@@ -12,21 +12,5 @@ namespace BankApp2
         string password;
         float money;
 
-        public string Username
-        {
-            get { return username; }
-            set { username = value; }
-        }
-        public string Password
-        {
-            get { return password; }
-            set { password = value; }
-        }
-        public float Money
-        {
-            get { return money; }
-            set { money = value; }
-        }
-
     }
 }
