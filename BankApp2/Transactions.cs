@@ -8,8 +8,8 @@ namespace BankApp2
 {
     internal class Transactions
     {
-        public string sendMoney { get; set; }
+        public decimal sendMoney { get; set; }
 
-        public int getMoney { get; set; }
+        public decimal getMoney { get; set; }
     }
 }
