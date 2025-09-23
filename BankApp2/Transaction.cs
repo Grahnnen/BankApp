@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankApp2
 {
-    internal class Transaction
+    public class Transaction
     {
         private string id;
         private string accountNumber;
