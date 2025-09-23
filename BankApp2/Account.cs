@@ -7,6 +7,7 @@ namespace BankApp2
     {
         public string AccountNumber { get; set; }
         public decimal Balance { get; set; }
+        public  User Owner { get; set; }
 
 
         List<Transaction> transactions = new List<Transaction>();
