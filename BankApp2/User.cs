@@ -1,6 +1,6 @@
 ﻿namespace BankApp2
 {
-    internal class User
+    public class User
     {
         public string Username { get; set; }
         public string Password { get; set; }
@@ -9,14 +9,12 @@
         public int FailedAttempts { get; set; } = 0;
         public bool IsLocked { get; set; } = false;
 
-
-        public class LoginResult
-        {
-            private User? loggedInUser;
-
-            public bool Success { get; set; }
-            public string? Message { get; set; }
-            public User? LoggedInUser { get => loggedInUser; set => loggedInUser = value; }
+            public User(string username, string password, decimal balance, string role)
+            {
+                Username = username;
+                Password = password;
+                Balance = balance;
+                Role = role;
         }
     }
 }
