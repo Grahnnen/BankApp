@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace BankApp2
 {
-    internal class User
+    public class User
     {
-        string username;
-        string password;
-        float money;
+        public string id;
+        private string name;
+        private List<Account> account = new List<Account>();
 
+        public User(string id, string name)
+        {
+            this.id = id;
+            this.name = name;
+        }
     }
 }
