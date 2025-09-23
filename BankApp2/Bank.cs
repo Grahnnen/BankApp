@@ -19,7 +19,7 @@ namespace BankApp2
             //    Console.WriteLine("Konto med detta nummer finns redan");
             //}
 
-            var account = new Account("1", 123);
+            var account = new Account("1", 0);
             Accounts.Add(account);
 
             if (!Users.Contains(user))
