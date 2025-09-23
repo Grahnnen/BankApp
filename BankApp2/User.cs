@@ -8,9 +8,9 @@ namespace BankApp2
 {
     public class User
     {
-        private string id;
+        public string id;
         private string name;
-       //private List<Account> account = new List<Account>();
+        private List<Account> account = new List<Account>();
 
         public User(string id, string name)
         {
