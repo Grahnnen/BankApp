@@ -19,8 +19,8 @@ namespace BankApp2
             //    Console.WriteLine("Konto med detta nummer finns redan");
             //}
 
-            var account = new Account("1", 0);
-            Accounts.Add(account);
+            var account = new Account(accountNumber, 0);
+            user.account.Add(account);
 
             if (!Users.Contains(user))
             {
@@ -42,8 +42,5 @@ namespace BankApp2
                 }
             }
         }
-
-
-
     }
 }
