@@ -8,6 +8,7 @@ namespace BankApp2
         {
             // 1. Create an instance of LoginManager
             var loginManager = new LoginManager();
+            Bank bank = new Bank();
 
             Console.WriteLine("=== Welcome to the Bank App Login Test ===");
 
@@ -33,7 +34,29 @@ namespace BankApp2
             // 5. Optional: show role if login succeeded
             if (loginResult.Success)
             {
-                Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Role}");
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Role}");
+
+                    Console.WriteLine($"You have {loginResult.LoggedInUser.Account.Count} accounts.");
+
+                    Console.WriteLine("1. Open new account");
+                    Console.WriteLine("2. View accounts");
+
+                    string response = Console.ReadLine();
+
+                    if (response == "1")
+                    {
+                        Random rng = new Random();
+                        int random = rng.Next(999999, 9999999);
+                        bank.OpenAccount(loginResult.LoggedInUser, random.ToString());
+                    }
+                    else if (response == "2")
+                    {
+                        bank.PrintAccounts(loginResult.LoggedInUser);
+                    }
+                }
             }
         }
     }

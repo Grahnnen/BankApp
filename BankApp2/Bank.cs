@@ -10,23 +10,54 @@ namespace BankApp2
     public class Bank
     {
         public List<User> Users { get; set; } = new List<User>();
-        public List<Account> Accounts { get; set; } = new List<Account>();
 
         public void OpenAccount(User user, string accountNumber)
         {
-            //if (FindAccount(accountNumber) != null)
-            //{
-            //    Console.WriteLine("Konto med detta nummer finns redan");
-            //}
-
-            var account = new Account("1", 123);
-            Accounts.Add(account);
-
-            if (!Users.Contains(user))
+            while (true)
             {
-                Users.Add(user);
+                Console.Clear();
+                Console.WriteLine("Choose account type to open:");
+                Console.WriteLine("1. Checking account");
+                Console.WriteLine("2. Saving account");
+                Console.WriteLine("3. Cancel");
+                string response = Console.ReadLine();
+                if (response == "1")
+                {
+                    var account = new CheckingAccount(user, accountNumber, 0);
+                    user.Account.Add(account);
+                    break;
+                }
+                else if (response == "2")
+                {
+                    var account = new SavingsAccount(user, accountNumber, 0, 3);
+                    user.Account.Add(account);
+                    break;
+                }
+                else if (response == "3")
+                {
+                    break;
+                }
             }
-
+        }
+        public void PrintAccounts(User user)
+        {
+            Console.Clear();
+            for (int i = 0; i < user.Account.Count; i++)
+            {
+                Console.WriteLine("-----------------------------");
+                Console.WriteLine($"Account number: {user.Account[i].AccountNumber}");
+                if (user.Account[i] is SavingsAccount)
+                {
+                    Console.WriteLine($"Account type: Savings account");
+                }
+                else if (user.Account[i] is CheckingAccount)
+                {
+                    Console.WriteLine($"Account type: Checking account");
+                }
+                Console.WriteLine($"Balance: {user.Account[i].Balance}");
+                Console.WriteLine("-----------------------------");
+            }
+            Console.ReadKey();
         }
 
         public void FindAccount(string id)
@@ -42,8 +73,5 @@ namespace BankApp2
                 }
             }
         }
-
-
-
     }
 }

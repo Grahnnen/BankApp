@@ -13,7 +13,7 @@ namespace BankApp2
 
         List<Transaction> transactions = new List<Transaction>();
 
-        public Account(string accountNumber, decimal balance)
+        public Account(User user, string accountNumber, decimal balance)
         {
             AccountNumber = accountNumber;
             Balance = balance;

@@ -15,9 +15,7 @@ namespace BankApp2
         public int FreeWithdrawals { get; set; } = 3;
         public decimal WithdrawalFee { get; set; } = 10m;
         private int withdrawCount = 0;
-
-
-        public SavingsAccount(string accountNumber, decimal balance, decimal interestRate) : base(accountNumber, balance)
+        public SavingsAccount(User user, string accountNumber,decimal balance, decimal interestRate) : base(user, accountNumber, balance)
         {
             Balance = balance;
             InterestRate = interestRate;
