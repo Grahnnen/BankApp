@@ -62,3 +62,4 @@ Vi har gemensamt tagit fram detta kontrakt och förbinder oss att följa det.
 - Lukas Karlsson
 - Anton Smedman
 - Robin Grahn
+- Jordan Foose
