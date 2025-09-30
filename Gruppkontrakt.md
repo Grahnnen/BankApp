@@ -59,3 +59,4 @@ Rollerna kan med fördel roteras varje vecka för att ge alla möjlighet att utv
 Vi har gemensamt tagit fram detta kontrakt och förbinder oss att följa det.
 
 Liza Hjortling
+Lukas Karlsson
