@@ -10,7 +10,6 @@ namespace BankApp2
     public class Bank
     {
         public List<User> Users { get; set; } = new List<User>();
-        public List<Account> Accounts { get; set; } = new List<Account>();
 
         public void OpenAccount(User user, string accountNumber)
         {
@@ -18,15 +17,17 @@ namespace BankApp2
             //{
             //    Console.WriteLine("Konto med detta nummer finns redan");
             //}
-
-            var account = new Account("1", 123);
-            Accounts.Add(account);
-
-            if (!Users.Contains(user))
+            Console.WriteLine("Choose account type to open:");
+            Console.WriteLine("1. Checking account");
+            Console.WriteLine("2. Saving account");
+            Console.WriteLine("3. Cancel");
+            string response = Console.ReadLine();
+            if(response == "1") 
             {
-                Users.Add(user);
+                var account = new (user, accountNumber, 0);
+                user.account.Add(account);
             }
-
+            
         }
 
         public void FindAccount(string id)
@@ -42,8 +43,5 @@ namespace BankApp2
                 }
             }
         }
-
-
-
     }
 }

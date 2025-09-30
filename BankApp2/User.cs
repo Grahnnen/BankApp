@@ -9,6 +9,9 @@
         public string Role { get; set; }
         public int FailedAttempts { get; set; } = 0;
         public bool IsLocked { get; set; } = false;
+        public string id;
+        private string name;
+        public List<Account> account = new List<Account>();
 
 
         public User(string username, string password, decimal balance, string role)
@@ -19,10 +22,7 @@
             Role = role;
         }
 
-        public string id;
-        private string name;
-        private List<Account> account = new List<Account>();
-
+        
         public User(string id, string name)
         {
             this.id = id;

@@ -12,7 +12,7 @@ namespace BankApp2
         public decimal InterestRate { get; set; }
 
 
-        public SavingsAccount(string accountNumber,decimal balance, decimal interestRate) : base(accountNumber, balance)
+        public SavingsAccount(User user, string accountNumber,decimal balance, decimal interestRate) : base(user, accountNumber, balance)
         {
             Balance = balance;
             InterestRate = interestRate;
