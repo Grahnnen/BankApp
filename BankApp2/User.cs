@@ -11,13 +11,13 @@
         public bool IsLocked { get; set; } = false;
 
 
-        public class LoginResult
+        public User(string username, string password, decimal balance, string role)
         {
-            private User? loggedInUser;
-
-            public bool Success { get; set; }
-            public string? Message { get; set; }
-            public User? LoggedInUser { get => loggedInUser; set => loggedInUser = value; }
+            Username = username;
+            Password = password;
+            Balance = balance;
+            Role = role;
+        }
 
         public string id;
         private string name;
@@ -27,6 +27,7 @@
         {
             this.id = id;
             this.name = name; 
+
         }
     }
 }
