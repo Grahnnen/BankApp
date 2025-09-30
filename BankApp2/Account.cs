@@ -36,7 +36,7 @@ namespace BankApp2
 
 
         }
-        public void Withdraw(decimal amount)
+        public virtual void Withdraw(decimal amount)
         {
             if (amount <= 0)
             {

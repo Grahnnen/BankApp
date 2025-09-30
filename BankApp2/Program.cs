@@ -39,7 +39,7 @@ namespace BankApp2
                     Console.Clear();
                     Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Role}");
 
-                    Console.WriteLine($"You have {loginResult.LoggedInUser.account.Count} accounts.");
+                    Console.WriteLine($"You have {loginResult.LoggedInUser.Account.Count} accounts.");
 
                     Console.WriteLine("1. Open new account");
                     Console.WriteLine("2. View accounts");
@@ -48,7 +48,13 @@ namespace BankApp2
 
                     if (response == "1")
                     {
-                        bank.OpenAccount(loginResult.LoggedInUser, "1");
+                        Random rng = new Random();
+                        int random = rng.Next(999999, 9999999);
+                        bank.OpenAccount(loginResult.LoggedInUser, random.ToString());
+                    }
+                    else if (response == "2")
+                    {
+                        bank.PrintAccounts(loginResult.LoggedInUser);
                     }
                 }
             }

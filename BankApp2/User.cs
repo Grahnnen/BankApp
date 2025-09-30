@@ -11,7 +11,7 @@
         public bool IsLocked { get; set; } = false;
         public string id;
         private string name;
-        public List<Account> account = new List<Account>();
+        public List<Account> Account = new List<Account>();
 
 
         public User(string username, string password, decimal balance, string role)
