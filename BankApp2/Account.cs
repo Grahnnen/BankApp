@@ -8,27 +8,34 @@ namespace BankApp2
     {
         public string AccountNumber { get; set; }
         public decimal Balance { get; set; }
-        public  User Owner { get; set; }
+        public User Owner { get; set; }
 
 
         List<Transaction> transactions = new List<Transaction>();
 
-        public Account (string accountNumber, decimal balance)
+        public Account(string accountNumber, decimal balance)
         {
             AccountNumber = accountNumber;
             Balance = balance;
         }
 
-        public void Deposit(decimal amount)
+        public void Deposit()
         {
-            if (amount <= 0)
+            Console.Clear();
+            Console.WriteLine("Enter the amount to deposit");
+            if (int.TryParse(Console.ReadLine(), out int amount))
             {
-                Console.WriteLine("Deposit failed: amount must be greater than 0.");
-                return;
+                if (amount <= 0)
+                {
+                    Console.WriteLine("Deposit failed: amount must be greater than 0.");
+                    return;
+                }
+                Balance += amount;
+                Console.WriteLine($"Deposit successful: new balance is {Balance}.");
             }
-            Balance += amount;
-            Console.WriteLine($"Deposit successful: new balance is {Balance}.");
-        }    
+
+
+        }
         public void Withdraw(decimal amount)
         {
             if (amount <= 0)
