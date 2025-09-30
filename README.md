@@ -1,4 +1,4 @@
-Rapportör: Liza, 2025-09-23
+Rapportör: Lukas, 2025-09-23
 
 Närvarande: Liza, Robin, Lukas, Jordan
 
