@@ -61,3 +61,4 @@ Vi har gemensamt tagit fram detta kontrakt och förbinder oss att följa det.
 - Liza Hjortling
 - Lukas Karlsson
 - Anton Smedman
+- Robin Grahn
