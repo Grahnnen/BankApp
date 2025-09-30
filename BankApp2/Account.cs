@@ -44,5 +44,11 @@ namespace BankApp2
             Balance -= amount;
             Console.WriteLine($"Withdrawal successful: new balance is {Balance}.");
         }
+        public void TransferMoney(Account fromAccount, Account toAccount, decimal amount)
+        {
+            toAccount.Balance += amount;
+            fromAccount.Balance -= amount;
+            Console.WriteLine($"Transfered {amount} from {fromAccount} to {toAccount}");
+        }
     }
 }
