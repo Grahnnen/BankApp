@@ -8,11 +8,16 @@ namespace BankApp2
 {
     public class SavingsAccount : Account
     {
-        public decimal Balance { get;  set; }
+        public decimal Balance { get; set; }
         public decimal InterestRate { get; set; }
 
 
-        public SavingsAccount(string accountNumber,decimal balance, decimal interestRate) : base(accountNumber, balance)
+        public int FreeWithdrawals { get; set; } = 3;
+        public decimal WithdrawalFee { get; set; } = 10m;
+        private int withdrawCount = 0;
+
+
+        public SavingsAccount(string accountNumber, decimal balance, decimal interestRate) : base(accountNumber, balance)
         {
             Balance = balance;
             InterestRate = interestRate;
@@ -23,7 +28,26 @@ namespace BankApp2
             Balance += Balance * InterestRate;
         }
 
-       
-       
+        public void Withdraw(decimal amount)
+        {
+            if (amount <= 0 || amount > Balance)
+                return;
+
+            withdrawCount++;
+
+            if (withdrawCount > FreeWithdrawals)
+            {
+                
+                Balance -= (amount + WithdrawalFee);
+            }
+            else
+            {
+                Balance -= amount;
+            }
+        }
     }
 }
+
+
+
+
