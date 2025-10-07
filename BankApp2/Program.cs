@@ -62,10 +62,15 @@ namespace BankApp2
                     {
                         bank.PrintPositiveAccounts();
                     }
-
                     else if (response == "4")
                     {
                         Environment.Exit(0);
+                    }
+                    else 
+                    {
+                        Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3 eller 4");
+                        Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
+                        Console.ReadKey();
                     }
                 }
             }
