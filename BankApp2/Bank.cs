@@ -47,7 +47,7 @@ namespace BankApp2.Models
             Console.Clear();
 
             var summaries = Users
-
+ 
                 .Select(u => new
                 {
                     UserName = u.Username,
