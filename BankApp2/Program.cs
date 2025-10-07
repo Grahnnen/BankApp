@@ -46,6 +46,7 @@ namespace BankApp2.Models
                     Console.WriteLine("1. Open new account");
                     Console.WriteLine("2. View accounts");
                     Console.WriteLine("3. View accounts with positive balance");
+                    Console.WriteLine("4. Show top 3 transactions");
 
                     string response = Console.ReadLine();
                     if (response == "0")
@@ -64,16 +65,52 @@ namespace BankApp2.Models
                     }
                     else if (response == "3")
                     {
-                        bank.PrintPositiveAccounts();
-           
+                        loginResult.LoggedInUser.PrintPositiveAccounts();
                     }
-                    else 
+                    else if (response == "4")
                     {
-                        Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3 eller 4");
+                        ShowTopTransactionsMenu(loginResult.LoggedInUser);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3, 4 eller 5");
                         Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
                         Console.ReadKey();
                     }
                 }
+            }
+        }
+        static void ShowTopTransactionsMenu(User currentUser)
+        {
+            for (int i = 0; i < currentUser.Account.Count; i++)
+            {
+                var acc = currentUser.Account[i];
+                Console.WriteLine($"{i + 1}. {acc.AccountNumber} - Balance: {acc.Balance:C}");
+            }
+            Console.WriteLine("\nSelect account number: ");
+            if (int.TryParse(Console.ReadLine(), out int choice)
+                && choice > 0 && choice <= currentUser.Account.Count)
+            {
+                var selected = currentUser.Account[choice - 1];
+
+                var topTransactions = selected.GetTopTransactions(3);
+
+                if (topTransactions.Count == 0)
+                {
+                    Console.WriteLine("No transactions yet.");
+                }
+                else
+                {
+                    Console.WriteLine("\nTop 3 transactions:");
+                    foreach (var t in topTransactions)
+                    {
+                        Console.WriteLine(t);
+                    }
+                }
+
+
+                Console.WriteLine("\nPress any key to return...");
+                Console.ReadKey();
             }
         }
     }

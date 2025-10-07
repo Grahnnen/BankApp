@@ -10,7 +10,7 @@ namespace BankApp2.Models
     {
         private string id;
         private string accountNumber;
-        private decimal amount;
+        public decimal amount;
         private DateTime dateTime;
         private string type;
         private List<string> transactions = new List<string>();
@@ -28,6 +28,11 @@ namespace BankApp2.Models
                 Console.WriteLine(transaction);
             }
             Console.ReadKey();
+        }
+
+        public override string ToString()
+        {
+            return $"{dateTime:G} | {type} | {amount:C}";
         }
     }
 }

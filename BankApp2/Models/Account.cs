@@ -62,5 +62,13 @@ namespace BankApp2
         {
             
         }
+
+        public List<Transaction> GetTopTransactions(int topCount)
+        {
+            return transactions
+                .OrderByDescending(t => t.amount.ToString())
+                .Take(topCount)
+                .ToList();
+        }
     }
 }
