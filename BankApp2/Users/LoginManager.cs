@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BankApp2
+namespace BankApp2.Users
 {
     public class LoginManager
     {
