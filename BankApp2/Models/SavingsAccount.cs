@@ -27,21 +27,26 @@ namespace BankApp2.Models
             Balance += Balance * InterestRate;
         }
 
-        public void Withdraw(decimal amount)
+        public override void Withdraw()
         {
-            if (amount <= 0 || amount > Balance)
-                return;
-
-            withdrawCount++;
-
-            if (withdrawCount > FreeWithdrawals)
+            Console.Clear();
+            Console.Write("Enter the amount to withdraw: ");
+            if (int.TryParse(Console.ReadLine(), out int amount))
             {
-                
-                Balance -= amount + WithdrawalFee;
-            }
-            else
-            {
-                Balance -= amount;
+                if (amount <= 0 || amount > Balance)
+                    return;
+
+                withdrawCount++;
+
+                if (withdrawCount > FreeWithdrawals)
+                {
+
+                    Balance -= (amount + WithdrawalFee);
+                }
+                else
+                {
+                    Balance -= amount;
+                }
             }
         }
     }

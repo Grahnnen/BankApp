@@ -1,4 +1,6 @@
-﻿namespace BankApp2
+﻿using BankApp2.Models;
+
+namespace BankApp2
 {
     public class User
     {
@@ -9,8 +11,6 @@
         public string Role { get; set; }
         public int FailedAttempts { get; set; } = 0;
         public bool IsLocked { get; set; } = false;
-        public string id;
-        private string name;
         public List<Account> Account = new List<Account>();
 
 
@@ -19,15 +19,97 @@
             Username = username;
             Password = password;
             Balance = balance;
-            Role = role;
+            Role = role; 
+            Random rng = new Random();
+            int random = rng.Next(999999, 9999999);
+            Account.Add(new CheckingAccount(this, random.ToString(), 0));
+            random = rng.Next(999999, 9999999);
+            Account.Add(new SavingsAccount(this, random.ToString(), 0, 3));
+        }
+        public void PrintAccounts()
+        {
+            while (true)
+            {
+                Console.Clear();
+                for (int i = 0; i < Account.Count; i++)
+                {
+                    Console.WriteLine("-----------------------------");
+                    Console.WriteLine($"{i + 1}. Account number: {Account[i].AccountNumber}");
+                    if (Account[i] is SavingsAccount)
+                    {
+                        Console.WriteLine($"Account type: Savings account");
+                    }
+                    else if (Account[i] is CheckingAccount)
+                    {
+                        Console.WriteLine($"Account type: Checking account");
+                    }
+                    Console.WriteLine($"Balance: {Account[i].Balance}");
+                    Console.WriteLine("-----------------------------");
+                }
+                Console.Write("Account to manage: (0 to exit)");
+                
+                if(int.TryParse(Console.ReadLine(), out int response))
+                {
+                    if (response == 0)
+                        break;
+                    if (Account.Count >= response)
+                    {
+                        var selectedAccount = Account[response - 1];
+                        AccountMenu(selectedAccount);
+
+                    } 
+                }
+                
+            }
+        }
+        public void PrintPositiveAccounts()
+        {
+            var positiveAccounts = Account.Where(a => a.Balance > 0);
+            Console.Clear();
+            Console.WriteLine("Konton med positivt saldo:\n");
+
+            if (positiveAccounts.Count() <= 0)
+            {
+                Console.WriteLine("Inga konton med postivt saldo");
+            }
+            else
+            {
+                foreach (var account in positiveAccounts)
+                {
+                    Console.WriteLine($"Ägare: {account.Owner}");
+                    Console.WriteLine($"Kontonummer: {account.AccountNumber}");
+                    Console.WriteLine($"Saldo: {account.Balance}");
+                }
+            }
+            Console.ReadKey();
         }
 
-        
-        public User(string id, string name)
+        void AccountMenu(Account account)
         {
-            this.id = id;
-            this.name = name; 
-
+            while (true) {
+                Console.Clear();
+                Console.WriteLine($"Accountnumber: {account.AccountNumber}");
+                Console.WriteLine($"Account balance: {account.Balance}");
+                Console.WriteLine("0. Exit");
+                Console.WriteLine("1. Deposit money");
+                Console.WriteLine("2. Withdraw money");
+                Console.WriteLine("3. Transfer money");
+                string response = Console.ReadLine();
+                if (response == "0")
+                {
+                    break;
+                }
+                else if (response == "1")
+                {
+                    account.Deposit();
+                }
+                else if (response == "2")
+                {
+                    account.Withdraw();
+                }
+                else if (response == "3")
+                    account.TransferMoney();
+            }
         }
     }
 }
