@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankApp2
+namespace BankApp2.Models
 {
     public class Transaction
     {

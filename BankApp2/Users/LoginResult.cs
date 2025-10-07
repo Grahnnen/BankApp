@@ -1,4 +1,4 @@
-﻿namespace BankApp2
+﻿namespace BankApp2.Users
 {
     public class LoginResult
     {

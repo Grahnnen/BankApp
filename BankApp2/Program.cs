@@ -44,6 +44,7 @@ namespace BankApp2
                     Console.WriteLine("0. Exit");
                     Console.WriteLine("1. Open new account");
                     Console.WriteLine("2. View accounts");
+                    Console.WriteLine("3. Exit");
 
                     string response = Console.ReadLine();
                     if (response == "0")
@@ -57,8 +58,12 @@ namespace BankApp2
                         bank.OpenAccount(loginResult.LoggedInUser, random.ToString());
                     }
                     else if (response == "2")
+                        bank.PrintAccounts(loginResult.LoggedInUser);
                     {
-                        loginResult.LoggedInUser.PrintAccounts();
+                    }
+                    else if (response == "3")
+                    {
+                        Environment.Exit(0);
                     }
                 }
             }
