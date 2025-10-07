@@ -11,6 +11,8 @@ namespace BankApp2
     {
         public List<User> Users { get; set; } = new List<User>();
 
+        public IEnumerable<Account> Accounts => Users.SelectMany(u => u.Account);
+
         public void OpenAccount(User user, string accountNumber)
         {
             while (true)
@@ -39,6 +41,7 @@ namespace BankApp2
                 }
             }
         }
+
         public void PrintAccounts(User user)
         {
             Console.Clear();
@@ -72,6 +75,28 @@ namespace BankApp2
                     Console.WriteLine("hittade inte user");
                 }
             }
+        }
+
+        public void PrintPositiveAccounts()
+        {
+            var positiveAccounts = Accounts.Where(a => a.Balance > 0);
+            Console.Clear();
+            Console.WriteLine("Konton med positivt saldo:\n");
+
+            if (positiveAccounts.Count() <= 0)
+            {
+                Console.WriteLine("Inga konton med postivt saldo");
+            }
+            else
+            {
+                foreach (var account in positiveAccounts)
+                {
+                    Console.WriteLine($"Ägare: {account.Owner}");
+                    Console.WriteLine($"Kontonummer: {account.AccountNumber}");
+                    Console.WriteLine($"Saldo: {account.Balance}");
+                }
+            }
+            Console.ReadKey();
         }
     }
 }

@@ -43,7 +43,8 @@ namespace BankApp2
 
                     Console.WriteLine("1. Open new account");
                     Console.WriteLine("2. View accounts");
-                    Console.WriteLine("3. Exit");
+                    Console.WriteLine("3. View accounts with positive balance");
+                    Console.WriteLine("4. Exit");
 
                     string response = Console.ReadLine();
 
@@ -58,6 +59,11 @@ namespace BankApp2
                         bank.PrintAccounts(loginResult.LoggedInUser);
                     }
                     else if (response == "3")
+                    {
+                        bank.PrintPositiveAccounts();
+                    }
+
+                    else if (response == "4")
                     {
                         Environment.Exit(0);
                     }
