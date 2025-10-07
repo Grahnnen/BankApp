@@ -9,8 +9,6 @@ namespace BankApp2
     public class CheckingAccount : Account
     {
         public CheckingAccount(User user, string accountNumber, decimal balance) : base(user, accountNumber, balance) { }
-
-        public override void Withdraw(decimal amount) { }
      
     }
 }

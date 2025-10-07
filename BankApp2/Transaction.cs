@@ -13,14 +13,21 @@ namespace BankApp2
         private decimal amount;
         private DateTime dateTime;
         private string type;
+        private List<string> transactions = new List<string>();
 
-        public Transaction(string id, string accountNumber, decimal amount, DateTime dateTime, string type)
+        public void CreateTransaction(Account fromAccount, Account toAccount, decimal amount)
         {
-            this.id = id;
-            this.accountNumber = accountNumber;
-            this.amount = amount;
-            this.dateTime = dateTime;
-            this.type = type;
+            transactions.Add($"From account: {fromAccount.AccountNumber}" +
+                $" to account: {toAccount.AccountNumber} - Amount: {amount}");
+        }
+        public void ListTransactions()
+        {
+            Console.Clear();
+            foreach (var transaction in transactions)
+            {
+                Console.WriteLine(transaction);
+            }
+            Console.ReadKey();
         }
     }
 }

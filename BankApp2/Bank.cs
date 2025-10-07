@@ -17,11 +17,15 @@ namespace BankApp2
             {
                 Console.Clear();
                 Console.WriteLine("Choose account type to open:");
+                Console.WriteLine("0. Cancel");
                 Console.WriteLine("1. Checking account");
                 Console.WriteLine("2. Saving account");
-                Console.WriteLine("3. Cancel");
                 string response = Console.ReadLine();
-                if (response == "1")
+                if (response == "0")
+                {
+                    break;
+                }
+                else if (response == "1")
                 {
                     var account = new CheckingAccount(user, accountNumber, 0);
                     user.Account.Add(account);
@@ -33,45 +37,23 @@ namespace BankApp2
                     user.Account.Add(account);
                     break;
                 }
-                else if (response == "3")
-                {
-                    break;
-                }
+                
             }
         }
-        public void PrintAccounts(User user)
-        {
-            Console.Clear();
-            for (int i = 0; i < user.Account.Count; i++)
-            {
-                Console.WriteLine("-----------------------------");
-                Console.WriteLine($"Account number: {user.Account[i].AccountNumber}");
-                if (user.Account[i] is SavingsAccount)
-                {
-                    Console.WriteLine($"Account type: Savings account");
-                }
-                else if (user.Account[i] is CheckingAccount)
-                {
-                    Console.WriteLine($"Account type: Checking account");
-                }
-                Console.WriteLine($"Balance: {user.Account[i].Balance}");
-                Console.WriteLine("-----------------------------");
-            }
-            Console.ReadKey();
-        }
+       
 
-        public void FindAccount(string id)
-        {
-            foreach (var user in Users)
-            {
-                if (user.id == id)
-                    Console.WriteLine("hittade user");
-
-                else
-                {
-                    Console.WriteLine("hittade inte user");
-                }
-            }
-        }
+       //public void FindAccount(string id)
+       //{
+       //    foreach (var user in Users)
+       //    {
+       //        if (user.id == id)
+       //            Console.WriteLine("hittade user");
+       //
+       //        else
+       //        {
+       //            Console.WriteLine("hittade inte user");
+       //        }
+       //    }
+       //}
     }
 }
