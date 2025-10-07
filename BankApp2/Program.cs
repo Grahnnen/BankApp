@@ -35,6 +35,11 @@ namespace BankApp2.Models
             // 5. Optional: show role if login succeeded
             if (loginResult.Success)
             {
+                // Add the logged-in user to the bank's Users list if not already present
+                if (!bank.Users.Any(u => u.Username == loginResult.LoggedInUser.Username))
+                {
+                    bank.Users.Add(loginResult.LoggedInUser);
+                }
                 while (true)
                 {
                     Console.Clear();
@@ -46,7 +51,8 @@ namespace BankApp2.Models
                     Console.WriteLine("1. Open new account");
                     Console.WriteLine("2. View accounts");
                     Console.WriteLine("3. View accounts with positive balance");
-                    Console.WriteLine("4. Show top 3 transactions");
+                    Console.WriteLine("4. Show account summary");
+                    Console.WriteLine("5. Show top 3 transactions");
 
                     string response = Console.ReadLine();
                     if (response == "0")
@@ -68,6 +74,10 @@ namespace BankApp2.Models
                         loginResult.LoggedInUser.PrintPositiveAccounts();
                     }
                     else if (response == "4")
+                    {
+                        bank.PrintUserAccountSummaries();
+                    }
+                    else if (response == "5")
                     {
                         loginResult.LoggedInUser.PrintTopTransactions();
                     }

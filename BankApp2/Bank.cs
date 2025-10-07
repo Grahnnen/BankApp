@@ -42,5 +42,30 @@ namespace BankApp2.Models
                 
             }
         }
+        public void PrintUserAccountSummaries()
+        {
+            Console.Clear();
+
+            var summaries = Users
+
+                .Select(u => new
+                {
+                    UserName = u.Username,
+                    AccountCount = u.Account.Count,
+                    TotalBalance = u.Account.Sum(account => account.Balance)
+                });
+
+            foreach (var summary in summaries)
+            {
+                Console.WriteLine("-----------------------------");
+                Console.WriteLine($"Namn: {summary.UserName}");
+                Console.WriteLine($"Konton: {summary.AccountCount}");
+                Console.WriteLine($"Saldo: {summary.TotalBalance:C}");
+                Console.WriteLine("-----------------------------");
+                Console.WriteLine("Tryck på valfri knapp för att gå bakåt");
+            }
+
+            Console.ReadKey();
+        }
     }
 }
