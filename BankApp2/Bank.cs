@@ -41,6 +41,7 @@ namespace BankApp2
                 }
             }
         }
+
         public void PrintAccounts(User user)
         {
             Console.Clear();
