@@ -56,6 +56,10 @@ namespace BankApp2
                     {
                         bank.PrintAccounts(loginResult.LoggedInUser);
                     }
+                    else if (response == "3")
+                    {
+                        Environment.Exit(0);
+                    }
                 }
             }
         }
