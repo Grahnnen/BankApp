@@ -37,12 +37,13 @@ namespace BankApp2
                 while (true)
                 {
                     Console.Clear();
-                    Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Role}");
+                    Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Username}");
 
                     Console.WriteLine($"You have {loginResult.LoggedInUser.Account.Count} accounts.");
 
                     Console.WriteLine("1. Open new account");
                     Console.WriteLine("2. View accounts");
+                    Console.WriteLine("3. Exit");
 
                     string response = Console.ReadLine();
 
@@ -55,6 +56,10 @@ namespace BankApp2
                     else if (response == "2")
                     {
                         bank.PrintAccounts(loginResult.LoggedInUser);
+                    }
+                    else if (response == "3")
+                    {
+                        Environment.Exit(0);
                     }
                 }
             }
