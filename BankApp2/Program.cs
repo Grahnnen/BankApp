@@ -64,8 +64,7 @@ namespace BankApp2.Models
                     }
                     else if (response == "3")
                     {
-                        bank.PrintPositiveAccounts();
-           
+                        loginResult.LoggedInUser.PrintPositiveAccounts();
                     }
                     else 
                     {
