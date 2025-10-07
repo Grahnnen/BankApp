@@ -73,9 +73,13 @@ namespace BankApp2.Models
                     {
                         loginResult.LoggedInUser.PrintPositiveAccounts();
                     }
-                    else 
+                    else if (response == "4") 
                     {
-                        Console.WriteLine("Ogiltig inmatning, Vänligen välj 0, 1, 2 eller 3");
+                        bank.PrintUserAccountSummaries();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ogiltig inmatning, Vänligen välj 0, 1, 2, 3 eller 4");
                         Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
                         Console.ReadKey();
                     }
