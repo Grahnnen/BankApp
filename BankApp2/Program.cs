@@ -1,6 +1,7 @@
-﻿using System;
+﻿using BankApp2.Users;
+using System;
 
-namespace BankApp2
+namespace BankApp2.Models
 {
     internal class Program
     {
@@ -47,14 +48,17 @@ namespace BankApp2
 
                     Console.WriteLine($"You have {loginResult.LoggedInUser.Account.Count} accounts.");
 
+                    Console.WriteLine("0. Exit");
                     Console.WriteLine("1. Open new account");
                     Console.WriteLine("2. View accounts");
-                    Console.WriteLine("3. Exit");
-                    Console.WriteLine("4. Print");
+                    Console.WriteLine("3. View accounts with positive balance");
 
                     string response = Console.ReadLine();
-
-                    if (response == "1")
+                    if (response == "0")
+                    {
+                        Environment.Exit(0);
+                    }
+                    else if (response == "1")
                     {
                         Random rng = new Random();
                         int random = rng.Next(999999, 9999999);
@@ -62,11 +66,11 @@ namespace BankApp2
                     }
                     else if (response == "2")
                     {
-                        bank.PrintAccounts(loginResult.LoggedInUser);
+                        loginResult.LoggedInUser.PrintAccounts();
                     }
                     else if (response == "3")
                     {
-                        Environment.Exit(0);
+                        loginResult.LoggedInUser.PrintPositiveAccounts();
                     }
                     else if (response == "4")
                     {
