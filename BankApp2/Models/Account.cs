@@ -18,6 +18,7 @@ namespace BankApp2
         {
             AccountNumber = accountNumber;
             Balance = balance;
+            Owner = user;
         }
 
         public void Deposit()
