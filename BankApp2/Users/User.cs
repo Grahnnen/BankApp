@@ -1,4 +1,6 @@
-﻿namespace BankApp2
+﻿using BankApp2.Models;
+
+namespace BankApp2
 {
     public class User
     {
@@ -59,6 +61,27 @@
                 }
                 
             }
+        }
+        public void PrintPositiveAccounts()
+        {
+            var positiveAccounts = Account.Where(a => a.Balance > 0);
+            Console.Clear();
+            Console.WriteLine("Konton med positivt saldo:\n");
+
+            if (positiveAccounts.Count() <= 0)
+            {
+                Console.WriteLine("Inga konton med postivt saldo");
+            }
+            else
+            {
+                foreach (var account in positiveAccounts)
+                {
+                    Console.WriteLine($"Ägare: {account.Owner}");
+                    Console.WriteLine($"Kontonummer: {account.AccountNumber}");
+                    Console.WriteLine($"Saldo: {account.Balance}");
+                }
+            }
+            Console.ReadKey();
         }
 
         void AccountMenu(Account account)
