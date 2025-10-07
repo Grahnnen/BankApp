@@ -76,9 +76,11 @@ namespace BankApp2
             {
                 foreach (var account in positiveAccounts)
                 {
-                    Console.WriteLine($"Ägare: {account.Owner}");
+                    Console.WriteLine("-----------------------------");
+                    Console.WriteLine($"Ägare: {account.Owner.Username}");
                     Console.WriteLine($"Kontonummer: {account.AccountNumber}");
                     Console.WriteLine($"Saldo: {account.Balance}");
+                    Console.WriteLine("-----------------------------");
                 }
             }
             Console.ReadKey();
