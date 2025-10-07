@@ -34,6 +34,12 @@ namespace BankApp2
             // 5. Optional: show role if login succeeded
             if (loginResult.Success)
             {
+                // Add the logged-in user to the bank's Users list if not already present
+                if (!bank.Users.Any(u => u.id == loginResult.LoggedInUser.id))
+                {
+                    bank.Users.Add(loginResult.LoggedInUser);
+                }
+
                 while (true)
                 {
                     Console.Clear();
@@ -44,6 +50,7 @@ namespace BankApp2
                     Console.WriteLine("1. Open new account");
                     Console.WriteLine("2. View accounts");
                     Console.WriteLine("3. Exit");
+                    Console.WriteLine("4. Print");
 
                     string response = Console.ReadLine();
 
@@ -60,6 +67,10 @@ namespace BankApp2
                     else if (response == "3")
                     {
                         Environment.Exit(0);
+                    }
+                    else if (response == "4")
+                    {
+                        bank.PrintUserAccountSummaries();
                     }
                 }
             }
