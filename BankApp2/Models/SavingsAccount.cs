@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BankApp2.Users;
 
-namespace BankApp2
+namespace BankApp2.Models
 {
     public class SavingsAccount : Account
     {
@@ -36,7 +37,7 @@ namespace BankApp2
             if (withdrawCount > FreeWithdrawals)
             {
                 
-                Balance -= (amount + WithdrawalFee);
+                Balance -= amount + WithdrawalFee;
             }
             else
             {
