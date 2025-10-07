@@ -69,7 +69,7 @@ namespace BankApp2.Models
                     }
                     else if (response == "4")
                     {
-                        ShowTopTransactionsMenu(loginResult.LoggedInUser);
+                        loginResult.LoggedInUser.PrintTopTransactions();
                     }
                     else
                     {
@@ -78,39 +78,6 @@ namespace BankApp2.Models
                         Console.ReadKey();
                     }
                 }
-            }
-        }
-        static void ShowTopTransactionsMenu(User currentUser)
-        {
-            for (int i = 0; i < currentUser.Account.Count; i++)
-            {
-                var acc = currentUser.Account[i];
-                Console.WriteLine($"{i + 1}. {acc.AccountNumber} - Balance: {acc.Balance:C}");
-            }
-            Console.WriteLine("\nSelect account number: ");
-            if (int.TryParse(Console.ReadLine(), out int choice)
-                && choice > 0 && choice <= currentUser.Account.Count)
-            {
-                var selected = currentUser.Account[choice - 1];
-
-                var topTransactions = selected.GetTopTransactions(3);
-
-                if (topTransactions.Count == 0)
-                {
-                    Console.WriteLine("No transactions yet.");
-                }
-                else
-                {
-                    Console.WriteLine("\nTop 3 transactions:");
-                    foreach (var t in topTransactions)
-                    {
-                        Console.WriteLine(t);
-                    }
-                }
-
-
-                Console.WriteLine("\nPress any key to return...");
-                Console.ReadKey();
             }
         }
     }
