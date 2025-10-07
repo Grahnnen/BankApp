@@ -40,7 +40,6 @@ namespace BankApp2.Models
                 {
                     bank.Users.Add(loginResult.LoggedInUser);
                 }
-
                 while (true)
                 {
                     Console.Clear();
@@ -52,7 +51,8 @@ namespace BankApp2.Models
                     Console.WriteLine("1. Open new account");
                     Console.WriteLine("2. View accounts");
                     Console.WriteLine("3. View accounts with positive balance");
-                    Console.WriteLine("4. View user account summaries");
+                    Console.WriteLine("4. Show account summary");
+                    Console.WriteLine("5. Show top 3 transactions");
 
                     string response = Console.ReadLine();
                     if (response == "0")
@@ -73,13 +73,17 @@ namespace BankApp2.Models
                     {
                         loginResult.LoggedInUser.PrintPositiveAccounts();
                     }
-                    else if (response == "4") 
+                    else if (response == "4")
                     {
                         bank.PrintUserAccountSummaries();
                     }
+                    else if (response == "5")
+                    {
+                        loginResult.LoggedInUser.PrintTopTransactions();
+                    }
                     else
                     {
-                        Console.WriteLine("Ogiltig inmatning, Vänligen välj 0, 1, 2, 3 eller 4");
+                        Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3, 4 eller 5");
                         Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
                         Console.ReadKey();
                     }

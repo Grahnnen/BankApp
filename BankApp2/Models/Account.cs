@@ -1,7 +1,7 @@
 ﻿
+using BankApp2.Models;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
-using System.Transactions;
 
 namespace BankApp2
 {
@@ -12,7 +12,6 @@ namespace BankApp2
         public User Owner { get; set; }
 
 
-        public List<string> transactions = new List<string>();
 
         public Account(User user, string accountNumber, decimal balance)
         {
@@ -33,7 +32,12 @@ namespace BankApp2
                     return;
                 }
                 Balance += amount;
-                transactions.Add($"Deposited {amount} to account: {AccountNumber}");
+                Owner.transactions.Add(new Transaction
+(
+                    accountNumber: AccountNumber,
+                    amount: amount,
+                    type: "Deposit"
+                ));
                 Console.WriteLine($"Deposit successful: new balance is {Balance}.");
             }
 
@@ -56,6 +60,12 @@ namespace BankApp2
                     return;
                 }
                 Balance -= amount;
+                Owner.transactions.Add(new Models.Transaction
+(
+                    accountNumber: AccountNumber,
+                    amount: amount,
+                    type: "Withdraw"
+                ));
                 Console.WriteLine($"Withdrawal successful: new balance is {Balance}.");
             }
         }

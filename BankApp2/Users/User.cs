@@ -12,6 +12,7 @@ namespace BankApp2
         public int FailedAttempts { get; set; } = 0;
         public bool IsLocked { get; set; } = false;
         public List<Account> Account = new List<Account>();
+        public List<Transaction> transactions = new List<Transaction>();
 
 
         public User(string username, string password, decimal balance, string role)
@@ -61,6 +62,24 @@ namespace BankApp2
                 }
                 
             }
+        }
+        public void PrintTopTransactions(int count = 3)
+        {
+            Console.Clear();
+            var topTransactions = GetTopTransactions(count);
+            Console.WriteLine($"Top {count} transactions:");
+            foreach (var t in topTransactions)
+            {
+                Console.WriteLine(t.ToString());
+            }
+            Console.ReadKey();
+        }
+        public List<Transaction> GetTopTransactions(int topCount)
+        {
+            return transactions
+                .OrderByDescending(t => t.Amount)
+                .Take(topCount)
+                .ToList();
         }
         public void PrintPositiveAccounts()
         {

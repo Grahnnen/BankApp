@@ -1,33 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BankApp2.Models
 {
     public class Transaction
     {
-        private string id;
-        private string accountNumber;
-        private decimal amount;
-        private DateTime dateTime;
-        private string type;
-        private List<string> transactions = new List<string>();
+        public string Id { get; }
+        public string AccountNumber { get; }
+        public decimal Amount { get; }
+        public DateTime DateTime { get; }
+        public string Type { get; }
+        public string? TargetAccount { get; }
 
-        public void CreateTransaction(Account fromAccount, Account toAccount, decimal amount)
+        public Transaction(string accountNumber, decimal amount, string type, string? targetAccount = null)
         {
-            transactions.Add($"From account: {fromAccount.AccountNumber}" +
-                $" to account: {toAccount.AccountNumber} - Amount: {amount}");
+            Id = Guid.NewGuid().ToString();
+            AccountNumber = accountNumber;
+            Amount = amount;
+            DateTime = DateTime.Now;
+            Type = type;
+            TargetAccount = targetAccount;
         }
-        public void ListTransactions()
+
+        public override string ToString()
         {
-            Console.Clear();
-            foreach (var transaction in transactions)
-            {
-                Console.WriteLine(transaction);
-            }
-            Console.ReadKey();
+            if (!string.IsNullOrEmpty(TargetAccount))
+                return $"{DateTime:G} | {Type} | {Amount:C} | To: {TargetAccount}";
+            return $"{DateTime:G} | {Type} | {Amount:C}";
         }
     }
 }
