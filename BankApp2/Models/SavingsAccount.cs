@@ -9,7 +9,7 @@ namespace BankApp2.Models
 {
     public class SavingsAccount : Account
     {
-        public decimal Balance { get; set; }
+       
         public decimal InterestRate { get; set; }
 
 
