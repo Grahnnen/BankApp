@@ -67,6 +67,8 @@ namespace BankApp2
                     type: "Withdraw"
                 ));
                 Console.WriteLine($"Withdrawal successful: new balance is {Balance}.");
+               
+
             }
         }
         public void TransferMoney()
