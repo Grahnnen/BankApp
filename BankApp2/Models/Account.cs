@@ -89,6 +89,8 @@ namespace BankApp2
                 Balance -= amount;
                 Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
                 Console.WriteLine($"Withdrawal successful: new balance is {Balance}.");
+               
+
             }
             else
             {

@@ -9,7 +9,7 @@ namespace BankApp2.Models
 {
     public class SavingsAccount : Account
     {
-        public decimal Balance { get; set; }
+       
         public decimal InterestRate { get; set; }
 
 
@@ -31,26 +31,50 @@ namespace BankApp2.Models
         {
             Console.Clear();
             Console.Write("Enter the amount to withdraw: ");
-            if (int.TryParse(Console.ReadLine(), out int amounts))
+            if (int.TryParse(Console.ReadLine(), out int amount))
+              
             {
                 if (amount <= 0 || amount > Balance)
                     return;
 
                 withdrawCount++;
 
+                int remainingFree = FreeWithdrawals - withdrawCount;
+
+                if (remainingFree > 0)
+                {
+                    Console.WriteLine($"You have {remainingFree} free withdrawal(s) left.");
+                    
+                }
+                else if (remainingFree == 0)
+                {
+                    Console.WriteLine(" That was your last free withdrawal. Future withdrawals will incur a 10 kr fee.");
+                }
+
+
                 if (withdrawCount > FreeWithdrawals)
                 {
 
                     Balance -= (amount + WithdrawalFee);
+                   
                 }
                 else
                 {
                     Balance -= amount;
                 }
+
+                Console.WriteLine($"Withdrawal successful. New balance: {Balance} kr");
+                Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
+
             }
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+
         }
     }
 }
+
+
 
 
 
