@@ -27,14 +27,14 @@ namespace BankApp2.Models
             Balance += Balance * InterestRate;
         }
 
-        public override void Withdraw(decimal amount)
+        public override void Withdraw()
         {
             Console.Clear();
             Console.Write("Enter the amount to withdraw: ");
-            if (int.TryParse(Console.ReadLine(), out int amount))
+            if (int.TryParse(Console.ReadLine(), out int amounts))
               
             {
-                if (amount <= 0 || amount > Balance)
+                if (amounts <= 0 || amounts > Balance)
                     return;
 
                 withdrawCount++;
@@ -55,16 +55,16 @@ namespace BankApp2.Models
                 if (withdrawCount > FreeWithdrawals)
                 {
 
-                    Balance -= (amount + WithdrawalFee);
+                    Balance -= (amounts + WithdrawalFee);
                    
                 }
                 else
                 {
-                    Balance -= amount;
+                    Balance -= amounts;
                 }
 
                 Console.WriteLine($"Withdrawal successful. New balance: {Balance} kr");
-                Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
+                Owner.transactions.Add(new Transaction(AccountNumber, amounts, "Withdraw"));
 
             }
             Console.WriteLine("\nPress any key to continue...");
