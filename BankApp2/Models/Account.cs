@@ -45,9 +45,6 @@ namespace BankApp2
                 Console.ReadKey();
             }
 
-
-            Console.WriteLine("\nPress any key to continue...");
-            Console.ReadKey();
         }
 
         public void Deposit(decimal amount)
