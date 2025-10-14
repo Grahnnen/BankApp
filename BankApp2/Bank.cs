@@ -67,5 +67,37 @@ namespace BankApp2.Models
 
             Console.ReadKey();
         }
+        public void FindUser(string username)
+        {
+            var foundUser = Users.Where(u => u.Username.Contains(username));
+            Console.Clear();
+            foreach (var user in foundUser)
+            {
+                Console.WriteLine("----------------");
+                Console.WriteLine($"User: {user.Username}");
+                Console.WriteLine($"- Role: {user.Role}");
+                Console.WriteLine($"- Accounts: {user.Account.Count}");
+                Console.WriteLine($"- Transactions: {user.transactions.Count}");
+            }
+            Console.ReadKey();
+        }
+        public void FindUserWithTopTransactions()
+        {
+            var foundUser = Users.OrderByDescending(u => u.transactions.Count).FirstOrDefault(); Console.Clear();
+            Console.Clear();
+            if (foundUser != null)
+            {
+                Console.WriteLine("----------------");
+                Console.WriteLine($"User: {foundUser.Username}");
+                Console.WriteLine($"- Role: {foundUser.Role}");
+                Console.WriteLine($"- Accounts: {foundUser.Account.Count}");
+                Console.WriteLine($"- Transactions: {foundUser.transactions.Count}");
+            }
+            else
+            {
+                Console.WriteLine("No users found.");
+            }
+            Console.ReadKey();
+        }
     }
 }
