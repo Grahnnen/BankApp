@@ -10,7 +10,7 @@ namespace BankApp2.Models
             // 1. Create an instance of LoginManager
             var loginManager = new LoginManager();
             Bank bank = new Bank();
-
+            bank.Users.AddRange(loginManager.Users.Where(u => !bank.Users.Any(bu => bu.Username == u.Username)));
             Console.WriteLine("=== Welcome to the Bank App Login Test ===");
 
             // 2. Ask user for input (for testing purposes)
@@ -53,6 +53,10 @@ namespace BankApp2.Models
                     Console.WriteLine("3. View accounts with positive balance");
                     Console.WriteLine("4. Show account summary");
                     Console.WriteLine("5. Show top 3 transactions");
+                    if(loginResult.LoggedInUser.Role == "Admin")
+                    {
+                        Console.WriteLine("6. Search Users");
+                    }
 
                     string response = Console.ReadLine();
                     if (response == "0")
@@ -80,6 +84,11 @@ namespace BankApp2.Models
                     else if (response == "5")
                     {
                         loginResult.LoggedInUser.PrintTopTransactions();
+                    }
+                    else if (response == "6" && loginResult.LoggedInUser.Role == "Admin")
+                    {
+                        Console.Write("Search for user:");
+                        bank.FindUser(Console.ReadLine().ToLower());
                     }
                     else
                     {

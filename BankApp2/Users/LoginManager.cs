@@ -7,14 +7,17 @@ namespace BankApp2.Users
     public class LoginManager
     {
         private List<User> users;
-
+        public List<User> Users => users;
         public LoginManager()
         {
             users = new List<User>
             {
                 new User("admin", "1234", 0, "Admin"),
                 new User("john", "pass", 1000, "User"),
-                new User("emma", "12345", 500, "User")
+                new User("emma", "12345", 500, "User"),
+                new User("emelie", "12345", 500, "User"),
+                new User("martin", "12345", 500, "User"),
+                new User("robin", "12345", 500, "Admin"),
             };
         }
 
