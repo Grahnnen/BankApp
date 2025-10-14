@@ -27,11 +27,11 @@ namespace BankApp2.Models
             Balance += Balance * InterestRate;
         }
 
-        public override void Withdraw()
+        public override void Withdraw(decimal amount)
         {
             Console.Clear();
             Console.Write("Enter the amount to withdraw: ");
-            if (int.TryParse(Console.ReadLine(), out int amount))
+            if (int.TryParse(Console.ReadLine(), out int amounts))
             {
                 if (amount <= 0 || amount > Balance)
                     return;

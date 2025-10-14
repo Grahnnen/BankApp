@@ -2,10 +2,12 @@
 using BankApp2.Models;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
+using System.Linq;
+
 
 namespace BankApp2
 {
-    public class Account
+    public class Account 
     {
         public string AccountNumber { get; set; }
         public decimal Balance { get; set; }
@@ -43,11 +45,35 @@ namespace BankApp2
 
 
         }
-        public virtual void Withdraw()
+
+        public void Deposit(decimal amount)
+        {
+          
+                if (amount <= 0)
+                {
+                    Console.WriteLine("Deposit failed: amount must be greater than 0.");
+                    return;
+                }
+                Balance += amount;
+                Owner.transactions.Add(new Transaction
+(
+                    accountNumber: AccountNumber,
+                    amount: amount,
+                    type: "Deposit"
+                ));
+                Console.WriteLine($"Deposit successful: new balance is {Balance}.");
+
+        }
+
+
+
+
+        // 1️⃣ Version där användaren skriver in summan i konsolen
+        public void Withdraw()
         {
             Console.Clear();
             Console.Write("Enter the amount to withdraw: ");
-            if (int.TryParse(Console.ReadLine(), out int amount))
+            if (decimal.TryParse(Console.ReadLine(), out decimal amount))
             {
                 if (amount <= 0)
                 {
@@ -59,19 +85,36 @@ namespace BankApp2
                     Console.WriteLine("Withdrawal failed: insufficient funds.");
                     return;
                 }
+
                 Balance -= amount;
-                Owner.transactions.Add(new Models.Transaction
-(
-                    accountNumber: AccountNumber,
-                    amount: amount,
-                    type: "Withdraw"
-                ));
+                Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
                 Console.WriteLine($"Withdrawal successful: new balance is {Balance}.");
             }
+            else
+            {
+                Console.WriteLine("Invalid amount.");
+            }
         }
-        public void TransferMoney()
+
+        // 2️⃣ Version som tar emot belopp direkt (för överföring)
+        public virtual void Withdraw(decimal amount)
         {
-            
+            if (amount <= 0)
+            {
+                Console.WriteLine("Withdrawal failed: amount must be greater than 0.");
+                return;
+            }
+            if (amount > Balance)
+            {
+                Console.WriteLine("Withdrawal failed: insufficient funds.");
+                return;
+            }
+
+            Balance -= amount;
+            Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
         }
+         
+
     }
 }
+
