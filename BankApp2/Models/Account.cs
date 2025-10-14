@@ -41,6 +41,8 @@ namespace BankApp2
                     type: "Deposit"
                 ));
                 Console.WriteLine($"Deposit successful: new balance is {Balance}.");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
             }
 
 
@@ -89,8 +91,8 @@ namespace BankApp2
                 Balance -= amount;
                 Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
                 Console.WriteLine($"Withdrawal successful: new balance is {Balance}.");
-               
-
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
             }
             else
             {
