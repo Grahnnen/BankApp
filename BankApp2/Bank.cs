@@ -102,21 +102,30 @@ namespace BankApp2.Models
 
             // Logga händelsen
             Console.WriteLine($"{sender.Username} överförde {amount} kr från {fromAccountNumber} till {toAccountNumber}");
+            Console.ReadKey();       
         }
 
         public void FindUser(string username)
         {
             var foundUser = Users.Where(u => u.Username.Contains(username));
-            Console.Clear();
-            foreach (var user in foundUser)
+            if (foundUser.Count() <= 0)
             {
-                Console.WriteLine("----------------");
-                Console.WriteLine($"User: {user.Username}");
-                Console.WriteLine($"- Role: {user.Role}");
-                Console.WriteLine($"- Accounts: {user.Account.Count}");
-                Console.WriteLine($"- Transactions: {user.transactions.Count}");
+                Console.WriteLine("No user found!");
+                Console.ReadKey();
             }
-            Console.ReadKey();
+            else
+            {
+                Console.Clear();
+                foreach (var user in foundUser)
+                {
+                    Console.WriteLine("----------------");
+                    Console.WriteLine($"User: {user.Username}");
+                    Console.WriteLine($"- Role: {user.Role}");
+                    Console.WriteLine($"- Accounts: {user.Account.Count}");
+                    Console.WriteLine($"- Transactions: {user.transactions.Count}");
+                }
+                Console.ReadKey();
+            }
         }
         public void FindUserWithTopTransactions()
         {

@@ -35,7 +35,7 @@ namespace BankApp2
                 }
                 Balance += amount;
                 Owner.transactions.Add(new Transaction
-(
+                (   
                     accountNumber: AccountNumber,
                     amount: amount,
                     type: "Deposit"
@@ -45,25 +45,25 @@ namespace BankApp2
                 Console.ReadKey();
             }
 
-
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
         }
 
         public void Deposit(decimal amount)
         {
-          
-                if (amount <= 0)
-                {
-                    Console.WriteLine("Deposit failed: amount must be greater than 0.");
-                    return;
-                }
-                Balance += amount;
-                Owner.transactions.Add(new Transaction
+            if (amount <= 0)
+            {
+                Console.WriteLine("Deposit failed: amount must be greater than 0.");
+                return;
+            }
+            Balance += amount;
+            Owner.transactions.Add(new Transaction
 (
-                    accountNumber: AccountNumber,
-                    amount: amount,
-                    type: "Deposit"
-                ));
-                Console.WriteLine($"Deposit successful: new balance is {Balance}.");
+                accountNumber: AccountNumber,
+                amount: amount,
+                type: "Deposit"
+            ));
+            Console.WriteLine($"Deposit successful: new balance is {Balance}.");
 
         }
 
@@ -71,7 +71,7 @@ namespace BankApp2
 
 
         // 1️⃣ Version där användaren skriver in summan i konsolen
-        public void Withdraw()
+        public virtual void Withdraw()
         {
             Console.Clear();
             Console.Write("Enter the amount to withdraw: ");
