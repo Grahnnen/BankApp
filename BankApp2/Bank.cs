@@ -67,6 +67,43 @@ namespace BankApp2.Models
 
             Console.ReadKey();
         }
+        public void TransferMoney(User sender, string fromAccountNumber, string toAccountNumber, decimal amount)
+
+        {
+            var fromAccount = sender.Account.FirstOrDefault(a => a.AccountNumber == fromAccountNumber);
+
+            if (fromAccount == null)
+            {
+                Console.WriteLine("Konto att överföra från hittades inte.");
+                return;
+            }
+            var receiverAccount = Users
+             .SelectMany(u => u.Account)
+             .FirstOrDefault(a => a.AccountNumber == toAccountNumber);
+
+            if (receiverAccount == null)
+            {
+                Console.WriteLine("Mottagarkonto hittades inte.");
+                return;
+            }
+
+            // Kontrollera saldo
+            if (fromAccount.Balance < amount)
+            {
+                Console.WriteLine("Otillräckligt saldo.");
+                return;
+            }
+
+            // Utför överföring
+            fromAccount.Withdraw(amount);
+            receiverAccount.Deposit(amount);
+
+            Console.WriteLine($"Överförde {amount} kr från {fromAccountNumber} till {toAccountNumber}.");
+
+            // Logga händelsen
+            Console.WriteLine($"{sender.Username} överförde {amount} kr från {fromAccountNumber} till {toAccountNumber}");
+        }
+
         public void FindUser(string username)
         {
             var foundUser = Users.Where(u => u.Username.Contains(username));

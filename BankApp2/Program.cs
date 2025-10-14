@@ -71,7 +71,7 @@ namespace BankApp2.Models
                     }
                     else if (response == "2")
                     {
-                        loginResult.LoggedInUser.PrintAccounts();
+                        loginResult.LoggedInUser.PrintAccounts(bank);
                     }
                     else if (response == "3")
                     {

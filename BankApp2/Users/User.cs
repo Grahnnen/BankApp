@@ -1,4 +1,5 @@
 ﻿using BankApp2.Models;
+using System;
 
 namespace BankApp2
 {
@@ -20,14 +21,14 @@ namespace BankApp2
             Username = username;
             Password = password;
             Balance = balance;
-            Role = role; 
+            Role = role;
             Random rng = new Random();
             int random = rng.Next(999999, 9999999);
             Account.Add(new CheckingAccount(this, random.ToString(), 0));
             random = rng.Next(999999, 9999999);
             Account.Add(new SavingsAccount(this, random.ToString(), 0, 3));
         }
-        public void PrintAccounts()
+        public void PrintAccounts(Bank bank)
         {
             while (true)
             {
@@ -48,19 +49,19 @@ namespace BankApp2
                     Console.WriteLine("-----------------------------");
                 }
                 Console.Write("Account to manage: (0 to exit)");
-                
-                if(int.TryParse(Console.ReadLine(), out int response))
+
+                if (int.TryParse(Console.ReadLine(), out int response))
                 {
                     if (response == 0)
                         break;
                     if (Account.Count >= response)
                     {
                         var selectedAccount = Account[response - 1];
-                        AccountMenu(selectedAccount);
+                        AccountMenu(selectedAccount, bank);
 
-                    } 
+                    }
                 }
-                
+
             }
         }
         public void PrintTopTransactions(int count = 3)
@@ -105,9 +106,10 @@ namespace BankApp2
             Console.ReadKey();
         }
 
-        void AccountMenu(Account account)
+        void AccountMenu(Account account, Bank bank)
         {
-            while (true) {
+            while (true)
+            {
                 Console.Clear();
                 Console.WriteLine($"Accountnumber: {account.AccountNumber}");
                 Console.WriteLine($"Account balance: {account.Balance}");
@@ -122,6 +124,7 @@ namespace BankApp2
                 }
                 else if (response == "1")
                 {
+
                     account.Deposit();
                 }
                 else if (response == "2")
@@ -129,7 +132,22 @@ namespace BankApp2
                     account.Withdraw();
                 }
                 else if (response == "3")
-                    account.TransferMoney();
+                {
+                    Console.WriteLine("Enter Account number: ");
+                    var accountNumber = Console.ReadLine();
+                    Console.WriteLine("Enter amount for transfer: ");
+                    var inputAmount = (Console.ReadLine());
+
+                    if (decimal.TryParse(inputAmount, out decimal amount))
+                    {
+                      bank.TransferMoney(this, account.AccountNumber, accountNumber, amount);
+
+                    }
+
+
+
+                }
+
             }
         }
         
