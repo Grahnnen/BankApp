@@ -15,88 +15,95 @@ namespace BankApp2.Menu
             bank.Users.AddRange(loginManager.Users.Where(u => !bank.Users.Any(bu => bu.Username == u.Username)));
             Console.WriteLine("=== Welcome to the Bank App Login Test ===");
 
-            // 2. Ask user for input (for testing purposes)
-            Console.Write("Enter username: ");
-            string? username = Console.ReadLine();
-
-            Console.Write("Enter password: ");
-            string? password = Console.ReadLine();
-
-            if (username == null || password == null)
+            while (true)
             {
-                Console.WriteLine("Username and password cannot be null.");
-                return;
-            }
 
-            // 3. Call the login method
-            var loginResult = loginManager.Login(username, password);
+                // 2. Ask user for input (for testing purposes)
+                Console.Write("Enter username: ");
+                string? username = Console.ReadLine();
 
-            // 4. Show the result
-            Console.WriteLine(loginResult.Message);
+                Console.Write("Enter password: ");
+                string? password = Console.ReadLine();
+                
+                // 3. Call the login method
+                var loginResult = loginManager.Login(username, password);
+                
+                // 4. Show the result
+                Console.WriteLine(loginResult.Message);
 
-            // 5. Optional: show role if login succeeded
-            if (loginResult.Success)
-            {
-                // Add the logged-in user to the bank's Users list if not already present
-                if (!bank.Users.Any(u => u.Username == loginResult.LoggedInUser.Username))
+                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
                 {
-                    bank.Users.Add(loginResult.LoggedInUser);
+                    Console.WriteLine("Please write your username and password.");
                 }
-                while (true)
+
+                Console.WriteLine("\nPress any key to continue");
+                Console.ReadKey();
+                Console.Clear();
+
+                // 5. Optional: show role if login succeeded
+                if (loginResult.Success)
                 {
-                    Console.Clear();
-                    Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Username}");
+                    // Add the logged-in user to the bank's Users list if not already present
+                    if (!bank.Users.Any(u => u.Username == loginResult.LoggedInUser.Username))
+                    {
+                        bank.Users.Add(loginResult.LoggedInUser);
+                    }
+                    while (true)
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Username}");
 
-                    Console.WriteLine($"You have {loginResult.LoggedInUser.Account.Count} accounts.");
+                        Console.WriteLine($"You have {loginResult.LoggedInUser.Account.Count} accounts.");
 
-                    Console.WriteLine("0. Exit");
-                    Console.WriteLine("1. Open new account");
-                    Console.WriteLine("2. View accounts");
-                    Console.WriteLine("3. View accounts with positive balance");
-                    Console.WriteLine("4. Show account summary");
-                    Console.WriteLine("5. Show top 3 transactions");
-                    if (loginResult.LoggedInUser.Role == "Admin")
-                    {
-                        Console.WriteLine("6. Search Users");
-                    }
+                        Console.WriteLine("0. Exit");
+                        Console.WriteLine("1. Open new account");
+                        Console.WriteLine("2. View accounts");
+                        Console.WriteLine("3. View accounts with positive balance");
+                        Console.WriteLine("4. Show account summary");
+                        Console.WriteLine("5. Show top 3 transactions");
+                        if (loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            Console.WriteLine("6. Search Users");
+                        }
 
-                    string response = Console.ReadLine();
-                    if (response == "0")
-                    {
-                        Environment.Exit(0);
-                    }
-                    else if (response == "1")
-                    {
-                        Random rng = new Random();
-                        int random = rng.Next(999999, 9999999);
-                        bank.OpenAccount(loginResult.LoggedInUser, random.ToString());
-                    }
-                    else if (response == "2")
-                    {
-                        loginResult.LoggedInUser.PrintAccounts(bank);
-                    }
-                    else if (response == "3")
-                    {
-                        loginResult.LoggedInUser.PrintPositiveAccounts();
-                    }
-                    else if (response == "4")
-                    {
-                        bank.PrintUserAccountSummaries();
-                    }
-                    else if (response == "5")
-                    {
-                        loginResult.LoggedInUser.PrintTopTransactions();
-                    }
-                    else if (response == "6" && loginResult.LoggedInUser.Role == "Admin")
-                    {
-                        Console.Write("Search for user:");
-                        bank.FindUser(Console.ReadLine().ToLower());
-                    }
-                    else
-                    {
-                        Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3, 4 eller 5");
-                        Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
-                        Console.ReadKey();
+                        string response = Console.ReadLine();
+                        if (response == "0")
+                        {
+                            Environment.Exit(0);
+                        }
+                        else if (response == "1")
+                        {
+                            Random rng = new Random();
+                            int random = rng.Next(999999, 9999999);
+                            bank.OpenAccount(loginResult.LoggedInUser, random.ToString());
+                        }
+                        else if (response == "2")
+                        {
+                            loginResult.LoggedInUser.PrintAccounts(bank);
+                        }
+                        else if (response == "3")
+                        {
+                            loginResult.LoggedInUser.PrintPositiveAccounts();
+                        }
+                        else if (response == "4")
+                        {
+                            bank.PrintUserAccountSummaries();
+                        }
+                        else if (response == "5")
+                        {
+                            loginResult.LoggedInUser.PrintTopTransactions();
+                        }
+                        else if (response == "6" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            Console.Write("Search for user:");
+                            bank.FindUser(Console.ReadLine().ToLower());
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3, 4 eller 5");
+                            Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
+                            Console.ReadKey();
+                        }
                     }
                 }
             }

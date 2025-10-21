@@ -26,15 +26,15 @@ namespace BankApp2.Users
             var user = users.FirstOrDefault(u => u.Username == username);
 
             if (user == null)
-                return new LoginResult { Success = false, Message = "User not found" };
+                return new LoginResult { Success = false, Message = "\nUser not found" };
 
             if (user.IsLocked)
-                return new LoginResult { Success = false, Message = "Account is locked" };
+                return new LoginResult { Success = false, Message = "\nAccount is locked" };
 
             if (user.Password == password)
             {
                 user.FailedAttempts = 0;
-                return new LoginResult { Success = true, Message = $"Welcome {user.Username}", LoggedInUser = user };
+                return new LoginResult { Success = true, Message = $"\nWelcome {user.Username}", LoggedInUser = user };
             }
             else
             {
@@ -45,7 +45,7 @@ namespace BankApp2.Users
                 return new LoginResult
                 {
                     Success = false,
-                    Message = user.Role == "Admin" && user.IsLocked ? "Admin account locked!" : "Wrong password"
+                    Message = user.Role == "Admin" && user.IsLocked ? "\nAdmin account locked!" : "\nWrong password"
                 };
             }
         }
