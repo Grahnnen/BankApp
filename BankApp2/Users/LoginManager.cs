@@ -69,6 +69,8 @@ namespace BankApp2.Users
             if (newRole == "Admin" || newRole == "User")
             {
                 Users.Add(new User(name, password, 0, newRole));
+                Console.WriteLine("Added user");
+                Console.ReadKey();
             }
         }
         public void DeleteUser()
