@@ -53,7 +53,7 @@ namespace BankApp2.Menu
                         Console.Clear();
                         Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Username}");
 
-                        Console.WriteLine($"You have {loginResult.LoggedInUser.Account.Count} accounts.");
+                        Console.WriteLine($"You have {loginResult.LoggedInUser.Accounts.Count} accounts.");
 
                         Console.WriteLine("0. Sign out");
                         Console.WriteLine("1. Open new account");
@@ -67,6 +67,8 @@ namespace BankApp2.Menu
                             Console.WriteLine("7. Search account");
                             Console.WriteLine("8. Show all users");
                             Console.WriteLine("9. Show users with top transactions");
+                            Console.WriteLine("10. Add user");
+                            Console.WriteLine("11. Delete user");
                         }
 
                         string response = Console.ReadLine();
@@ -114,6 +116,19 @@ namespace BankApp2.Menu
                         else if (response == "9" && loginResult.LoggedInUser.Role == "Admin")
                         {
                             bank.FindUserWithTopTransactions();
+                        }
+                        else if (response == "10" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            var newUser = loginManager.AddUser();
+                            if( newUser != null) 
+                            bank.Users.Add(newUser);
+                        }
+                        else if (response == "11" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+
+                            var newUser = loginManager.DeleteUser();
+                            if (newUser != null)
+                            bank.Users.Remove(newUser);
                         }
                         else
                         {

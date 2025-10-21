@@ -50,7 +50,7 @@ namespace BankApp2.Users
             }
         }
 
-        public void AddUser()
+        public User AddUser()
         {
             Console.Clear();
             Console.WriteLine("Adding user");
@@ -64,16 +64,24 @@ namespace BankApp2.Users
             {
                 Console.WriteLine("Name and password cannot be empty!");
                 Console.ReadKey();
-                return;
+                return null;
             }
             if (newRole == "Admin" || newRole == "User")
             {
-                Users.Add(new User(name, password, 0, newRole));
+                User newUser = new User(name, password, 0, newRole);
+                Users.Add(newUser);
                 Console.WriteLine("Added user");
                 Console.ReadKey();
+                return newUser;
+            }
+            else
+            {
+                Console.WriteLine("Invalid role!");
+                Console.ReadKey();
+                return null;
             }
         }
-        public void DeleteUser()
+        public User DeleteUser()
         {
             Console.Clear();
             Console.WriteLine("Deleting user");
@@ -84,7 +92,7 @@ namespace BankApp2.Users
             {
                 Console.WriteLine("Name cannot be empty.");
                 Console.ReadKey();
-                return;
+                return null;
             }
 
             var userToDelete = users.FirstOrDefault(u => string.Equals(u.Username, name, StringComparison.OrdinalIgnoreCase));
@@ -93,12 +101,12 @@ namespace BankApp2.Users
             {
                 Console.WriteLine("User not found.");
                 Console.ReadKey();
-                return;
+                return null;
             }
             users.Remove(userToDelete);
             Console.WriteLine("User deleted.");
-
             Console.ReadKey();
+            return userToDelete;
         }
     }
 }
