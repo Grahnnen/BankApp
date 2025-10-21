@@ -31,45 +31,94 @@ namespace BankApp2.Models
         {
             Console.Clear();
             Console.Write("Enter the amount to withdraw: ");
-            if (int.TryParse(Console.ReadLine(), out int amounts))
+            if (decimal.TryParse(Console.ReadLine(), out decimal amounts))
               
             {
-                if (amounts <= 0 || amounts > Balance)
+                if (amounts <= 0)
+                {
+                    Console.WriteLine("Withdrawal failed: amount must be greater than 0.");
+                    Console.WriteLine("\nPress any key to continue...");
+                    Console.ReadKey();
                     return;
+                }
+
+                decimal totalAmount = amounts;
+
+                if (withdrawCount >= FreeWithdrawals)
+                {
+                    totalAmount += WithdrawalFee;
+                    Console.WriteLine($"A fee of {WithdrawalFee} kr will be applied to this withdrawal.");
+                }
+                if (totalAmount > Balance)
+                {
+                    Console.WriteLine("Withdrawal failed: insufficient funds.");
+                    Console.WriteLine("\nPress any key to continue...");
+                    Console.ReadKey();
+                    return;
+                }
 
                 withdrawCount++;
+                Balance -= totalAmount;
 
                 int remainingFree = FreeWithdrawals - withdrawCount;
 
                 if (remainingFree > 0)
                 {
-                    Console.WriteLine($"You have {remainingFree} free withdrawal(s) left.");
-                    
+                    Console.WriteLine($"Withdrawal successful. You have {remainingFree} free withdrawal(s) left.");
                 }
                 else if (remainingFree == 0)
                 {
-                    Console.WriteLine(" That was your last free withdrawal. Future withdrawals will incur a 10 kr fee.");
-                }
-
-
-                if (withdrawCount > FreeWithdrawals)
-                {
-
-                    Balance -= (amounts + WithdrawalFee);
-                   
+                    Console.WriteLine("Withdrawal successful. That was your last free withdrawal.");
+                    Console.WriteLine("Future withdrawals will have a 10 kr fee.");
                 }
                 else
                 {
-                    Balance -= amounts;
+                    Console.WriteLine($"Withdrawal successful. Fee of {WithdrawalFee} kr was applied.");
                 }
 
-                Console.WriteLine($"Withdrawal successful. New balance: {Balance} kr");
+                Console.WriteLine($"New balance: {Balance} kr");
                 Owner.transactions.Add(new Transaction(AccountNumber, amounts, "Withdraw"));
-
             }
+            else
+            {
+                Console.WriteLine("Invalid amount.");
+            }
+
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
 
+        }
+
+        public override void Withdraw(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                Console.WriteLine("Withdrawal failed: amount must be greater than 0.");
+                return;
+            }
+
+            decimal totalAmount = amount;
+
+
+            if (withdrawCount >= FreeWithdrawals)
+            {
+                totalAmount += WithdrawalFee;
+            }
+
+            if (totalAmount > Balance)
+            {
+                Console.WriteLine("Withdrawal failed: insufficient funds (including fee).");
+                return;
+            }
+
+            withdrawCount++;
+            Balance -= totalAmount;
+            Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
+
+            if (withdrawCount > FreeWithdrawals)
+            {
+                Console.WriteLine($"Fee of {WithdrawalFee} kr was applied.");
+            }
         }
     }
 }
