@@ -49,5 +49,56 @@ namespace BankApp2.Users
                 };
             }
         }
+
+        public void AddUser()
+        {
+            Console.Clear();
+            Console.WriteLine("Adding user");
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+            Console.Write("Password: ");
+            string password = Console.ReadLine();
+            Console.Write("Role(Admin/User): ");
+            string newRole = Console.ReadLine();
+            if(string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
+            {
+                Console.WriteLine("Name and password cannot be empty!");
+                Console.ReadKey();
+                return;
+            }
+            if (newRole == "Admin" || newRole == "User")
+            {
+                Users.Add(new User(name, password, 0, newRole));
+                Console.WriteLine("Added user");
+                Console.ReadKey();
+            }
+        }
+        public void DeleteUser()
+        {
+            Console.Clear();
+            Console.WriteLine("Deleting user");
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Name cannot be empty.");
+                Console.ReadKey();
+                return;
+            }
+
+            var userToDelete = users.FirstOrDefault(u => string.Equals(u.Username, name, StringComparison.OrdinalIgnoreCase));
+
+            if (userToDelete == null)
+            {
+                Console.WriteLine("User not found.");
+                Console.ReadKey();
+                return;
+            }
+            users.Remove(userToDelete);
+            Console.WriteLine("User deleted.");
+
+            Console.ReadKey();
+        }
     }
 }
