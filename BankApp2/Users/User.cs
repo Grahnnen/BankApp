@@ -26,7 +26,7 @@ namespace BankApp2
             int random = rng.Next(999999, 9999999);
             Accounts.Add(new CheckingAccount(this, random.ToString(), 0));
             random = rng.Next(999999, 9999999);
-            Accounts.Add(new SavingsAccount(this, random.ToString(), 0, 3));
+            Account.Add(new SavingsAccount(this, random.ToString(), 0, 0.03m));
         }
         public void PrintAccounts(Bank bank)
         {
@@ -137,6 +137,10 @@ namespace BankApp2
                 Console.WriteLine("1. Deposit money");
                 Console.WriteLine("2. Withdraw money");
                 Console.WriteLine("3. Transfer money");
+                if (account is SavingsAccount)
+                {
+                    Console.WriteLine("4. Calculate Interest");
+                }
                 string response = Console.ReadLine();
                 if (response == "0")
                 {
@@ -175,8 +179,11 @@ namespace BankApp2
 
                     }
 
-
-
+                }
+                else if (response == "4" && account is SavingsAccount)
+                {
+                    var savingsAccount = account as SavingsAccount;
+                    savingsAccount.ShowInterest();
                 }
 
             }

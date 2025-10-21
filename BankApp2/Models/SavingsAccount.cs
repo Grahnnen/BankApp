@@ -111,6 +111,31 @@ namespace BankApp2.Models
             {
                 Console.WriteLine($"Fee of {WithdrawalFee} kr was applied.");
             }
+
+        }
+
+        public void ShowInterest()
+        {
+            Console.Clear();
+            Console.WriteLine($"Account: {AccountNumber}");
+            Console.WriteLine($"Current Balance: {Balance:F2} kr"); // F2 Gives us two decimals
+            Console.WriteLine($"Interest Rate: {InterestRate:P2} per month"); //P2 gives us percentage with two decimals
+
+            Console.Write("\nEnter number of months to calculate interest: ");
+            if (!int.TryParse(Console.ReadLine(), out int months) || months <= 0)
+            {
+                Console.WriteLine("Invalid input. Please enter a positive number of months.");
+            }
+            else
+            {
+                decimal futureBalance = Balance * (decimal)Math.Pow((double)(1 + InterestRate), months); // Calculate future balance using compound interest: Balance × (1 + rate)^months
+                decimal totalInterest = futureBalance - Balance;
+
+                Console.WriteLine($"\nInterest earned after {months} month(s): {totalInterest:F2} kr");
+            }
+
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
         }
     }
 }
