@@ -74,7 +74,12 @@ namespace BankApp2.Users
                 Console.ReadKey();
                 return newUser;
             }
-            return null;
+            else
+            {
+                Console.WriteLine("Invalid role!");
+                Console.ReadKey();
+                return null;
+            }
         }
         public User DeleteUser()
         {
@@ -100,8 +105,8 @@ namespace BankApp2.Users
             }
             users.Remove(userToDelete);
             Console.WriteLine("User deleted.");
-            return userToDelete;
             Console.ReadKey();
+            return userToDelete;
         }
     }
 }
