@@ -12,7 +12,7 @@ namespace BankApp2
         public string Role { get; set; }
         public int FailedAttempts { get; set; } = 0;
         public bool IsLocked { get; set; } = false;
-        public List<Account> Account = new List<Account>();
+        public List<Account> Accounts = new List<Account>();
         public List<Transaction> transactions = new List<Transaction>();
 
 
@@ -24,46 +24,66 @@ namespace BankApp2
             Role = role;
             Random rng = new Random();
             int random = rng.Next(999999, 9999999);
-            Account.Add(new CheckingAccount(this, random.ToString(), 0));
+            Accounts.Add(new CheckingAccount(this, random.ToString(), 0));
             random = rng.Next(999999, 9999999);
-            Account.Add(new SavingsAccount(this, random.ToString(), 0, 3));
+            Accounts.Add(new SavingsAccount(this, random.ToString(), 0, 3));
         }
         public void PrintAccounts(Bank bank)
         {
-            while (true)
+            try
             {
-                Console.Clear();
-                for (int i = 0; i < Account.Count; i++)
+                while (true)
                 {
-                    Console.WriteLine("-----------------------------");
-                    Console.WriteLine($"{i + 1}. Account number: {Account[i].AccountNumber}");
-                    if (Account[i] is SavingsAccount)
+                    Console.Clear();
+
+                    for (int i = 0; i < Accounts.Count; i++)
                     {
-                        Console.WriteLine($"Account type: Savings account");
+                        Console.WriteLine("-----------------------------");
+                        Console.WriteLine($"{i + 1}. Account number: {Accounts[i].AccountNumber}");
+                        if (Accounts[i] is SavingsAccount)
+                        {
+                            Console.WriteLine($"Account type: Savings account");
+                        }
+                        else if (Accounts[i] is CheckingAccount)
+                        {
+                            Console.WriteLine($"Account type: Checking account");
+                        }
+                        Console.WriteLine($"Balance: {Accounts[i].Balance}");
+                        Console.WriteLine("-----------------------------");
                     }
-                    else if (Account[i] is CheckingAccount)
+
+                    Console.Write("Account to manage: (0 to exit)");
+
+                    if (int.TryParse(Console.ReadLine(), out int response))
                     {
-                        Console.WriteLine($"Account type: Checking account");
+                        if (response == 0)
+                            break;
+
+                        if (response > 0 && response <= Accounts.Count)
+                        {
+                            var selectedAccount = Accounts[response - 1];
+                            AccountMenu(selectedAccount, bank);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ogiltigt val. Försök igen.");
+                            Console.ReadKey();
+                        }
                     }
-                    Console.WriteLine($"Balance: {Account[i].Balance}");
-                    Console.WriteLine("-----------------------------");
+                    else
+                    {
+                        Console.WriteLine("Du måste skriva ett nummer!");
+                        Console.ReadKey();
+                    }
                 }
-                Console.Write("Account to manage: (0 to exit)");
-
-                if (int.TryParse(Console.ReadLine(), out int response))
-                {
-                    if (response == 0)
-                        break;
-                    if (Account.Count >= response)
-                    {
-                        var selectedAccount = Account[response - 1];
-                        AccountMenu(selectedAccount, bank);
-
-                    }
-                }
-
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ett fel uppstod: {ex.Message}");
+                Console.ReadKey();
             }
         }
+
         public void PrintTopTransactions(int count = 3)
         {
             Console.Clear();
@@ -84,7 +104,7 @@ namespace BankApp2
         }
         public void PrintPositiveAccounts()
         {
-            var positiveAccounts = Account.Where(a => a.Balance > 0);
+            var positiveAccounts = Accounts.Where(a => a.Balance > 0);
             Console.Clear();
             Console.WriteLine("Account with positive balance:\n");
 
@@ -124,12 +144,23 @@ namespace BankApp2
                 }
                 else if (response == "1")
                 {
-
-                    account.Deposit();
-                }
-                else if (response == "2")
-                {
-                    account.Withdraw();
+                    try
+                    {
+                        account.Deposit();
+                        Console.WriteLine("Insättningen lyckades!");
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Fel format – skriv ett giltigt belopp.");
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine($"Fel: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
+                    }
                 }
                 else if (response == "3")
                 {
@@ -140,7 +171,7 @@ namespace BankApp2
 
                     if (decimal.TryParse(inputAmount, out decimal amount))
                     {
-                      bank.TransferMoney(this, account.AccountNumber, accountNumber, amount);
+                        bank.TransferMoney(this, account.AccountNumber, accountNumber, amount);
 
                     }
 
@@ -150,6 +181,6 @@ namespace BankApp2
 
             }
         }
-        
+
     }
 }

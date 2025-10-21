@@ -11,7 +11,7 @@ namespace BankApp2.Models
     {
         public List<User> Users { get; set; } = new List<User>();
 
-        public IEnumerable<Account> Accounts => Users.SelectMany(u => u.Account);
+        public IEnumerable<Account> Accounts => Users.SelectMany(u => u.Accounts);
 
         public void OpenAccount(User user, string accountNumber)
         {
@@ -30,13 +30,13 @@ namespace BankApp2.Models
                 else if (response == "1")
                 {
                     var account = new CheckingAccount(user, accountNumber, 0);
-                    user.Account.Add(account);
+                    user.Accounts.Add(account);
                     break;
                 }
                 else if (response == "2")
                 {
                     var account = new SavingsAccount(user, accountNumber, 0, 3);
-                    user.Account.Add(account);
+                    user.Accounts.Add(account);
                     break;
                 }
                 
@@ -51,8 +51,8 @@ namespace BankApp2.Models
                 .Select(u => new
                 {
                     UserName = u.Username,
-                    AccountCount = u.Account.Count,
-                    TotalBalance = u.Account.Sum(account => account.Balance)
+                    AccountCount = u.Accounts.Count,
+                    TotalBalance = u.Accounts.Sum(account => account.Balance)
                 });
 
             foreach (var summary in summaries)
@@ -70,7 +70,7 @@ namespace BankApp2.Models
         public void TransferMoney(User sender, string fromAccountNumber, string toAccountNumber, decimal amount)
 
         {
-            var fromAccount = sender.Account.FirstOrDefault(a => a.AccountNumber == fromAccountNumber);
+            var fromAccount = sender.Accounts.FirstOrDefault(a => a.AccountNumber == fromAccountNumber);
 
             if (fromAccount == null)
             {
@@ -78,7 +78,7 @@ namespace BankApp2.Models
                 return;
             }
             var receiverAccount = Users
-             .SelectMany(u => u.Account)
+             .SelectMany(u => u.Accounts)
              .FirstOrDefault(a => a.AccountNumber == toAccountNumber);
 
             if (receiverAccount == null)
@@ -122,57 +122,11 @@ namespace BankApp2.Models
                     Console.WriteLine($"User: {user.Username}");
                     Console.WriteLine($"- Role: {user.Role}");
                     Console.WriteLine($"- Transactions: {user.transactions.Count}");
-                    Console.WriteLine($"- Accounts: {user.Account.Count}");
-                    foreach (var account in user.Account)
+                    Console.WriteLine($"- Accounts: {user.Accounts.Count}");
+                    foreach (var account in user.Accounts)
                     {
                         Console.WriteLine($" -{account.AccountNumber} ({account.Balance}kr)");
                     }
-                }
-                Console.WriteLine("\nPress any key to continue...");
-                Console.ReadKey();
-            }
-        }
-        public void FindAccount(string accountNumber)
-        {
-            var foundAccounts = Accounts.Where(u => u.AccountNumber.Contains(accountNumber)).OrderByDescending(u => u.Balance);
-            if (foundAccounts == null)
-            {
-                Console.WriteLine("Account not found!");
-                Console.ReadKey();
-            }
-            else
-            {
-                Console.Clear();
-                foreach(var account in foundAccounts)
-                {
-                    Console.WriteLine("----------------");
-                    Console.WriteLine($"Account number: {account.AccountNumber}");
-                    Console.WriteLine($"- Owner: {account.Owner.Username}");
-                    Console.WriteLine($"- Balance: {account.Balance}");
-                }
-                Console.WriteLine("----------------");
-
-                Console.WriteLine("\nPress any key to continue...");
-                Console.ReadKey();
-            }
-        }
-        public void ShowAllUsers()
-        {
-            if (Users.Count() <= 0)
-            {
-                Console.WriteLine("No user found!");
-                Console.ReadKey();
-            }
-            else
-            {
-                Console.Clear();
-                foreach (var user in Users)
-                {
-                    Console.WriteLine("----------------");
-                    Console.WriteLine($"User: {user.Username}");
-                    Console.WriteLine($"- Role: {user.Role}");
-                    Console.WriteLine($"- Accounts: {user.Account.Count}");
-                    Console.WriteLine($"- Transactions: {user.transactions.Count}");
                 }
                 Console.WriteLine("\nPress any key to continue...");
                 Console.ReadKey();
@@ -187,7 +141,7 @@ namespace BankApp2.Models
                 Console.WriteLine("----------------");
                 Console.WriteLine($"User: {foundUser.Username}");
                 Console.WriteLine($"- Role: {foundUser.Role}");
-                Console.WriteLine($"- Accounts: {foundUser.Account.Count}");
+                Console.WriteLine($"- Accounts: {foundUser.Accounts.Count}");
                 Console.WriteLine($"- Transactions: {foundUser.transactions.Count}");
             }
             else
