@@ -119,12 +119,16 @@ namespace BankApp2.Menu
                         }
                         else if (response == "10" && loginResult.LoggedInUser.Role == "Admin")
                         {
-                            bank.Users.Add(loginManager.AddUser());
+                            var newUser = loginManager.AddUser();
+                            if( newUser != null) 
+                            bank.Users.Add(newUser);
                         }
                         else if (response == "11" && loginResult.LoggedInUser.Role == "Admin")
                         {
-                            
-                            bank.Users.Remove(loginManager.DeleteUser());
+
+                            var newUser = loginManager.DeleteUser();
+                            if (newUser != null)
+                            bank.Users.Remove(newUser);
                         }
                         else
                         {
