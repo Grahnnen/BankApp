@@ -121,9 +121,35 @@ namespace BankApp2.Models
                     Console.WriteLine("----------------");
                     Console.WriteLine($"User: {user.Username}");
                     Console.WriteLine($"- Role: {user.Role}");
-                    Console.WriteLine($"- Accounts: {user.Account.Count}");
                     Console.WriteLine($"- Transactions: {user.transactions.Count}");
+                    Console.WriteLine($"- Accounts: {user.Account.Count}");
+                    foreach (var account in user.Account)
+                    {
+                        Console.WriteLine($" -{account.AccountNumber} ({account.Balance}kr)");
+                    }
                 }
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+            }
+        }
+        public void FindAccount(string accountNumber)
+        {
+            var account = Users.SelectMany(u => u.Account)
+                                    .FirstOrDefault(a => string.Equals(a.AccountNumber, accountNumber));
+            if (account == null)
+            {
+                Console.WriteLine("Account not found!");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("----------------");
+                Console.WriteLine($"Account number: {account.AccountNumber}");
+                Console.WriteLine($"- Owner: {account.Owner}");
+                Console.WriteLine($"- Balance: {account.Balance}");
+
+                Console.WriteLine("\nPress any key to continue...");
                 Console.ReadKey();
             }
         }
@@ -145,6 +171,7 @@ namespace BankApp2.Models
                     Console.WriteLine($"- Accounts: {user.Account.Count}");
                     Console.WriteLine($"- Transactions: {user.transactions.Count}");
                 }
+                Console.WriteLine("\nPress any key to continue...");
                 Console.ReadKey();
             }
         }
@@ -164,6 +191,7 @@ namespace BankApp2.Models
             {
                 Console.WriteLine("No users found.");
             }
+            Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
     }
