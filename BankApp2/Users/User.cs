@@ -86,20 +86,20 @@ namespace BankApp2
         {
             var positiveAccounts = Account.Where(a => a.Balance > 0);
             Console.Clear();
-            Console.WriteLine("Konton med positivt saldo:\n");
+            Console.WriteLine("Account with positive balance:\n");
 
             if (positiveAccounts.Count() <= 0)
             {
-                Console.WriteLine("Inga konton med postivt saldo");
+                Console.WriteLine("No accounts with positive balance");
             }
             else
             {
                 foreach (var account in positiveAccounts)
                 {
                     Console.WriteLine("-----------------------------");
-                    Console.WriteLine($"Ägare: {account.Owner.Username}");
-                    Console.WriteLine($"Kontonummer: {account.AccountNumber}");
-                    Console.WriteLine($"Saldo: {account.Balance}");
+                    Console.WriteLine($"Owner: {account.Owner.Username}");
+                    Console.WriteLine($"Account number: {account.AccountNumber}");
+                    Console.WriteLine($"Balance: {account.Balance}");
                     Console.WriteLine("-----------------------------");
                 }
             }
@@ -111,7 +111,7 @@ namespace BankApp2
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine($"Accountnumber: {account.AccountNumber}");
+                Console.WriteLine($"Account number: {account.AccountNumber}");
                 Console.WriteLine($"Account balance: {account.Balance}");
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("1. Deposit money");
