@@ -80,11 +80,37 @@ namespace BankApp2.Models
                 Console.ReadKey();
             }
         }
+
+        public override void Withdraw(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                Console.WriteLine("Withdrawal failed: amount must be greater than 0.");
+                return;
+            }
+
+            decimal totalAmount = amount;
+
+
+            if (withdrawCount >= FreeWithdrawals)
+            {
+                totalAmount += WithdrawalFee;
+            }
+
+            if (totalAmount > Balance)
+            {
+                Console.WriteLine("Withdrawal failed: insufficient funds (including fee).");
+                return;
+            }
+
+            withdrawCount++;
+            Balance -= totalAmount;
+            Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
+
+            if (withdrawCount > FreeWithdrawals)
+            {
+                Console.WriteLine($"Fee of {WithdrawalFee} kr was applied.");
+            }
+        }
     }
 }
-
-
-
-
-
-

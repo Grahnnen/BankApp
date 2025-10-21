@@ -58,11 +58,11 @@ namespace BankApp2.Models
             foreach (var summary in summaries)
             {
                 Console.WriteLine("-----------------------------");
-                Console.WriteLine($"Namn: {summary.UserName}");
-                Console.WriteLine($"Konton: {summary.AccountCount}");
-                Console.WriteLine($"Saldo: {summary.TotalBalance:C}");
+                Console.WriteLine($"Name: {summary.UserName}");
+                Console.WriteLine($"Account: {summary.AccountCount}");
+                Console.WriteLine($"Balance: {summary.TotalBalance:C}");
                 Console.WriteLine("-----------------------------");
-                Console.WriteLine("Tryck på valfri knapp för att gå bakåt");
+                Console.WriteLine("Press any key to go back");
             }
 
             Console.ReadKey();
@@ -74,7 +74,7 @@ namespace BankApp2.Models
 
             if (fromAccount == null)
             {
-                Console.WriteLine("Konto att överföra från hittades inte.");
+                Console.WriteLine("Account to transfer from not found.");
                 return;
             }
             var receiverAccount = Users
@@ -83,14 +83,14 @@ namespace BankApp2.Models
 
             if (receiverAccount == null)
             {
-                Console.WriteLine("Mottagarkonto hittades inte.");
+                Console.WriteLine("Receiver account not found");
                 return;
             }
 
             // Kontrollera saldo
             if (fromAccount.Balance < amount)
             {
-                Console.WriteLine("Otillräckligt saldo.");
+                Console.WriteLine("Insufficient balance.");
                 return;
             }
 
@@ -98,10 +98,10 @@ namespace BankApp2.Models
             fromAccount.Withdraw(amount);
             receiverAccount.Deposit(amount);
 
-            Console.WriteLine($"Överförde {amount} kr från {fromAccountNumber} till {toAccountNumber}.");
+            Console.WriteLine($"Transferred {amount} kr from {fromAccountNumber} to {toAccountNumber}.");
 
             // Logga händelsen
-            Console.WriteLine($"{sender.Username} överförde {amount} kr från {fromAccountNumber} till {toAccountNumber}");
+            Console.WriteLine($"{sender.Username} transferred {amount} kr from {fromAccountNumber} to {toAccountNumber}");
             Console.ReadKey();       
         }
 
@@ -121,9 +121,14 @@ namespace BankApp2.Models
                     Console.WriteLine("----------------");
                     Console.WriteLine($"User: {user.Username}");
                     Console.WriteLine($"- Role: {user.Role}");
-                    Console.WriteLine($"- Accounts: {user.Accounts.Count}");
                     Console.WriteLine($"- Transactions: {user.transactions.Count}");
+                    Console.WriteLine($"- Accounts: {user.Accounts.Count}");
+                    foreach (var account in user.Accounts)
+                    {
+                        Console.WriteLine($" -{account.AccountNumber} ({account.Balance}kr)");
+                    }
                 }
+                Console.WriteLine("\nPress any key to continue...");
                 Console.ReadKey();
             }
         }
@@ -143,6 +148,7 @@ namespace BankApp2.Models
             {
                 Console.WriteLine("No users found.");
             }
+            Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
     }
