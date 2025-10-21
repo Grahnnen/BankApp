@@ -13,10 +13,10 @@ namespace BankApp2.Menu
             var loginManager = new LoginManager();
             Bank bank = new Bank();
             bank.Users.AddRange(loginManager.Users.Where(u => !bank.Users.Any(bu => bu.Username == u.Username)));
-            Console.WriteLine("=== Welcome to the Bank App Login Test ===");
 
             while (true)
             {
+                Console.WriteLine("=== Welcome to the UmeBank App ===");
 
                 // 2. Ask user for input (for testing purposes)
                 Console.Write("Enter username: ");
@@ -55,7 +55,7 @@ namespace BankApp2.Menu
 
                         Console.WriteLine($"You have {loginResult.LoggedInUser.Account.Count} accounts.");
 
-                        Console.WriteLine("0. Exit");
+                        Console.WriteLine("0. Sign out");
                         Console.WriteLine("1. Open new account");
                         Console.WriteLine("2. View accounts");
                         Console.WriteLine("3. View accounts with positive balance");
@@ -72,7 +72,8 @@ namespace BankApp2.Menu
                         string response = Console.ReadLine();
                         if (response == "0")
                         {
-                            Environment.Exit(0);
+                            Console.Clear();
+                            break;
                         }
                         else if (response == "1")
                         {
