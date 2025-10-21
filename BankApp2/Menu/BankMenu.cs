@@ -53,7 +53,7 @@ namespace BankApp2.Menu
                         Console.Clear();
                         Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Username}");
 
-                        Console.WriteLine($"You have {loginResult.LoggedInUser.Account.Count} accounts.");
+                        Console.WriteLine($"You have {loginResult.LoggedInUser.Accounts.Count} accounts.");
 
                         Console.WriteLine("0. Sign out");
                         Console.WriteLine("1. Open new account");

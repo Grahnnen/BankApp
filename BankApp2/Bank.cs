@@ -132,6 +132,55 @@ namespace BankApp2.Models
                 Console.ReadKey();
             }
         }
+        public void FindAccount(string accountNumber)
+        {
+            var foundAccounts = Accounts.Where(u => u.AccountNumber.Contains(accountNumber));
+            if (foundAccounts.Count() <= 0)
+            {
+                Console.WriteLine("No accounts found!");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.Clear();
+                foreach (var account in foundAccounts)
+                {
+                    Console.WriteLine("----------------");
+                    Console.WriteLine($"Account number: {account.AccountNumber}");
+                    Console.WriteLine($"- Owner: {account.Owner.Username}");
+                    Console.WriteLine($"- Balance: {account.Balance}");
+                }
+                Console.WriteLine("----------------");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+            }
+        }
+        public void ShowAllUsers()
+        {
+            if (Users.Count() <= 0)
+            {
+                Console.WriteLine("No users found!");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.Clear();
+                foreach (var user in Users)
+                {
+                    Console.WriteLine("----------------");
+                    Console.WriteLine($"User: {user.Username}");
+                    Console.WriteLine($"- Role: {user.Role}");
+                    Console.WriteLine($"- Transactions: {user.transactions.Count}");
+                    Console.WriteLine($"- Accounts: {user.Accounts.Count}");
+                    foreach (var account in user.Accounts)
+                    {
+                        Console.WriteLine($" -{account.AccountNumber} ({account.Balance}kr)");
+                    }
+                }
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+            }
+        }
         public void FindUserWithTopTransactions()
         {
             var foundUser = Users.OrderByDescending(u => u.transactions.Count).FirstOrDefault(); Console.Clear();
