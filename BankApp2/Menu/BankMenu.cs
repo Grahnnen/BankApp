@@ -67,6 +67,8 @@ namespace BankApp2.Menu
                             Console.WriteLine("7. Search account");
                             Console.WriteLine("8. Show all users");
                             Console.WriteLine("9. Show users with top transactions");
+                            Console.WriteLine("10. Add user");
+                            Console.WriteLine("11. Delete user");
                         }
 
                         string response = Console.ReadLine();
@@ -114,6 +116,15 @@ namespace BankApp2.Menu
                         else if (response == "9" && loginResult.LoggedInUser.Role == "Admin")
                         {
                             bank.FindUserWithTopTransactions();
+                        }
+                        else if (response == "10" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            bank.Users.Add(loginManager.AddUser());
+                        }
+                        else if (response == "11" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            
+                            bank.Users.Remove(loginManager.DeleteUser());
                         }
                         else
                         {
