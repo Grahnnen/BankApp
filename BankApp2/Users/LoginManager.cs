@@ -60,7 +60,7 @@ namespace BankApp2.Users
             string password = Console.ReadLine();
             Console.Write("Role(Admin/User): ");
             string newRole = Console.ReadLine();
-            if(string.IsNullOrEmpty(newRole) || string.IsNullOrEmpty(password))
+            if(string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
             {
                 Console.WriteLine("Name and password cannot be empty!");
                 Console.ReadKey();
@@ -73,12 +73,30 @@ namespace BankApp2.Users
         }
         public void DeleteUser()
         {
-            Console.Clear(); 
+            Console.Clear();
             Console.WriteLine("Deleting user");
             Console.Write("Name: ");
             string name = Console.ReadLine();
-            User userToDelete = Users.Where(u => u.Username == name);
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Name cannot be empty.");
+                Console.ReadKey();
+                return;
+            }
+
+            var userToDelete = users.FirstOrDefault(u => string.Equals(u.Username, name, StringComparison.OrdinalIgnoreCase));
+
+            if (userToDelete == null)
+            {
+                Console.WriteLine("User not found.");
+                Console.ReadKey();
+                return;
+            }
             users.Remove(userToDelete);
+            Console.WriteLine("User deleted.");
+
+            Console.ReadKey();
         }
     }
 }
