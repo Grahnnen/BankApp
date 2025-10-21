@@ -26,7 +26,7 @@ namespace BankApp2
             int random = rng.Next(999999, 9999999);
             Accounts.Add(new CheckingAccount(this, random.ToString(), 0));
             random = rng.Next(999999, 9999999);
-            Account.Add(new SavingsAccount(this, random.ToString(), 0, 0.03m));
+            Accounts.Add(new SavingsAccount(this, random.ToString(), 0, 0.03m));
         }
         public void PrintAccounts(Bank bank)
         {
