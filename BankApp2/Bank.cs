@@ -134,9 +134,8 @@ namespace BankApp2.Models
         }
         public void FindAccount(string accountNumber)
         {
-            var account = Users.SelectMany(u => u.Account)
-                                    .FirstOrDefault(a => string.Equals(a.AccountNumber, accountNumber));
-            if (account == null)
+            var foundAccounts = Accounts.Where(u => u.AccountNumber.Contains(accountNumber)).OrderByDescending(u => u.Balance);
+            if (foundAccounts == null)
             {
                 Console.WriteLine("Account not found!");
                 Console.ReadKey();
@@ -144,10 +143,14 @@ namespace BankApp2.Models
             else
             {
                 Console.Clear();
+                foreach(var account in foundAccounts)
+                {
+                    Console.WriteLine("----------------");
+                    Console.WriteLine($"Account number: {account.AccountNumber}");
+                    Console.WriteLine($"- Owner: {account.Owner.Username}");
+                    Console.WriteLine($"- Balance: {account.Balance}");
+                }
                 Console.WriteLine("----------------");
-                Console.WriteLine($"Account number: {account.AccountNumber}");
-                Console.WriteLine($"- Owner: {account.Owner}");
-                Console.WriteLine($"- Balance: {account.Balance}");
 
                 Console.WriteLine("\nPress any key to continue...");
                 Console.ReadKey();
@@ -172,27 +175,6 @@ namespace BankApp2.Models
                     Console.WriteLine($"- Transactions: {user.transactions.Count}");
                 }
                 Console.WriteLine("\nPress any key to continue...");
-                Console.ReadKey();
-            }
-        }
-        public void ShowAllUsers()
-        {
-            if (Users.Count() <= 0)
-            {
-                Console.WriteLine("No user found!");
-                Console.ReadKey();
-            }
-            else
-            {
-                Console.Clear();
-                foreach (var user in Users)
-                {
-                    Console.WriteLine("----------------");
-                    Console.WriteLine($"User: {user.Username}");
-                    Console.WriteLine($"- Role: {user.Role}");
-                    Console.WriteLine($"- Accounts: {user.Account.Count}");
-                    Console.WriteLine($"- Transactions: {user.transactions.Count}");
-                }
                 Console.ReadKey();
             }
         }
