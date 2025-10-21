@@ -105,7 +105,7 @@ namespace BankApp2.Models
 
             withdrawCount++;
             Balance -= totalAmount;
-            Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
+            Owner.transactions.Add(new Transaction(AccountNumber, amount, "Outgoing transfer"));
 
             if (withdrawCount > FreeWithdrawals)
             {

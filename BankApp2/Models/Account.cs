@@ -69,7 +69,7 @@ namespace BankApp2
     (
                     accountNumber: AccountNumber,
                     amount: amount,
-                    type: "Deposit"
+                    type: "Incoming transfer"
                 ));
                 Console.WriteLine($"Deposit successful: new balance is {Balance}.");
 
@@ -140,7 +140,7 @@ namespace BankApp2
                 }
 
                 Balance -= amount;
-                Owner.transactions.Add(new Transaction(AccountNumber, amount, "Withdraw"));
+                Owner.transactions.Add(new Transaction(AccountNumber, amount, "Outgoing transfer"));
             }
             catch (Exception ex)
             {
