@@ -35,7 +35,7 @@ namespace BankApp2.Models
                 }
                 else if (response == "2")
                 {
-                    var account = new SavingsAccount(user, accountNumber, 0, 3);
+                    var account = new SavingsAccount(user, accountNumber, 0, 0.03m);
                     user.Accounts.Add(account);
                     break;
                 }
