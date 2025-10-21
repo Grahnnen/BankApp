@@ -63,7 +63,10 @@ namespace BankApp2.Menu
                         Console.WriteLine("5. Show top 3 transactions");
                         if (loginResult.LoggedInUser.Role == "Admin")
                         {
-                            Console.WriteLine("6. Search Users");
+                            Console.WriteLine("6. Search users");
+                            Console.WriteLine("7. Search account");
+                            Console.WriteLine("8. Show all users");
+                            Console.WriteLine("9. Show users with top transactions");
                         }
 
                         string response = Console.ReadLine();
@@ -97,6 +100,19 @@ namespace BankApp2.Menu
                         {
                             Console.Write("Search for user:");
                             bank.FindUser(Console.ReadLine().ToLower());
+                        }
+                        else if (response == "7" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            Console.Write("Search for account:");
+                            bank.FindAccount(Console.ReadLine().ToLower());
+                        }
+                        else if (response == "8" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            bank.ShowAllUsers();
+                        }
+                        else if (response == "9" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            bank.FindUserWithTopTransactions();
                         }
                         else
                         {
