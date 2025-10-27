@@ -12,8 +12,12 @@ namespace BankApp2.Models
         public List<User> Users { get; set; } = new List<User>();
 
         public IEnumerable<Account> Accounts => Users.SelectMany(u => u.Accounts);
-
-        public void OpenAccount(User user, string accountNumber)
+        
+        public Bank()
+		{
+			Task.Run(ProcessPendingTransactions);
+		}
+		public void OpenAccount(User user, string accountNumber)
         {
             while (true)
             {
@@ -61,51 +65,98 @@ namespace BankApp2.Models
                 Console.WriteLine($"Name: {summary.UserName}");
                 Console.WriteLine($"Account: {summary.AccountCount}");
                 Console.WriteLine($"Balance: {summary.TotalBalance:C}");
-                Console.WriteLine("-----------------------------");
-                Console.WriteLine("Press any key to go back");
             }
 
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine("Press any key to go back");
             Console.ReadKey();
         }
         public void TransferMoney(User sender, string fromAccountNumber, string toAccountNumber, decimal amount)
-
         {
             var fromAccount = sender.Accounts.FirstOrDefault(a => a.AccountNumber == fromAccountNumber);
-
             if (fromAccount == null)
             {
                 Console.WriteLine("Account to transfer from not found.");
+                Console.ReadKey();
                 return;
             }
             var receiverAccount = Users
-             .SelectMany(u => u.Accounts)
-             .FirstOrDefault(a => a.AccountNumber == toAccountNumber);
+                .SelectMany(u => u.Accounts)
+                .FirstOrDefault(a => a.AccountNumber == toAccountNumber);
 
             if (receiverAccount == null)
             {
                 Console.WriteLine("Receiver account not found");
+                Console.ReadKey();
                 return;
             }
 
-            // Kontrollera saldo
             if (fromAccount.Balance < amount)
             {
                 Console.WriteLine("Insufficient balance.");
+                Console.ReadKey();
                 return;
             }
 
-            // Utför överföring
-            fromAccount.Withdraw(amount);
-            receiverAccount.Deposit(amount);
+            var transaction = new Transaction(fromAccountNumber, amount, "Outgoing Transfer", toAccountNumber)
+            {
+                Status = "Pending",
+                ScheduledCompletionTime = DateTime.Now.AddSeconds(20)
+            };
+
+            sender.PendingTransactions.Add(transaction);
+            sender.transactions.Add(transaction);
 
             Console.WriteLine($"Transferred {amount} kr from {fromAccountNumber} to {toAccountNumber}.");
-
-            // Logga händelsen
-            Console.WriteLine($"{sender.Username} transferred {amount} kr from {fromAccountNumber} to {toAccountNumber}");
-            Console.ReadKey();       
+            Console.ReadKey();
         }
+		private async Task ProcessPendingTransactions()
+		{
+			while (true)
+			{
+				var now = DateTime.Now;
+				foreach (var user in Users)
+				{
+					var toProcess = user.PendingTransactions
+						.Where(t => t.Status == "Pending" && t.ScheduledCompletionTime <= now)
+						.ToList();
 
-        public void FindUser(string username)
+					foreach (var transaction in toProcess)
+					{
+                        var fromAccount = user.Accounts.FirstOrDefault(a => a.AccountNumber == transaction.AccountNumber);
+                        var toAccount = Users.SelectMany(u => u.Accounts)
+                                     .FirstOrDefault(a => a.AccountNumber == transaction.TargetAccount);
+
+                        if (fromAccount != null && toAccount != null)
+                        {
+                            fromAccount.Withdraw(transaction.Amount);
+                            toAccount.Deposit(transaction.Amount);
+
+                            var receiverUser = toAccount.Owner;
+                            receiverUser.transactions.Add(new Transaction(
+                                toAccount.AccountNumber,
+                                transaction.Amount,
+                                "Incoming transfer",
+                                fromAccount.AccountNumber
+                            )
+                            { Status = "Completed" });
+
+                            receiverUser.PendingTransactions.RemoveAll(t =>
+                                t.AccountNumber == transaction.AccountNumber &&
+                                t.TargetAccount == transaction.TargetAccount &&
+                                t.Amount == transaction.Amount &&
+                                t.Status == "Pending"
+                            );
+                        }
+                        transaction.Status = "Completed";
+					}
+					user.PendingTransactions.RemoveAll(t => t.Status == "Completed");
+				}
+				await Task.Delay(TimeSpan.FromSeconds(1));
+			}
+		}
+
+		public void FindUser(string username)
         {
             var foundUser = Users.Where(u => u.Username.Contains(username));
             if (foundUser.Count() <= 0)

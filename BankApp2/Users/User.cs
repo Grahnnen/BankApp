@@ -14,9 +14,10 @@ namespace BankApp2
         public bool IsLocked { get; set; } = false;
         public List<Account> Accounts = new List<Account>();
         public List<Transaction> transactions = new List<Transaction>();
+		public List<Transaction> PendingTransactions { get; set; } = new List<Transaction>();
 
 
-        public User(string username, string password, decimal balance, string role)
+		public User(string username, string password, decimal balance, string role)
         {
             Username = username;
             Password = password;
@@ -166,6 +167,10 @@ namespace BankApp2
                         Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
                     }
                 }
+                else if (response == "2")
+                {
+                    account.Withdraw();
+                }
                 else if (response == "3")
                 {
                     Console.WriteLine("Enter Account number: ");
@@ -176,7 +181,6 @@ namespace BankApp2
                     if (decimal.TryParse(inputAmount, out decimal amount))
                     {
                         bank.TransferMoney(this, account.AccountNumber, accountNumber, amount);
-
                     }
 
                 }
