@@ -51,6 +51,16 @@ namespace BankApp2.Menu
                     while (true)
                     {
                         Console.Clear();
+                        // The @ in front of the string is to make the print easier, preserving line breaks, ignoring backslashes as escape characters etc.
+                        string title = @"
+ __    __  .___  ___.  _______ .______        ___      .__   __.  __  ___ 
+|  |  |  | |   \/   | |   ____||   _  \      /   \     |  \ |  | |  |/  / 
+|  |  |  | |  \  /  | |  |__   |  |_)  |    /  ^  \    |   \|  | |  '  /  
+|  |  |  | |  |\/|  | |   __|  |   _  <    /  /_\  \   |  . `  | |    <   
+|  `--'  | |  |  |  | |  |____ |  |_)  |  /  _____  \  |  |\   | |  .  \  
+ \______/  |__|  |__| |_______||______/  /__/     \__\ |__| \__| |__|\__\ 
+";
+                        Console.WriteLine(title);
                         Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Username}");
 
                         Console.WriteLine($"You have {loginResult.LoggedInUser.Accounts.Count} accounts.");
