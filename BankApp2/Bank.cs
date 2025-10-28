@@ -107,6 +107,13 @@ namespace BankApp2.Models
             sender.PendingTransactions.Add(transaction);
             sender.transactions.Add(transaction);
 
+            var incomingTransaction = new Transaction(fromAccountNumber, amount, "Incoming Transfer", toAccountNumber)
+            {
+                Status = "Pending",
+                ScheduledCompletionTime = DateTime.Now.AddSeconds(20)
+            };
+            receiverAccount.Owner.transactions.Add(incomingTransaction);
+
             Console.WriteLine($"Transferred {amount} kr from {fromAccountNumber} to {toAccountNumber}.");
             Console.ReadKey();
         }
@@ -141,6 +148,12 @@ namespace BankApp2.Models
                             )
                             { Status = "Completed" });
 
+                            receiverUser.transactions.RemoveAll(t =>
+                                t.AccountNumber == transaction.AccountNumber &&
+                                t.TargetAccount == transaction.TargetAccount &&
+                                t.Amount == transaction.Amount &&
+                                t.Status == "Pending"
+                            );
                             receiverUser.PendingTransactions.RemoveAll(t =>
                                 t.AccountNumber == transaction.AccountNumber &&
                                 t.TargetAccount == transaction.TargetAccount &&
