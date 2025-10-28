@@ -258,7 +258,7 @@ namespace BankApp2.Models
                 Console.Write($"- Transactions: ");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(foundUser.transactions.Count);
-                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.White;
             }
             else
             {
