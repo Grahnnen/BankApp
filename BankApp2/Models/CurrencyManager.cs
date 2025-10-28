@@ -3,15 +3,16 @@ namespace BankApp2.Models
     public class CurrencyManager
     {
         private Dictionary<string, CurrencyExchangeRate> exchangeRates;
-
+        // This assumes that the base currency is SEK, could be made more clear
+        // Uses the logic that 1 SEK = 0,1 USD for example
         public CurrencyManager()
         {
             exchangeRates = new Dictionary<string, CurrencyExchangeRate>
             {
-                { "USD", new CurrencyExchangeRate("USD", 1.0m) },
-                { "EUR", new CurrencyExchangeRate("EUR", 0.92m) },
-                { "GBP", new CurrencyExchangeRate("GBP", 0.79m) },
-                { "SEK", new CurrencyExchangeRate("SEK", 10.50m) }
+                { "SEK", new CurrencyExchangeRate("SEK", 1.0m) },
+                { "USD", new CurrencyExchangeRate("USD", 0.010m) },
+                { "EUR", new CurrencyExchangeRate("EUR", 0.091m) },
+                { "GBP", new CurrencyExchangeRate("GBP", 0.080m) }
             };
         }
 
