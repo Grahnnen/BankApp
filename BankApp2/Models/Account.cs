@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Linq;
 
 
+
 namespace BankApp2
 {
     public class Account 
@@ -12,7 +13,7 @@ namespace BankApp2
         public string AccountNumber { get; set; }
         public decimal Balance { get; set; }
         public User Owner { get; set; }
-
+        public string CurrencyCode { get; set; } = "SEK";
 
 
         public Account(User user, string accountNumber, decimal balance)
@@ -149,7 +150,18 @@ namespace BankApp2
                 Console.ReadKey();
             }
         }
-         
+        
+        public virtual decimal GetMaxLoanAmount()
+        {
+            return Balance * 5;
+        }
+
+        public decimal CalculateLoanInterest(decimal principal, decimal annualRate, int months)
+        {
+            decimal monthlyRate = annualRate / 12;
+            decimal futureValue = principal * (decimal)Math.Pow((double)(1 + monthlyRate), months);
+            return futureValue - principal;
+        }
 
     }
 }

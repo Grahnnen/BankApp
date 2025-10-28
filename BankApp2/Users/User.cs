@@ -1,5 +1,6 @@
 ﻿using BankApp2.Models;
 using System;
+using System.Globalization;
 
 namespace BankApp2
 {
@@ -137,11 +138,15 @@ namespace BankApp2
                 Console.WriteLine("1. Deposit money");
                 Console.WriteLine("2. Withdraw money");
                 Console.WriteLine("3. Transfer money");
+                Console.WriteLine("4. Check maximum loan amount");
+                Console.WriteLine("5. Take loan");
+                Console.WriteLine("6. Calculate loan interest");
                 if (account is SavingsAccount)
                 {
-                    Console.WriteLine("4. Calculate Interest");
+                    Console.WriteLine("7. Calculate Interest");
                 }
-                string response = Console.ReadLine();
+                
+                    string response = Console.ReadLine();
                 if (response == "0")
                 {
                     break;
@@ -152,6 +157,26 @@ namespace BankApp2
                     {
                         account.Deposit();
                         Console.WriteLine("Insättningen lyckades!");
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Fel format – skriv ett giltigt belopp.");
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine($"Fel: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
+                    }
+                }
+                else if (response == "2")
+                {
+                    try
+                    {
+                        account.Withdraw();
+                        Console.WriteLine("Uttag lyckades!");
                     }
                     catch (FormatException)
                     {
@@ -178,16 +203,76 @@ namespace BankApp2
                         bank.TransferMoney(this, account.AccountNumber, accountNumber, amount);
 
                     }
-
                 }
-                else if (response == "4" && account is SavingsAccount)
+                else if (response == "4")
+                {
+                    decimal maxLoan = account.GetMaxLoanAmount();
+                    Console.WriteLine($"Current amount available to take loan for: {maxLoan.ToString("C", new CultureInfo("sv-SE"))}");
+                    Console.ReadKey();
+                }
+                else if (response == "5")
+                {
+                    Console.WriteLine($"Enter loan amount up to limit (max {account.GetMaxLoanAmount():C}):");
+                    string input = Console.ReadLine();
+                    
+                    if (decimal.TryParse(input, out decimal loanAmount))
+                    {
+                        decimal maxLoan = account.GetMaxLoanAmount();
+
+                        if (loanAmount > 0 && loanAmount <= maxLoan)
+                        {
+                            account.Balance += loanAmount;
+
+                            account.Owner.transactions.Add(new Transaction(accountNumber: account.AccountNumber, amount: loanAmount, type: "Loan"));
+
+                            Console.WriteLine($"Loan successful! New balance is {account.Balance.ToString("C", new CultureInfo("sv-SE"))}");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Invalid loan amount. Please enter an amount up to {maxLoan:C}.");
+                            Console.ReadKey();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Invalid loan amount. Please enter a numeric value.");
+                        Console.ReadKey();
+                    }
+                }
+                else if (response == "6")
+                {
+                    Console.WriteLine("Calculate compound interest for a loan: ");
+
+                    Console.Write("Enter loan amount: ");
+                    if (!decimal.TryParse(Console.ReadLine(), out decimal loanAmount) || loanAmount <= 0)
+                    {
+                        Console.WriteLine("Invalid loan amount.");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    decimal annualRate = 0.12m;
+
+                    Console.Write("Enter loan term in months: ");
+                    if (!int.TryParse(Console.ReadLine(), out int months) || months <=0)
+                    {
+                        Console.WriteLine("Invalid number of months.");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    decimal interest = account.CalculateLoanInterest(loanAmount, annualRate, months);
+
+                    Console.WriteLine($"Interest to pay after {months} month(s): {interest.ToString("C", new CultureInfo("sv-SE"))}");
+                    Console.ReadKey();
+                }
+                else if (response == "7" && account is SavingsAccount)
                 {
                     var savingsAccount = account as SavingsAccount;
                     savingsAccount.ShowInterest();
                 }
-
             }
         }
-
     }
 }
