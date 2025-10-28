@@ -142,7 +142,7 @@ namespace BankApp2.Menu
                         }
                         else
                         {
-                            Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3, eller 4");
+                            Console.WriteLine("Ogiltig inmatning, Vänligen ange en giltig siffra");
                             Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
                             Console.ReadKey();
                         }
