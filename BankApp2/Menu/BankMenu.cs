@@ -14,6 +14,10 @@ namespace BankApp2.Menu
             Bank bank = new Bank();
             bank.Users.AddRange(loginManager.Users.Where(u => !bank.Users.Any(bu => bu.Username == u.Username)));
 
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Clear();
+
             while (true)
             {
                 Console.WriteLine("=== Welcome to the UmeBank App ===");
