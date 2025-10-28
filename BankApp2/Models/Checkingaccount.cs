@@ -53,6 +53,5 @@ namespace BankApp2.Models
                 Console.ReadKey();
             }
         }
-     
     }
 }
