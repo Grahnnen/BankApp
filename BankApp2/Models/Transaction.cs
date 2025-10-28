@@ -28,7 +28,7 @@ namespace BankApp2.Models
         public override string ToString()
         {
 			if (!string.IsNullOrEmpty(TargetAccount))
-				return $"{DateTime:G} | {Type} | {Amount:C} | To: {TargetAccount}";
+				return $"{DateTime:G} | {Type} | {Amount:C} | To: {TargetAccount} | ({Status})";
 			return $"{DateTime:G} | {Type} | {Amount:C}";
 		}
     }
