@@ -79,6 +79,7 @@ namespace BankApp2.Menu
                             Console.WriteLine("9. Show users with top transactions");
                             Console.WriteLine("10. Add user");
                             Console.WriteLine("11. Delete user");
+                            Console.WriteLine("12. Show overall top 3 transactions");
                         }
 
                         string response = Console.ReadLine();
@@ -139,6 +140,10 @@ namespace BankApp2.Menu
                             var newUser = loginManager.DeleteUser();
                             if (newUser != null)
                             bank.Users.Remove(newUser);
+                        }
+                        else if (response == "12" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            bank.ShowBanksBiggestTransactions();
                         }
                         else
                         {
