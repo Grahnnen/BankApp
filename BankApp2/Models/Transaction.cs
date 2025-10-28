@@ -22,7 +22,7 @@ namespace BankApp2.Models
             Type = type;
             TargetAccount = targetAccount;
 			Status = "Pending";
-			ScheduledCompletionTime = DateTime.Now.AddSeconds(30);
+			ScheduledCompletionTime = DateTime.Now.AddSeconds(20);
 		}
 
         public override string ToString()
