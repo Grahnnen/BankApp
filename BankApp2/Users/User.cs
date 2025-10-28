@@ -92,7 +92,12 @@ namespace BankApp2
             Console.WriteLine($"Top {count} transactions:");
             foreach (var t in topTransactions)
             {
+                if (t.Status == "Pending")
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                else if(t.Status == "Completed")
+                    Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(t.ToString());
+                Console.ResetColor();
             }
             Console.ReadKey();
         }

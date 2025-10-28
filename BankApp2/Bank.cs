@@ -242,7 +242,10 @@ namespace BankApp2.Models
                 Console.WriteLine($"User: {foundUser.Username}");
                 Console.WriteLine($"- Role: {foundUser.Role}");
                 Console.WriteLine($"- Accounts: {foundUser.Accounts.Count}");
-                Console.WriteLine($"- Transactions: {foundUser.transactions.Count}");
+                Console.Write($"- Transactions: ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(foundUser.transactions.Count);
+                Console.ResetColor();
             }
             else
             {
