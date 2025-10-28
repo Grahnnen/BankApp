@@ -69,10 +69,10 @@ namespace BankApp2.Menu
                         Console.WriteLine("1. Open new account");
                         Console.WriteLine("2. View accounts");
                         Console.WriteLine("3. View accounts with positive balance");
-                        Console.WriteLine("4. Show account summary");
-                        Console.WriteLine("5. Show top 3 transactions");
+                        Console.WriteLine("4. Show top 3 transactions");
                         if (loginResult.LoggedInUser.Role == "Admin")
                         {
+                            Console.WriteLine("5. Show accounts summary");
                             Console.WriteLine("6. Search users");
                             Console.WriteLine("7. Search account");
                             Console.WriteLine("8. Show all users");
@@ -103,11 +103,11 @@ namespace BankApp2.Menu
                         }
                         else if (response == "4")
                         {
-                            bank.PrintUserAccountSummaries();
-                        }
-                        else if (response == "5")
-                        {
                             loginResult.LoggedInUser.PrintTopTransactions();
+                        }
+                        else if (response == "5" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            bank.PrintUserAccountSummaries();
                         }
                         else if (response == "6" && loginResult.LoggedInUser.Role == "Admin")
                         {
@@ -142,7 +142,7 @@ namespace BankApp2.Menu
                         }
                         else
                         {
-                            Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3, 4 eller 5");
+                            Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3, eller 4");
                             Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
                             Console.ReadKey();
                         }
