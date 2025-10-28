@@ -45,7 +45,7 @@ namespace BankApp2.Users
                 return new LoginResult
                 {
                     Success = false,
-                    Message = user.IsLocked ? "\n Account locked! (Wrong password 3 times)" : "\nWrong password"
+                    Message = user.IsLocked ? "\nAccount locked! (Wrong password 3 times)" : "\nWrong password"
                 };
             }
         }
