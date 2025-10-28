@@ -39,13 +39,13 @@ namespace BankApp2.Users
             else
             {
                 user.FailedAttempts++;
-                if (user.Role == "Admin" && user.FailedAttempts >= 3)
+                if (user.FailedAttempts >= 3)
                     user.IsLocked = true;
 
                 return new LoginResult
                 {
                     Success = false,
-                    Message = user.Role == "Admin" && user.IsLocked ? "\nAdmin account locked!" : "\nWrong password"
+                    Message = user.IsLocked ? "\n Account locked! (Wrong password 3 times)" : "\nWrong password"
                 };
             }
         }
