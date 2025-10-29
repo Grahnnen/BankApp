@@ -118,7 +118,40 @@ namespace BankApp2.Models
             Console.WriteLine($"Transferred {amount} kr from {fromAccountNumber} to {toAccountNumber}.");
             Console.ReadKey();
         }
-		private async Task ProcessPendingTransactions()
+
+
+        public Dictionary<string, string> FavoriteRecipients { get; } = new Dictionary<string, string>();
+
+        public void AddFavorite(string alias, string accountNumber)
+        {
+            if (string.IsNullOrWhiteSpace(alias) || string.IsNullOrWhiteSpace(accountNumber))
+            {
+                Console.WriteLine("Type name and account number to add favorite.");
+                return;
+            }
+
+            if (!FavoriteRecipients.ContainsKey(alias))
+            {
+                FavoriteRecipients[alias] = accountNumber;
+                Console.WriteLine($"Favorite '{alias}' saved for account {accountNumber}.");
+            }
+            else
+            {
+                Console.WriteLine("Favorite already exist");
+            }
+        }
+
+        public void ShowFavorites()
+        {
+            Console.WriteLine("Saved favorites:");
+            foreach (var fav in FavoriteRecipients)
+            {
+                Console.WriteLine($"{fav.Key}, {fav.Value}");
+            }
+        }
+
+
+        private async Task ProcessPendingTransactions()
 		{
 			while (true)
 			{
