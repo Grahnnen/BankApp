@@ -259,12 +259,52 @@ namespace BankApp2.Models
                 Console.Write($"- Transactions: ");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(foundUser.transactions.Count);
-                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.White;
             }
             else
             {
                 Console.WriteLine("No users found.");
             }
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        public void ShowBanksBiggestTransactions()
+        {
+            Console.Clear();
+
+            var allTransactions = Users
+                .SelectMany(u => u.transactions)
+                .OrderByDescending(t => t.Amount)
+                .Take(3)
+                .ToList();
+
+            if (allTransactions.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("Top 3 transactions across the bank:");
+            int rank = 1;
+            foreach (var transactions in allTransactions)
+            {
+                var ownerName = Accounts.FirstOrDefault(a => a.AccountNumber == transactions.AccountNumber).Owner.Username;
+
+                Console.WriteLine("----------------");
+                Console.WriteLine($"#{rank} Amount: {transactions.Amount:C}");
+                Console.WriteLine($"Owner: {ownerName}");
+                Console.WriteLine($"Type: {transactions.Type}");
+                Console.WriteLine($"From: {transactions.AccountNumber}");
+                Console.WriteLine($"To: {transactions.TargetAccount}");
+                Console.WriteLine($"Status: {transactions.Status}");
+                Console.WriteLine($"Date: {transactions.DateTime}");
+                rank++;
+            }
+            Console.WriteLine("----------------");
+
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }

@@ -13,6 +13,10 @@ namespace BankApp2.Menu
             var loginManager = new LoginManager();
             Bank bank = new Bank();
             bank.Users.AddRange(loginManager.Users.Where(u => !bank.Users.Any(bu => bu.Username == u.Username)));
+             
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Clear();
 
             while (true)
             {
@@ -69,10 +73,10 @@ namespace BankApp2.Menu
                         Console.WriteLine("1. Open new account");
                         Console.WriteLine("2. View accounts");
                         Console.WriteLine("3. View accounts with positive balance");
-                        Console.WriteLine("4. Show account summary");
-                        Console.WriteLine("5. Show top 3 transactions");
+                        Console.WriteLine("4. Show top 3 transactions");
                         if (loginResult.LoggedInUser.Role == "Admin")
                         {
+                            Console.WriteLine("5. Show accounts summary");
                             Console.WriteLine("6. Search users");
                             Console.WriteLine("7. Search account");
                             Console.WriteLine("8. Show all users");
@@ -81,6 +85,7 @@ namespace BankApp2.Menu
                             Console.WriteLine("11. Delete user");
                             Console.WriteLine("12. Set exchange rate");
                             Console.WriteLine("13. View all exchange rates");
+                            Console.WriteLine("14. Show overall top 3 transactions");
                         }
 
                         string response = Console.ReadLine();
@@ -105,11 +110,11 @@ namespace BankApp2.Menu
                         }
                         else if (response == "4")
                         {
-                            bank.PrintUserAccountSummaries();
-                        }
-                        else if (response == "5")
-                        {
                             loginResult.LoggedInUser.PrintTopTransactions();
+                        }
+                        else if (response == "5" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            bank.PrintUserAccountSummaries();
                         }
                         else if (response == "6" && loginResult.LoggedInUser.Role == "Admin")
                         {
@@ -150,9 +155,13 @@ namespace BankApp2.Menu
                         {
                             bank.CurrencyManager.ViewAllExchangeRates();
                         }
+                        else if (response == "14" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            bank.ShowBanksBiggestTransactions();
+                        }
                         else
                         {
-                            Console.WriteLine("Ogiltig inmatning, Vänligen välj 1, 2, 3, 4 eller 5");
+                            Console.WriteLine("Ogiltig inmatning, Vänligen ange en giltig siffra");
                             Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
                             Console.ReadKey();
                         }

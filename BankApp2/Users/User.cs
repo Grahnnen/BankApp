@@ -97,7 +97,7 @@ namespace BankApp2
                 else if(t.Status == "Completed")
                     Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(t.ToString());
-                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.White;
             }
             Console.ReadKey();
         }
