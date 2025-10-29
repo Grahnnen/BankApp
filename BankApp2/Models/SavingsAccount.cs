@@ -29,56 +29,80 @@ namespace BankApp2.Models
 
         public override void Withdraw()
         {
+
+
             Console.Clear();
             Console.Write("Enter the amount to withdraw: ");
-            try
+
+
+            while (true)
             {
-                if (int.TryParse(Console.ReadLine(), out int amounts))
 
+
+                try
                 {
-                    if (amounts <= 0 || amounts > Balance)
-                        return;
+                    if (int.TryParse(Console.ReadLine(), out int amounts))
 
-                    withdrawCount++;
-
-                    int remainingFree = FreeWithdrawals - withdrawCount;
-
-                    if (remainingFree > 0)
                     {
-                        Console.WriteLine($"You have {remainingFree} free withdrawal(s) left.");
+                        if (amounts <= 0 || amounts > Balance)
+                        {
 
-                    }
-                    else if (remainingFree == 0)
-                    {
-                        Console.WriteLine(" That was your last free withdrawal. Future withdrawals will incur a 10 kr fee.");
-                    }
+                            Console.WriteLine($"Withdrawal failed: ({Balance}) sek on your account");
+                            Console.ReadKey();
+                            return;
+                        }
 
 
-                    if (withdrawCount > FreeWithdrawals)
-                    {
+                        withdrawCount++;
 
-                        Balance -= (amounts + WithdrawalFee);
+                        int remainingFree = FreeWithdrawals - withdrawCount;
+
+                        if (remainingFree > 0)
+                        {
+                            Console.WriteLine($"You have {remainingFree} free withdrawal(s) left.");
+
+                        }
+                        else if (remainingFree == 0)
+                        {
+                            Console.WriteLine(" That was your last free withdrawal. Future withdrawals will incur a 10 kr fee.");
+                        }
+
+
+                        if (withdrawCount > FreeWithdrawals)
+                        {
+
+                            Balance -= (amounts + WithdrawalFee);
+
+                        }
+                        else
+                        {
+                            Balance -= amounts;
+                        }
+
+                        Console.WriteLine($"Withdrawal successful. New balance: {Balance} kr");
+                        Owner.transactions.Add(new Transaction(AccountNumber, amounts, "Withdraw"));
 
                     }
                     else
                     {
-                        Balance -= amounts;
+                        Console.WriteLine("\ninvalid input, enter a interger value!");
+                        Console.Write("Try again: ");
+                        Console.ReadKey();
                     }
 
-                    Console.WriteLine($"Withdrawal successful. New balance: {Balance} kr");
-                    Owner.transactions.Add(new Transaction(AccountNumber, amounts, "Withdraw"));
 
                 }
-                Console.WriteLine("\nPress any key to continue...");
-                Console.ReadKey();
+
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine($"Ett oväntat fel uppstod");
+                    Console.ReadKey();
+                }
+
 
             }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine($"Ett oväntat fel uppstod");
-                Console.ReadKey();
-            }
+          
         }
 
         public override void Withdraw(decimal amount)
@@ -102,6 +126,7 @@ namespace BankApp2.Models
                 Console.WriteLine("Withdrawal failed: insufficient funds (including fee).");
                 return;
             }
+
 
             withdrawCount++;
             Balance -= totalAmount;

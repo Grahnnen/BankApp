@@ -79,8 +79,7 @@ namespace BankApp2
 			}
 		}
 
-
-		// 1️⃣ Version där användaren skriver in summan i konsolen
+        // Version where user writes sum in the console.
 		public virtual void Withdraw()
         {
             try
@@ -99,6 +98,7 @@ namespace BankApp2
                         Console.WriteLine("Withdrawal failed: insufficient funds.");
                         return;
                     }
+                   
 
                     Balance -= amount;
 					Owner.transactions.Add(new Transaction(
@@ -123,8 +123,7 @@ namespace BankApp2
                 Console.ReadKey();
             }
         }
-
-		// 2️⃣ Version som tar emot belopp direkt (för överföring)
+        // version that takes amount directly from transfer.
 		public virtual void Withdraw(decimal amount)
 		{
 			try
