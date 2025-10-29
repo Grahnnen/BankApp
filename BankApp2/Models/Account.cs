@@ -163,35 +163,6 @@ namespace BankApp2
             decimal futureValue = principal * (decimal)Math.Pow((double)(1 + monthlyRate), months);
             return futureValue - principal;
         }
-
-    }
-        // version that takes amount directly from transfer.
-		public virtual void Withdraw(decimal amount)
-		{
-			try
-			{
-				if (amount <= 0)
-				{
-					Console.WriteLine("Withdrawal failed: amount must be greater than 0.");
-					return;
-				}
-				if (amount > Balance)
-				{
-					Console.WriteLine("Withdrawal failed: insufficient funds.");
-					return;
-				}
-				Balance -= amount;
-				//Owner.transactions.Add(new Transaction(
-				//	AccountNumber, amount, "Outgoing transfer"
-				//)
-				//{ Status = "Pending" });
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
-				Console.ReadKey();
-			}
-		}
 	}
 }
 
