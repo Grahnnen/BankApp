@@ -10,10 +10,15 @@ namespace BankApp2.Models
     public class Bank
     {
         public List<User> Users { get; set; } = new List<User>();
+        public CurrencyManager CurrencyManager { get; set; } = new CurrencyManager();
 
         public IEnumerable<Account> Accounts => Users.SelectMany(u => u.Accounts);
-
-        public void OpenAccount(User user, string accountNumber)
+        
+        public Bank()
+		{
+			Task.Run(ProcessPendingTransactions);
+		}
+		public void OpenAccount(User user, string accountNumber)
         {
             while (true)
             {
@@ -61,51 +66,111 @@ namespace BankApp2.Models
                 Console.WriteLine($"Name: {summary.UserName}");
                 Console.WriteLine($"Account: {summary.AccountCount}");
                 Console.WriteLine($"Balance: {summary.TotalBalance:C}");
-                Console.WriteLine("-----------------------------");
-                Console.WriteLine("Press any key to go back");
             }
 
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine("Press any key to go back");
             Console.ReadKey();
         }
         public void TransferMoney(User sender, string fromAccountNumber, string toAccountNumber, decimal amount)
-
         {
             var fromAccount = sender.Accounts.FirstOrDefault(a => a.AccountNumber == fromAccountNumber);
-
             if (fromAccount == null)
             {
                 Console.WriteLine("Account to transfer from not found.");
+                Console.ReadKey();
                 return;
             }
             var receiverAccount = Users
-             .SelectMany(u => u.Accounts)
-             .FirstOrDefault(a => a.AccountNumber == toAccountNumber);
+                .SelectMany(u => u.Accounts)
+                .FirstOrDefault(a => a.AccountNumber == toAccountNumber);
 
             if (receiverAccount == null)
             {
                 Console.WriteLine("Receiver account not found");
+                Console.ReadKey();
                 return;
             }
 
-            // Kontrollera saldo
             if (fromAccount.Balance < amount)
             {
                 Console.WriteLine("Insufficient balance.");
+                Console.ReadKey();
                 return;
             }
 
-            // Utför överföring
-            fromAccount.Withdraw(amount);
-            receiverAccount.Deposit(amount);
+            var transaction = new Transaction(fromAccountNumber, amount, "Outgoing Transfer", toAccountNumber)
+            {
+                Status = "Pending",
+                ScheduledCompletionTime = DateTime.Now.AddSeconds(20)
+            };
+
+            sender.PendingTransactions.Add(transaction);
+            sender.transactions.Add(transaction);
+
+            var incomingTransaction = new Transaction(fromAccountNumber, amount, "Incoming Transfer", toAccountNumber)
+            {
+                Status = "Pending",
+                ScheduledCompletionTime = DateTime.Now.AddSeconds(20)
+            };
+            receiverAccount.Owner.transactions.Add(incomingTransaction);
 
             Console.WriteLine($"Transferred {amount} kr from {fromAccountNumber} to {toAccountNumber}.");
-
-            // Logga händelsen
-            Console.WriteLine($"{sender.Username} transferred {amount} kr from {fromAccountNumber} to {toAccountNumber}");
-            Console.ReadKey();       
+            Console.ReadKey();
         }
+		private async Task ProcessPendingTransactions()
+		{
+			while (true)
+			{
+				var now = DateTime.Now;
+				foreach (var user in Users)
+				{
+					var toProcess = user.PendingTransactions
+						.Where(t => t.Status == "Pending" && t.ScheduledCompletionTime <= now)
+						.ToList();
 
-        public void FindUser(string username)
+					foreach (var transaction in toProcess)
+					{
+                        var fromAccount = user.Accounts.FirstOrDefault(a => a.AccountNumber == transaction.AccountNumber);
+                        var toAccount = Users.SelectMany(u => u.Accounts)
+                                     .FirstOrDefault(a => a.AccountNumber == transaction.TargetAccount);
+
+                        if (fromAccount != null && toAccount != null)
+                        {
+                            fromAccount.Withdraw(transaction.Amount);
+                            toAccount.Deposit(transaction.Amount);
+
+                            var receiverUser = toAccount.Owner;
+                            receiverUser.transactions.Add(new Transaction(
+                                toAccount.AccountNumber,
+                                transaction.Amount,
+                                "Incoming transfer",
+                                fromAccount.AccountNumber
+                            )
+                            { Status = "Completed" });
+
+                            receiverUser.transactions.RemoveAll(t =>
+                                t.AccountNumber == transaction.AccountNumber &&
+                                t.TargetAccount == transaction.TargetAccount &&
+                                t.Amount == transaction.Amount &&
+                                t.Status == "Pending"
+                            );
+                            receiverUser.PendingTransactions.RemoveAll(t =>
+                                t.AccountNumber == transaction.AccountNumber &&
+                                t.TargetAccount == transaction.TargetAccount &&
+                                t.Amount == transaction.Amount &&
+                                t.Status == "Pending"
+                            );
+                        }
+                        transaction.Status = "Completed";
+					}
+					user.PendingTransactions.RemoveAll(t => t.Status == "Completed");
+				}
+				await Task.Delay(TimeSpan.FromSeconds(1));
+			}
+		}
+
+		public void FindUser(string username)
         {
             var foundUser = Users.Where(u => u.Username.Contains(username));
             if (foundUser.Count() <= 0)
@@ -191,12 +256,55 @@ namespace BankApp2.Models
                 Console.WriteLine($"User: {foundUser.Username}");
                 Console.WriteLine($"- Role: {foundUser.Role}");
                 Console.WriteLine($"- Accounts: {foundUser.Accounts.Count}");
-                Console.WriteLine($"- Transactions: {foundUser.transactions.Count}");
+                Console.Write($"- Transactions: ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(foundUser.transactions.Count);
+                Console.ForegroundColor = ConsoleColor.White;
             }
             else
             {
                 Console.WriteLine("No users found.");
             }
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        public void ShowBanksBiggestTransactions()
+        {
+            Console.Clear();
+
+            var allTransactions = Users
+                .SelectMany(u => u.transactions)
+                .OrderByDescending(t => t.Amount)
+                .Take(3)
+                .ToList();
+
+            if (allTransactions.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("Top 3 transactions across the bank:");
+            int rank = 1;
+            foreach (var transactions in allTransactions)
+            {
+                var ownerName = Accounts.FirstOrDefault(a => a.AccountNumber == transactions.AccountNumber).Owner.Username;
+
+                Console.WriteLine("----------------");
+                Console.WriteLine($"#{rank} Amount: {transactions.Amount:C}");
+                Console.WriteLine($"Owner: {ownerName}");
+                Console.WriteLine($"Type: {transactions.Type}");
+                Console.WriteLine($"From: {transactions.AccountNumber}");
+                Console.WriteLine($"To: {transactions.TargetAccount}");
+                Console.WriteLine($"Status: {transactions.Status}");
+                Console.WriteLine($"Date: {transactions.DateTime}");
+                rank++;
+            }
+            Console.WriteLine("----------------");
+
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
