@@ -83,7 +83,9 @@ namespace BankApp2.Menu
                             Console.WriteLine("9. Show users with top transactions");
                             Console.WriteLine("10. Add user");
                             Console.WriteLine("11. Delete user");
-                            Console.WriteLine("12. Show overall top 3 transactions");
+                            Console.WriteLine("12. Set exchange rate");
+                            Console.WriteLine("13. View all exchange rates");
+                            Console.WriteLine("14. Show overall top 3 transactions");
                         }
 
                         string response = Console.ReadLine();
@@ -146,6 +148,14 @@ namespace BankApp2.Menu
                             bank.Users.Remove(newUser);
                         }
                         else if (response == "12" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            bank.CurrencyManager.SetExchangeRateInteractive();
+                        }
+                        else if (response == "13" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            bank.CurrencyManager.ViewAllExchangeRates();
+                        }
+                        else if (response == "14" && loginResult.LoggedInUser.Role == "Admin")
                         {
                             bank.ShowBanksBiggestTransactions();
                         }

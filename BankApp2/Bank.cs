@@ -10,6 +10,7 @@ namespace BankApp2.Models
     public class Bank
     {
         public List<User> Users { get; set; } = new List<User>();
+        public CurrencyManager CurrencyManager { get; set; } = new CurrencyManager();
 
         public IEnumerable<Account> Accounts => Users.SelectMany(u => u.Accounts);
         
