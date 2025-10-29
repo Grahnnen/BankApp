@@ -147,6 +147,8 @@ namespace BankApp2
                 {
                     Console.WriteLine("4. Calculate Interest");
                 }
+                Console.WriteLine("5. Add favorite");
+                Console.WriteLine("6. Show favorites and transfer");
                 string response = Console.ReadLine();
                 if (response == "0")
                 {
@@ -193,6 +195,42 @@ namespace BankApp2
                 {
                     var savingsAccount = account as SavingsAccount;
                     savingsAccount.ShowInterest();
+                }
+                else if (response == "5")
+                {
+                    Console.WriteLine("Enter name for favorite: ");
+                    var alias = Console.ReadLine();
+                    Console.WriteLine("Enter account number to save: ");
+                    var favAccount = Console.ReadLine();
+                    bank.AddFavorite(alias, favAccount);
+                    Console.ReadKey();
+                }
+                else if (response == "6")
+                {
+                    if (bank.FavoriteRecipients.Count == 0)
+                    {
+                        Console.WriteLine("No saved favorites.");
+                        Console.ReadKey();
+                        continue;
+                    }
+                    bank.ShowFavorites();
+                    Console.WriteLine("Enter favorite to transfer to: ");
+                    var alias = Console.ReadLine();
+
+                    if (bank.FavoriteRecipients.TryGetValue(alias, out string favAccount))
+                    {
+                        Console.WriteLine("Enter amount for transfer: ");
+                        var inputAmount = Console.ReadLine();
+                        if (decimal.TryParse(inputAmount, out decimal amount))
+                        {
+                            bank.TransferMoney(this, account.AccountNumber, favAccount, amount);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Favorite not found.");
+                    }
+                    Console.ReadKey();
                 }
 
             }
