@@ -8,6 +8,8 @@ namespace BankApp2.Models
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8; // emoji support
+
             BankMenu bank = new BankMenu();
             bank.ShowMenu();
 

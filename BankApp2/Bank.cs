@@ -341,5 +341,51 @@ namespace BankApp2.Models
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
+        public void ConvertCurrency(Account account)
+        {
+
+
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            while (true)
+            {
+
+                Console.Clear();
+                Console.WriteLine("=== Convert Currency 🌍 ===");
+                Console.WriteLine($"Current balance: {account.Balance:F2} {account.CurrencyCode}");
+                Console.WriteLine();
+                Console.WriteLine("\n[Press enter to Exit]");
+                Console.Write("Enter target currency (SEK| USD| EUR| GBP): ");
+                string? newCurrency = Console.ReadLine()?.ToUpper();
+                if (string.IsNullOrWhiteSpace(newCurrency))
+                {
+                    break;
+                }
+                var currencyManager = CurrencyManager;
+                var currentRate = currencyManager.GetExchangeRate(account.CurrencyCode);
+                var targetRate = currencyManager.GetExchangeRate(newCurrency);
+
+                if (!currentRate.HasValue || !targetRate.HasValue)
+                {
+                    Console.WriteLine("Currency not found, press enter to try again!");
+                    Console.ReadKey();
+                    continue;
+                }
+
+                decimal newBalance = currencyManager.ConvertCurrency(account.Balance, account.CurrencyCode, newCurrency);
+
+                account.Balance = newBalance;
+                account.CurrencyCode = newCurrency;
+
+                Console.WriteLine();
+                Console.WriteLine($"✅ Your balance is now {newBalance:F2} {newCurrency}");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+
+            }
+
+
+
+        }
     }
 }
