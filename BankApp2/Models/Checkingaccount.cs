@@ -53,6 +53,7 @@ namespace BankApp2.Models
                     Owner.transactions.Add(new Transaction(accountNumber: AccountNumber, amount: amount, type: "withdrawal"));
                     Console.WriteLine($"Withdrawal successful: new balance is {Balance:C}.");
                     Console.ReadKey();
+                    break;
                 }
                 catch (Exception ex)
                 {

@@ -29,16 +29,10 @@ namespace BankApp2.Models
 
         public override void Withdraw()
         {
-
-
             Console.Clear();
             Console.Write("Enter the amount to withdraw: ");
-
-
             while (true)
             {
-
-
                 try
                 {
                     if (int.TryParse(Console.ReadLine(), out int amounts))
@@ -67,12 +61,9 @@ namespace BankApp2.Models
                             Console.WriteLine(" That was your last free withdrawal. Future withdrawals will incur a 10 kr fee.");
                         }
 
-
                         if (withdrawCount > FreeWithdrawals)
                         {
-
                             Balance -= (amounts + WithdrawalFee);
-
                         }
                         else
                         {
@@ -81,28 +72,22 @@ namespace BankApp2.Models
 
                         Console.WriteLine($"Withdrawal successful. New balance: {Balance} kr");
                         Owner.transactions.Add(new Transaction(AccountNumber, amounts, "Withdraw"));
-
+						Console.ReadKey();
+						break;
                     }
                     else
                     {
                         Console.WriteLine("\ninvalid input, enter a interger value!");
-                        Console.Write("Try again: ");
                         Console.ReadKey();
                     }
-
-
                 }
 
                 catch (Exception ex)
                 {
-
                     Console.WriteLine($"Ett oväntat fel uppstod");
                     Console.ReadKey();
                 }
-
-
             }
-          
         }
 
         public override void Withdraw(decimal amount)
