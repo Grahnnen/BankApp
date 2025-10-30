@@ -14,10 +14,10 @@ namespace BankApp2
         public bool IsLocked { get; set; } = false;
         public List<Account> Accounts = new List<Account>();
         public List<Transaction> transactions = new List<Transaction>();
-		public List<Transaction> PendingTransactions { get; set; } = new List<Transaction>();
+        public List<Transaction> PendingTransactions { get; set; } = new List<Transaction>();
 
 
-		public User(string username, string password, decimal balance, string role)
+        public User(string username, string password, decimal balance, string role)
         {
             Username = username;
             Password = password;
@@ -94,7 +94,7 @@ namespace BankApp2
             {
                 if (t.Status == "Pending")
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                else if(t.Status == "Completed")
+                else if (t.Status == "Completed")
                     Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(t.ToString());
                 Console.ForegroundColor = ConsoleColor.White;
@@ -137,16 +137,28 @@ namespace BankApp2
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine($"Account number: {account.AccountNumber}");
-                Console.WriteLine($"Account balance: {account.Balance}");
-                Console.WriteLine("0. Exit");
-                Console.WriteLine("1. Deposit money");
-                Console.WriteLine("2. Withdraw money");
-                Console.WriteLine("3. Transfer money");
+                Console.WriteLine($"🏦 Account number: {account.AccountNumber}");
+                string currencySymbol = account.CurrencyCode switch
+                {
+                    "USD" => "$",
+                    "EUR" => "€",
+                    "GBP" => "£",
+                    "SEK" => "kr",
+                    _ => account.CurrencyCode 
+                };
+                Console.WriteLine($"💰 Account balance: {currencySymbol} {account.Balance:N2}");
+                Console.WriteLine("");
+                Console.WriteLine("0.🚪 Exit");
+                Console.WriteLine("1.💵 Deposit money  ");
+                Console.WriteLine("2.🏧 Withdraw money  ");
+                Console.WriteLine("3.🔄 Transfer money  ");
                 if (account is SavingsAccount)
                 {
-                    Console.WriteLine("4. Calculate Interest");
+                    Console.WriteLine("4.📈 Calculate Interest");
                 }
+
+                Console.WriteLine("5.🌍 Convert currency"); 
+
                 string response = Console.ReadLine();
                 if (response == "0")
                 {
@@ -193,6 +205,11 @@ namespace BankApp2
                 {
                     var savingsAccount = account as SavingsAccount;
                     savingsAccount.ShowInterest();
+                }
+                else if (response == "5")
+                {
+
+                    bank.ConvertCurrency(account);
                 }
 
             }

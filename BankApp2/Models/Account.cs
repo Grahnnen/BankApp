@@ -12,14 +12,16 @@ namespace BankApp2
         public string AccountNumber { get; set; }
         public decimal Balance { get; set; }
         public User Owner { get; set; }
+        public string CurrencyCode { get; set; } = "SEK";
 
 
 
-        public Account(User user, string accountNumber, decimal balance)
+        public Account(User user, string accountNumber, decimal balance, string currency = "SEK")
         {
             AccountNumber = accountNumber;
             Balance = balance;
             Owner = user;
+            CurrencyCode = currency; 
         }
 
         public void Deposit()

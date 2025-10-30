@@ -10,7 +10,7 @@ namespace BankApp2.Models
             exchangeRates = new Dictionary<string, CurrencyExchangeRate>
             {
                 { "SEK", new CurrencyExchangeRate("SEK", 1.0m) },
-                { "USD", new CurrencyExchangeRate("USD", 0.010m) },
+                { "USD", new CurrencyExchangeRate("USD", 0.106m) },
                 { "EUR", new CurrencyExchangeRate("EUR", 0.091m) },
                 { "GBP", new CurrencyExchangeRate("GBP", 0.080m) }
             };
