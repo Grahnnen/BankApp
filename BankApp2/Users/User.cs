@@ -1,5 +1,6 @@
 ﻿using BankApp2.Models;
 using System;
+using System.Globalization;
 
 namespace BankApp2
 {
@@ -132,6 +133,16 @@ namespace BankApp2
             Console.ReadKey();
         }
 
+        public void ShowPendingRecurringPayments()
+        {
+            Console.WriteLine("Pending recurring payments:");
+            foreach (var t in PendingTransactions.Where(t => t.IsRecurring))
+            {
+                Console.WriteLine($"To: {t.TargetAccount}, Amount: {t.Amount:C}, Next Execution: {t.NextExecutionDate}");
+            }
+            Console.ReadKey();
+        }
+
         void AccountMenu(Account account, Bank bank)
         {
             while (true)
@@ -152,12 +163,18 @@ namespace BankApp2
                 Console.WriteLine("1.💵 Deposit money  ");
                 Console.WriteLine("2.🏧 Withdraw money  ");
                 Console.WriteLine("3.🔄 Transfer money  ");
+                Console.WriteLine("4. Check maximum loan amount");
+                Console.WriteLine("5. Take loan");
+                Console.WriteLine("6. Calculate loan interest");
+                Console.WriteLine("7. Add favorite");
+                Console.WriteLine("8. Show favorites and transfer");
+                Console.WriteLine("9. Enable Autopay for bills");
+                Console.WriteLine("10. View Pending Recurring Payments");
+                Console.WriteLine("11. Convert Currency");
                 if (account is SavingsAccount)
                 {
-                    Console.WriteLine("4.📈 Calculate Interest");
+                    Console.WriteLine("12. Calculate Interest");
                 }
-
-                Console.WriteLine("5.🌍 Convert currency"); 
 
                 string response = Console.ReadLine();
                 if (response == "0")
@@ -186,6 +203,23 @@ namespace BankApp2
                 }
                 else if (response == "2")
                 {
+                    try
+                    {
+                        account.Withdraw();
+                        Console.WriteLine("Uttag lyckades!");
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Fel format – skriv ett giltigt belopp.");
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine($"Fel: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
+                    }
                     account.Withdraw();
                 }
                 else if (response == "3")
@@ -199,14 +233,158 @@ namespace BankApp2
                     {
                         bank.TransferMoney(this, account.AccountNumber, accountNumber, amount);
                     }
+                }
+                else if (response == "4")
+                {
+                    decimal maxLoan = account.GetMaxLoanAmount();
+                    Console.WriteLine($"Current amount available to take loan for: {maxLoan.ToString("C", new CultureInfo("sv-SE"))}");
+                    Console.ReadKey();
+                }
+                // Added max loan limit and validation Jordan
+                else if (response == "5")
+                {
+                    Console.WriteLine($"Enter loan amount up to limit (max {account.GetMaxLoanAmount():C}):");
+                    string input = Console.ReadLine();
+
+                    if (decimal.TryParse(input, out decimal loanAmount))
+                    {
+                        decimal maxLoan = account.GetMaxLoanAmount();
+
+                        if (loanAmount > 0 && loanAmount <= maxLoan)
+                        {
+                            account.Balance += loanAmount;
+
+                            account.Owner.transactions.Add(new Transaction(accountNumber: account.AccountNumber, amount: loanAmount, type: "Loan"));
+
+                            Console.WriteLine($"Loan successful! New balance is {account.Balance.ToString("C", new CultureInfo("sv-SE"))}");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Invalid loan amount. Please enter an amount up to {maxLoan:C}.");
+                            Console.ReadKey();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Invalid loan amount. Please enter a numeric value.");
+                        Console.ReadKey();
+                    }
+                }
+                // Loan interest calculation Jordan
+                else if (response == "6")
+                {
+                    Console.WriteLine("Calculate compound interest for a loan: ");
+
+                    Console.Write("Enter loan amount: ");
+                    if (!decimal.TryParse(Console.ReadLine(), out decimal loanAmount) || loanAmount <= 0)
+                    {
+                        Console.WriteLine("Invalid loan amount.");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    decimal annualRate = 0.12m;
+
+                    Console.Write("Enter loan term in months: ");
+                    if (!int.TryParse(Console.ReadLine(), out int months) || months <= 0)
+                    {
+                        Console.WriteLine("Invalid number of months.");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    decimal interest = account.CalculateLoanInterest(loanAmount, annualRate, months);
+
+                    Console.WriteLine($"Interest to pay after {months} month(s): {interest.ToString("C", new CultureInfo("sv-SE"))}");
+                    Console.ReadKey();
+                }
+
+                else if (response == "7")
+                {
+                    Console.WriteLine("Enter name for favorite: ");
+                    var alias = Console.ReadLine();
+                    Console.WriteLine("Enter account number to save: ");
+                    var favAccount = Console.ReadLine();
+                    bank.AddFavorite(alias, favAccount);
+                    Console.ReadKey();
+                }
+                else if (response == "8")
+                {
+                    if (bank.FavoriteRecipients.Count == 0)
+                    {
+                        Console.WriteLine("No saved favorites.");
+                        Console.ReadKey();
+                        continue;
+                    }
+                    bank.ShowFavorites();
+                    Console.WriteLine("Enter favorite to transfer to: ");
+                    var alias = Console.ReadLine();
+
+                    if (bank.FavoriteRecipients.TryGetValue(alias, out string favAccount))
+                    {
+                        Console.WriteLine("Enter amount for transfer: ");
+                        var inputAmount = Console.ReadLine();
+                        if (decimal.TryParse(inputAmount, out decimal amount))
+                        {
+                            bank.TransferMoney(this, account.AccountNumber, favAccount, amount);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Favorite not found.");
+                    }
+                    Console.ReadKey();
+                }
+                // Added recurring payments/autopay Jordan
+                else if (response == "9")
+                {
+                    Console.WriteLine("Set up a recurring payment: ");
+
+                    Console.Write("Enter recipient account number: ");
+                    string recipient = Console.ReadLine();
+
+                    Console.Write("Enter the amount: ");
+                    if (!decimal.TryParse(Console.ReadLine(), out decimal amount) || amount <= 0)
+                    {
+                        Console.WriteLine("Invalid amount.");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    Console.Write("Enter interval in days: e.g., 30 for monthly: ");
+                    if (!int.TryParse(Console.ReadLine(), out int intervalDays) || intervalDays <= 0)
+                    {
+                        Console.WriteLine("Invalid interval.");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    var recurringPayment = new Transaction(account.AccountNumber, amount, "RecurringPayment", recipient)
+                    {
+                        IsRecurring = true,
+                        IntervalDays = intervalDays,
+                        NextExecutionDate = DateTime.Now.AddDays(intervalDays),
+                        Status = "Pending"
+                    };
+
+                    PendingTransactions.Add(recurringPayment);
+
+                    Console.WriteLine($"Recurring payment scheduled. Next execution: {recurringPayment.NextExecutionDate}");
+                    Console.ReadKey();
 
                 }
-                else if (response == "4" && account is SavingsAccount)
+                // Added show pending recurring payments Jordan
+                else if (response == "10")
+                {
+                    ShowPendingRecurringPayments();
+                }
+                else if (response == "12" && account is SavingsAccount)
                 {
                     var savingsAccount = account as SavingsAccount;
                     savingsAccount.ShowInterest();
                 }
-                else if (response == "5")
+                else if (response == "11")
                 {
 
                     bank.ConvertCurrency(account);
@@ -214,6 +392,5 @@ namespace BankApp2
 
             }
         }
-
     }
 }

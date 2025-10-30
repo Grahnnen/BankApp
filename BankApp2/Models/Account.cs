@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Linq;
 
 
+
 namespace BankApp2
 {
     public class Account 
@@ -13,7 +14,6 @@ namespace BankApp2
         public decimal Balance { get; set; }
         public User Owner { get; set; }
         public string CurrencyCode { get; set; } = "SEK";
-
 
 
         public Account(User user, string accountNumber, decimal balance, string currency = "SEK")
@@ -81,8 +81,7 @@ namespace BankApp2
 			}
 		}
 
-
-		// 1️⃣ Version där användaren skriver in summan i konsolen
+        // Version where user writes sum in the console.
 		public virtual void Withdraw()
         {
             try
@@ -101,6 +100,7 @@ namespace BankApp2
                         Console.WriteLine("Withdrawal failed: insufficient funds.");
                         return;
                     }
+                   
 
                     Balance -= amount;
 					Owner.transactions.Add(new Transaction(
@@ -126,33 +126,45 @@ namespace BankApp2
             }
         }
 
-		// 2️⃣ Version som tar emot belopp direkt (för överföring)
-		public virtual void Withdraw(decimal amount)
-		{
-			try
-			{
-				if (amount <= 0)
-				{
-					Console.WriteLine("Withdrawal failed: amount must be greater than 0.");
-					return;
-				}
-				if (amount > Balance)
-				{
-					Console.WriteLine("Withdrawal failed: insufficient funds.");
-					return;
-				}
-				Balance -= amount;
-				//Owner.transactions.Add(new Transaction(
-				//	AccountNumber, amount, "Outgoing transfer"
-				//)
-				//{ Status = "Pending" });
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
-				Console.ReadKey();
-			}
-		}
+        // 2️⃣ Version som tar emot belopp direkt (för överföring)
+        public virtual void Withdraw(decimal amount)
+        {
+            try
+            {
+                if (amount <= 0)
+                {
+                    Console.WriteLine("Withdrawal failed: amount must be greater than 0.");
+                    return;
+                }
+                if (amount > Balance)
+                {
+                    Console.WriteLine("Withdrawal failed: insufficient funds.");
+                    return;
+                }
+
+                Balance -= amount;
+                Owner.transactions.Add(new Transaction(AccountNumber, amount, "Outgoing transfer"));
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
+                Console.ReadKey();
+            }
+        }
+        
+        public virtual decimal GetMaxLoanAmount()
+        {
+	        return Balance * 5;
+        }
+
+        public decimal CalculateLoanInterest(decimal principal, decimal annualRate, int months)
+        {
+	        decimal monthlyRate = annualRate / 12;
+	        decimal futureValue = principal * (decimal)Math.Pow((double)(1 + monthlyRate), months);
+	        return futureValue - principal;
+        }
 	}
 }
+
 
