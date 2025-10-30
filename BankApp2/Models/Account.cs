@@ -163,8 +163,7 @@ namespace BankApp2
 	        decimal futureValue = principal * (decimal)Math.Pow((double)(1 + monthlyRate), months);
 	        return futureValue - principal;
         }
-
-    }
+	}
 }
 
 

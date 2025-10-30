@@ -31,5 +31,10 @@ namespace BankApp2.Models
 				return $"{DateTime:G} | {Type} | {Amount:C} | To: {TargetAccount} | ({Status})";
 			return $"{DateTime:G} | {Type} | {Amount:C}";
 		}
+
+        // Recurring transaction properties Jordan
+        public bool IsRecurring { get; set; }
+        public int IntervalDays { get; set; }
+        public DateTime? NextExecutionDate { get; set; }
     }
 }
