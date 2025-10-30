@@ -154,15 +154,16 @@ namespace BankApp2
         
         public virtual decimal GetMaxLoanAmount()
         {
-            return Balance * 5;
+	        return Balance * 5;
         }
 
         public decimal CalculateLoanInterest(decimal principal, decimal annualRate, int months)
         {
-            decimal monthlyRate = annualRate / 12;
-            decimal futureValue = principal * (decimal)Math.Pow((double)(1 + monthlyRate), months);
-            return futureValue - principal;
+	        decimal monthlyRate = annualRate / 12;
+	        decimal futureValue = principal * (decimal)Math.Pow((double)(1 + monthlyRate), months);
+	        return futureValue - principal;
         }
 	}
 }
+
 
