@@ -163,14 +163,15 @@ namespace BankApp2
                 Console.WriteLine("1.💵 Deposit money  ");
                 Console.WriteLine("2.🏧 Withdraw money  ");
                 Console.WriteLine("3.🔄 Transfer money  ");
-                Console.WriteLine("4. Check maximum loan amount");
-                Console.WriteLine("5. Take loan");
-                Console.WriteLine("6. Calculate loan interest");
-                Console.WriteLine("7. Add favorite");
-                Console.WriteLine("8. Show favorites and transfer");
-                Console.WriteLine("9. Enable Autopay for bills");
-                Console.WriteLine("10. View Pending Recurring Payments");
-                Console.WriteLine("11. Convert Currency");
+                Console.WriteLine("4.💸 Check maximum loan amount");
+                Console.WriteLine("5.🏦 Take loan");
+                Console.WriteLine("6.📊 Calculate loan interest");
+                Console.WriteLine("7.⭐ Add favorite");
+                Console.WriteLine("8.📋 Show favorites and transfer");
+                Console.WriteLine("9.⚙️ Enable Autopay for bills");
+                Console.WriteLine("10.⏳ View Pending Recurring Payments");
+                Console.WriteLine("11.🌍 Convert Currency");
+
                 if (account is SavingsAccount)
                 {
                     Console.WriteLine("12. Calculate Interest");
