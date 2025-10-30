@@ -220,7 +220,6 @@ namespace BankApp2
                     {
                         Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
                     }
-                    account.Withdraw();
                 }
                 else if (response == "3")
                 {
