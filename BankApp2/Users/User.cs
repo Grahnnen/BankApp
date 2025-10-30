@@ -252,11 +252,20 @@ namespace BankApp2
 
                         if (loanAmount > 0 && loanAmount <= maxLoan)
                         {
-                            account.Balance += loanAmount;
+                            Console.WriteLine("Processing your loan application...");
+                            Thread.Sleep(1000);
+                            if (loanAmount <= account.Balance * 5)
+                            {
+                                Console.WriteLine("Loan approved! Funds will be deposited shortly.");
+                                account.Balance += loanAmount;
 
-                            account.Owner.transactions.Add(new Transaction(accountNumber: account.AccountNumber, amount: loanAmount, type: "Loan"));
-
-                            Console.WriteLine($"Loan successful! New balance is {account.Balance.ToString("C", new CultureInfo("sv-SE"))}");
+                                account.Owner.transactions.Add(new Transaction(accountNumber: account.AccountNumber, amount: loanAmount, type: "Loan"));
+                                Console.WriteLine($"New balance: {account.Balance.ToString("C", new CultureInfo("sv-SE"))}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Loan denied: Requested amount is too high compared to your current account balance.");
+                            }
                             Console.ReadKey();
                         }
                         else
@@ -271,6 +280,7 @@ namespace BankApp2
                         Console.ReadKey();
                     }
                 }
+
                 // Loan interest calculation Jordan
                 else if (response == "6")
                 {
