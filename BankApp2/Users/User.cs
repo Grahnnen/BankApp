@@ -6,6 +6,9 @@ namespace BankApp2
 {
     public class User
     {
+        public DateTime CreatedDate { get; set; }
+        public DateTime NextPasswordChangeDate { get; set; }
+
 
         public string Username { get; set; }
         public string Password { get; set; }
@@ -24,6 +27,11 @@ namespace BankApp2
             Password = password;
             Balance = balance;
             Role = role;
+
+            CreatedDate = DateTime.Now; // date sets when user created
+            NextPasswordChangeDate = CreatedDate.AddMinutes(90); // when user need to change password
+
+
             Random rng = new Random();
             int random = rng.Next(999999, 9999999);
             Accounts.Add(new CheckingAccount(this, random.ToString(), 0));
@@ -142,6 +150,11 @@ namespace BankApp2
             }
             Console.ReadKey();
         }
+        public bool IsPasswordChangeDue() // checking if the time is in scope for changing password
+        {
+            return DateTime.Now >= NextPasswordChangeDate;
+        }
+
 
         void AccountMenu(Account account, Bank bank)
         {
@@ -155,7 +168,7 @@ namespace BankApp2
                     "EUR" => "€",
                     "GBP" => "£",
                     "SEK" => "kr",
-                    _ => account.CurrencyCode 
+                    _ => account.CurrencyCode
                 };
                 Console.WriteLine($"💰 Account balance: {currencySymbol} {account.Balance:N2}");
                 Console.WriteLine("");
