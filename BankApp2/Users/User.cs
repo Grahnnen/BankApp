@@ -49,7 +49,8 @@ namespace BankApp2
                     for (int i = 0; i < Accounts.Count; i++)
                     {
                         Console.WriteLine("-----------------------------");
-                        Console.WriteLine($"{i + 1}. Account number: {Accounts[i].AccountNumber}");
+                        Console.WriteLine($"{i + 1}. Account Name: {Accounts[i].AccountName}");
+                        Console.WriteLine($"Account number: {Accounts[i].AccountNumber}");
                         if (Accounts[i] is SavingsAccount)
                         {
                             Console.WriteLine($"Account type: Savings account");
@@ -184,10 +185,11 @@ namespace BankApp2
                 Console.WriteLine("9.⚙️ Enable Autopay for bills");
                 Console.WriteLine("10.⏳ View Pending Recurring Payments");
                 Console.WriteLine("11.🌍 Convert Currency");
+                Console.WriteLine("12. Rename Account");
 
                 if (account is SavingsAccount)
                 {
-                    Console.WriteLine("12. Calculate Interest");
+                    Console.WriteLine("13. Calculate Interest");
                 }
 
                 string response = Console.ReadLine();
@@ -402,17 +404,26 @@ namespace BankApp2
                 {
                     ShowPendingRecurringPayments();
                 }
-                else if (response == "12" && account is SavingsAccount)
-                {
-                    var savingsAccount = account as SavingsAccount;
-                    savingsAccount.ShowInterest();
-                }
+              
                 else if (response == "11")
                 {
 
                     bank.ConvertCurrency(account);
                 }
-
+                else if (response == "12")
+        
+                {
+                    Console.Write("Choose new account name: ");
+                    string newName = Console.ReadLine();
+                    account.RenameAccount(newName);
+                    Console.WriteLine("Press any key to continue..");
+                    Console.ReadKey();
+                }
+                else if (response == "13" && account is SavingsAccount)
+                {
+                    var savingsAccount = account as SavingsAccount;
+                    savingsAccount.ShowInterest();
+                }
             }
         }
     }
