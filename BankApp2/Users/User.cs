@@ -14,7 +14,6 @@ namespace BankApp2
         public string Password { get; set; }
         public decimal Balance { get; set; }
         public string Role { get; set; }
-        
         public string Email { get; set; }
         public int FailedAttempts { get; set; } = 0;
         public bool IsLocked { get; set; } = false;
