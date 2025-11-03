@@ -71,6 +71,7 @@ namespace BankApp2.Menu
 
                         Console.WriteLine($"You have {loginResult.LoggedInUser.Accounts.Count} accounts.");
 
+                        Console.WriteLine("To set email, type 'email'");
                         Console.WriteLine("0. Sign out");
                         Console.WriteLine("1. Open new account");
                         Console.WriteLine("2. View accounts");
@@ -96,6 +97,10 @@ namespace BankApp2.Menu
                         {
                             Console.Clear();
                             break;
+                        }
+                        else if (response == "email")
+                        {
+                            loginResult.LoggedInUser.SetEmail();
                         }
                         else if (response == "1")
                         {
