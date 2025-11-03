@@ -6,6 +6,9 @@ namespace BankApp2
 {
     public class User
     {
+        public DateTime CreatedDate { get; set; }
+        public DateTime NextPasswordChangeDate { get; set; }
+
 
         public string Username { get; set; }
         public string Password { get; set; }
@@ -42,6 +45,11 @@ namespace BankApp2
             Password = password;
             Balance = balance;
             Role = role;
+
+            CreatedDate = DateTime.Now; // date sets when user created
+            NextPasswordChangeDate = CreatedDate.AddMinutes(90); // when user need to change password
+
+
             Random rng = new Random();
             int random = rng.Next(999999, 9999999);
             Accounts.Add(new CheckingAccount(this, random.ToString(), 0));
@@ -59,7 +67,8 @@ namespace BankApp2
                     for (int i = 0; i < Accounts.Count; i++)
                     {
                         Console.WriteLine("-----------------------------");
-                        Console.WriteLine($"{i + 1}. Account number: {Accounts[i].AccountNumber}");
+                        Console.WriteLine($"{i + 1}. Account Name: {Accounts[i].AccountName}");
+                        Console.WriteLine($"Account number: {Accounts[i].AccountNumber}");
                         if (Accounts[i] is SavingsAccount)
                         {
                             Console.WriteLine($"Account type: Savings account");
@@ -160,6 +169,11 @@ namespace BankApp2
             }
             Console.ReadKey();
         }
+        public bool IsPasswordChangeDue() // checking if the time is in scope for changing password
+        {
+            return DateTime.Now >= NextPasswordChangeDate;
+        }
+
 
         void AccountMenu(Account account, Bank bank)
         {
@@ -173,7 +187,7 @@ namespace BankApp2
                     "EUR" => "€",
                     "GBP" => "£",
                     "SEK" => "kr",
-                    _ => account.CurrencyCode 
+                    _ => account.CurrencyCode
                 };
                 Console.WriteLine($"💰 Account balance: {currencySymbol} {account.Balance:N2}");
                 Console.WriteLine("");
@@ -189,10 +203,11 @@ namespace BankApp2
                 Console.WriteLine("9.⚙️ Enable Autopay for bills");
                 Console.WriteLine("10.⏳ View Pending Recurring Payments");
                 Console.WriteLine("11.🌍 Convert Currency");
+                Console.WriteLine("12. Rename Account");
 
                 if (account is SavingsAccount)
                 {
-                    Console.WriteLine("12. Calculate Interest");
+                    Console.WriteLine("13. Calculate Interest");
                 }
 
                 string response = Console.ReadLine();
@@ -407,17 +422,26 @@ namespace BankApp2
                 {
                     ShowPendingRecurringPayments();
                 }
-                else if (response == "12" && account is SavingsAccount)
-                {
-                    var savingsAccount = account as SavingsAccount;
-                    savingsAccount.ShowInterest();
-                }
+              
                 else if (response == "11")
                 {
 
                     bank.ConvertCurrency(account);
                 }
-
+                else if (response == "12")
+        
+                {
+                    Console.Write("Choose new account name: ");
+                    string newName = Console.ReadLine();
+                    account.RenameAccount(newName);
+                    Console.WriteLine("Press any key to continue..");
+                    Console.ReadKey();
+                }
+                else if (response == "13" && account is SavingsAccount)
+                {
+                    var savingsAccount = account as SavingsAccount;
+                    savingsAccount.ShowInterest();
+                }
             }
         }
     }

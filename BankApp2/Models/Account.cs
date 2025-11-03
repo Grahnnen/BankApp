@@ -15,15 +15,30 @@ namespace BankApp2
         public User Owner { get; set; }
         public string CurrencyCode { get; set; } = "SEK";
 
+        public string AccountName { get; private set; }
 
-        public Account(User user, string accountNumber, decimal balance, string currency = "SEK")
+        public Account(User user, string accountNumber, decimal balance, string accountName = "Standard Account", string currency = "SEK")
         {
             AccountNumber = accountNumber;
             Balance = balance;
             Owner = user;
-            CurrencyCode = currency; 
+            CurrencyCode = currency;
+            AccountName = "Unnamed Account";
+
         }
 
+        public void RenameAccount(string newName)
+        {
+            if (!string.IsNullOrWhiteSpace(newName))
+            {
+                AccountName = newName.Trim();
+                Console.WriteLine($"Changed account name to: {AccountName}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid name, try again.");
+            }
+        }
         public void Deposit()
         {
             Console.Clear();

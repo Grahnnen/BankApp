@@ -113,6 +113,27 @@ namespace BankApp2.Users
             Console.ReadKey();
             return userToDelete;
         }
+        public void TryChangePAssword(LoginResult loginResult)
+        {
+            if (loginResult.LoggedInUser.IsPasswordChangeDue())
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\n⚠️ Its time to change your password!");
+                Console.ForegroundColor = ConsoleColor.White;
+
+                Console.Write("Would you like to change it now? (y/n):");
+                string answer = Console.ReadLine();
+
+                if (answer == "y")
+                {
+                    Console.Write("Enter new password: ");
+                    string newPassword = Console.ReadLine();
+                    loginResult.LoggedInUser.Password = newPassword;
+                    loginResult.LoggedInUser.NextPasswordChangeDate = DateTime.Now.AddDays(90); // we set the time for when the password need to be changed next time
+                    Console.WriteLine("✅ Password successfully changed!");
+                }
+            }
+        }
         public void SuspendUserInteractive(User admin)
         {
             if(admin.Role != "Admin")
@@ -161,4 +182,5 @@ namespace BankApp2.Users
             }
         }
     }
+
 }

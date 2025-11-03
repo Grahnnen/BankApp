@@ -13,7 +13,7 @@ namespace BankApp2.Menu
             var loginManager = new LoginManager();
             Bank bank = new Bank();
             bank.Users.AddRange(loginManager.Users.Where(u => !bank.Users.Any(bu => bu.Username == u.Username)));
-             
+
             Console.BackgroundColor = ConsoleColor.Blue;
             Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
@@ -28,10 +28,10 @@ namespace BankApp2.Menu
 
                 Console.Write("Enter password: ");
                 string? password = Console.ReadLine();
-                
+
                 // 3. Call the login method
                 var loginResult = loginManager.Login(username, password);
-                
+
                 // 4. Show the result
                 Console.WriteLine(loginResult.Message);
 
@@ -47,6 +47,8 @@ namespace BankApp2.Menu
                 // 5. Optional: show role if login succeeded
                 if (loginResult.Success)
                 {
+                    loginManager.TryChangePAssword(loginResult);
+                   
                     // Add the logged-in user to the bank's Users list if not already present
                     if (!bank.Users.Any(u => u.Username == loginResult.LoggedInUser.Username))
                     {
@@ -138,15 +140,15 @@ namespace BankApp2.Menu
                         else if (response == "10" && loginResult.LoggedInUser.Role == "Admin")
                         {
                             var newUser = loginManager.AddUser();
-                            if( newUser != null) 
-                            bank.Users.Add(newUser);
+                            if (newUser != null)
+                                bank.Users.Add(newUser);
                         }
                         else if (response == "11" && loginResult.LoggedInUser.Role == "Admin")
                         {
 
                             var newUser = loginManager.DeleteUser();
                             if (newUser != null)
-                            bank.Users.Remove(newUser);
+                                bank.Users.Remove(newUser);
                         }
                         else if (response == "12" && loginResult.LoggedInUser.Role == "Admin")
                         {
@@ -176,3 +178,4 @@ namespace BankApp2.Menu
         }
     }
 }
+
