@@ -217,7 +217,8 @@ namespace BankApp2.Models
                 foreach (var user in foundUser)
                 {
                     Console.WriteLine("----------------");
-                    Console.WriteLine($"User: {user.Username}");
+                    string status = user.IsSuspended ? "⛔ Avstängd" : "✅ Aktiv";
+                    Console.WriteLine($"User: {user.Username} ({status})");
                     Console.WriteLine($"- Role: {user.Role}");
                     Console.WriteLine($"- Transactions: {user.transactions.Count}");
                     Console.WriteLine($"- Accounts: {user.Accounts.Count}");
@@ -244,8 +245,9 @@ namespace BankApp2.Models
                 foreach (var account in foundAccounts)
                 {
                     Console.WriteLine("----------------");
+                    string status = account.Owner.IsSuspended ? "⛔ Avstängd" : "✅ Aktiv";
                     Console.WriteLine($"Account number: {account.AccountNumber}");
-                    Console.WriteLine($"- Owner: {account.Owner.Username}");
+                    Console.WriteLine($"- Owner: {account.Owner.Username} ({status})");
                     Console.WriteLine($"- Balance: {account.Balance}");
                 }
                 Console.WriteLine("----------------");
@@ -265,8 +267,8 @@ namespace BankApp2.Models
                 Console.Clear();
                 foreach (var user in Users)
                 {
-                    Console.WriteLine("----------------");
-                    Console.WriteLine($"User: {user.Username}");
+                    string status = user.IsSuspended ? "⛔ Avstängd" : "✅ Aktiv";
+                    Console.WriteLine($"User: {user.Username} ({status})");
                     Console.WriteLine($"- Role: {user.Role}");
                     Console.WriteLine($"- Transactions: {user.transactions.Count}");
                     Console.WriteLine($"- Accounts: {user.Accounts.Count}");

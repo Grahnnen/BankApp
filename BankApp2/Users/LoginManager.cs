@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BankApp2.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,6 +28,10 @@ namespace BankApp2.Users
 
             if (user == null)
                 return new LoginResult { Success = false, Message = "\nUser not found" };
+
+            if (user.IsSuspended)
+                return new LoginResult { Success = false, Message = "\nYour account is temporarily suspended. Contact the administrator" };
+
 
             if (user.IsLocked)
                 return new LoginResult { Success = false, Message = "\nAccount is locked" };
@@ -107,6 +112,53 @@ namespace BankApp2.Users
             Console.WriteLine("User deleted.");
             Console.ReadKey();
             return userToDelete;
+        }
+        public void SuspendUserInteractive(User admin)
+        {
+            if(admin.Role != "Admin")
+            {
+                throw new Exception("User needs to be an admin to suspend other users.");
+            }
+            var allNonAdminUsers = Users.Where(u => u.Role != "Admin").ToList();
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("=== Suspend/Unsuspend User ===");
+
+                // Showing all the users in the bank
+                for (int i = 0; i < allNonAdminUsers.Count; i++)
+                {
+                    var u = allNonAdminUsers[i];
+                    string status = u.IsSuspended ? "⛔ Suspended" : "✅ Active";
+                    Console.WriteLine($"{i + 1}. {u.Username} ({status})");
+                }
+
+                Console.WriteLine("0. Cancel");
+                Console.Write("\nPick a user to toggle the status: ");
+
+                // reading the choice
+                if (int.TryParse(Console.ReadLine(), out int choice))
+                {
+                    if (choice == 0)
+                    {
+                        Console.WriteLine("Aborting...");
+                        break;
+                    }
+                    else if (choice > 0 && choice <= allNonAdminUsers.Count)
+                    {
+                        var selectedUser = allNonAdminUsers[choice - 1];
+                        selectedUser.ToggleSuspension();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid choice!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid format, a number is expected!");
+                }
+            }
         }
     }
 }
