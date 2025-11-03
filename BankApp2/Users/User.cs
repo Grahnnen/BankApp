@@ -14,6 +14,7 @@ namespace BankApp2
         public string Password { get; set; }
         public decimal Balance { get; set; }
         public string Role { get; set; }
+        public string Email { get; set; }
         public int FailedAttempts { get; set; } = 0;
         public bool IsLocked { get; set; } = false;
         public bool IsSuspended { get; set; } = false;
@@ -39,12 +40,13 @@ namespace BankApp2
         public List<Transaction> PendingTransactions { get; set; } = new List<Transaction>();
 
 
-        public User(string username, string password, decimal balance, string role)
+        public User(string username, string password, decimal balance, string role, string email = "")
         {
             Username = username;
             Password = password;
             Balance = balance;
             Role = role;
+            Email = email;
 
             CreatedDate = DateTime.Now; // date sets when user created
             NextPasswordChangeDate = CreatedDate.AddMinutes(90); // when user need to change password
@@ -444,5 +446,55 @@ namespace BankApp2
                 }
             }
         }
+        public void SetEmail()
+        {
+            Console.Clear();
+            Console.WriteLine("=== Set Email Address ===");
+    
+            if (!string.IsNullOrWhiteSpace(Email))
+            {
+                Console.WriteLine($"Current email: {Email}");
+            }
+    
+            Console.Write("Enter your email address (or press Enter to cancel): ");
+            string newEmail = Console.ReadLine();
+    
+            if (string.IsNullOrWhiteSpace(newEmail))
+            {
+                Console.WriteLine("Email update cancelled.");
+                Console.ReadKey();
+                return;
+            }
+    
+            if (IsValidEmail(newEmail))
+            {
+                Email = newEmail;
+                Console.WriteLine($"✅ Email successfully set to: {Email}");
+            }
+            else
+            {
+                Console.WriteLine("❌ Invalid email format. Please try again.");
+            }
+    
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {   // Regex taken from: https://regex101.com/r/lHs2R3/1
+                return System.Text.RegularExpressions.Regex.IsMatch(email, 
+                    @"^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$");
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        
     }
 }

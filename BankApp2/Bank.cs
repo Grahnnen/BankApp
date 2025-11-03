@@ -219,6 +219,7 @@ namespace BankApp2.Models
                     Console.WriteLine("----------------");
                     string status = user.IsSuspended ? "⛔ Avstängd" : "✅ Aktiv";
                     Console.WriteLine($"User: {user.Username} ({status})");
+                    Console.WriteLine($"- Email : {user.Email}");
                     Console.WriteLine($"- Role: {user.Role}");
                     Console.WriteLine($"- Transactions: {user.transactions.Count}");
                     Console.WriteLine($"- Accounts: {user.Accounts.Count}");
@@ -269,6 +270,7 @@ namespace BankApp2.Models
                 {
                     string status = user.IsSuspended ? "⛔ Avstängd" : "✅ Aktiv";
                     Console.WriteLine($"User: {user.Username} ({status})");
+                    Console.WriteLine($"- Email: {user.Email}");
                     Console.WriteLine($"- Role: {user.Role}");
                     Console.WriteLine($"- Transactions: {user.transactions.Count}");
                     Console.WriteLine($"- Accounts: {user.Accounts.Count}");
