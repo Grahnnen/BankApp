@@ -16,6 +16,24 @@ namespace BankApp2
         public string Role { get; set; }
         public int FailedAttempts { get; set; } = 0;
         public bool IsLocked { get; set; } = false;
+        public bool IsSuspended { get; set; } = false;
+
+        public void ToggleSuspension()
+        {
+            if (IsSuspended)
+            {
+                IsSuspended = false;
+            }
+            else
+            {
+                IsSuspended = true;
+            }
+            
+            string status = IsSuspended ? "avstängt" : "aktiverat";
+            Console.WriteLine($"Kontot för {Username} har nu blivit {status}.");
+        }
+
+
         public List<Account> Accounts = new List<Account>();
         public List<Transaction> transactions = new List<Transaction>();
         public List<Transaction> PendingTransactions { get; set; } = new List<Transaction>();

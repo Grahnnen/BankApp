@@ -88,6 +88,7 @@ namespace BankApp2.Menu
                             Console.WriteLine("12. Set exchange rate");
                             Console.WriteLine("13. View all exchange rates");
                             Console.WriteLine("14. Show overall top 3 transactions");
+                            Console.WriteLine("15. Suspend/Unsuspend a user");
                         }
 
                         string response = Console.ReadLine();
@@ -160,6 +161,10 @@ namespace BankApp2.Menu
                         else if (response == "14" && loginResult.LoggedInUser.Role == "Admin")
                         {
                             bank.ShowBanksBiggestTransactions();
+                        }
+                        else if (response == "15" && loginResult.LoggedInUser.Role == "Admin")
+                        {
+                            loginManager.SuspendUserInteractive(loginResult.LoggedInUser);
                         }
                         else
                         {
