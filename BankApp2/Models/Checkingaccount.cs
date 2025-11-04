@@ -19,7 +19,6 @@ namespace BankApp2.Models
 
             while(true)
             {
-
                 try
                 {
                     Console.WriteLine($"Available: ({Balance:C})");
@@ -39,7 +38,6 @@ namespace BankApp2.Models
                         Console.ReadKey();
                         return;
                     }
-                   
 
                     if (Balance - amount < OverdraftLimit)
                     {
@@ -58,13 +56,10 @@ namespace BankApp2.Models
                 catch (Exception ex)
                 {
 
-                    Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
+                    Console.WriteLine($"An error has occured: {ex.Message}");
                     Console.ReadKey();
                 }
-
-
             }
-           
         }
     }
 }

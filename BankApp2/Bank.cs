@@ -36,15 +36,24 @@ namespace BankApp2.Models
                 {
                     var account = new CheckingAccount(user, accountNumber, 0);
                     user.Accounts.Add(account);
-                    break;
+                    Console.Write("Choose account name: ");
+                    string newName = Console.ReadLine();
+                    account.RenameAccount(newName);
+                    Console.WriteLine($"{user.Username} added checkingaccount.");
+                    Console.ReadKey();
+                    continue;
                 }
                 else if (response == "2")
                 {
                     var account = new SavingsAccount(user, accountNumber, 0, 0.03m);
                     user.Accounts.Add(account);
-                    break;
+                    Console.Write("Choose account name: ");
+                    string newName = Console.ReadLine();
+                    account.RenameAccount(newName);
+                    Console.WriteLine($"{user.Username} added savingsaccount.");
+                    Console.ReadKey();
+                    continue;
                 }
-                
             }
         }
         public void PrintUserAccountSummaries()
@@ -146,7 +155,7 @@ namespace BankApp2.Models
             }
             else
             {
-                Console.WriteLine("❌ Ogiltigt val.");
+                Console.WriteLine("❌ Invalid choice.");
             }
         }
         public Dictionary<string, string> FavoriteRecipients { get; } = new Dictionary<string, string>();
@@ -246,7 +255,7 @@ namespace BankApp2.Models
                 foreach (var user in foundUser)
                 {
                     Console.WriteLine("----------------");
-                    string status = user.IsSuspended ? "⛔ Avstängd" : "✅ Aktiv";
+                    string status = user.IsSuspended ? "⛔ Suspended" : "✅ Active";
                     Console.WriteLine($"User: {user.Username} ({status})");
                     Console.WriteLine($"- Email : {user.Email}");
                     Console.WriteLine($"- Role: {user.Role}");
@@ -275,7 +284,7 @@ namespace BankApp2.Models
                 foreach (var account in foundAccounts)
                 {
                     Console.WriteLine("----------------");
-                    string status = account.Owner.IsSuspended ? "⛔ Avstängd" : "✅ Aktiv";
+                    string status = account.Owner.IsSuspended ? "⛔ Suspended" : "✅ Active";
                     Console.WriteLine($"Account number: {account.AccountNumber}");
                     Console.WriteLine($"- Owner: {account.Owner.Username} ({status})");
                     Console.WriteLine($"- Balance: {account.Balance}");
@@ -297,7 +306,7 @@ namespace BankApp2.Models
                 Console.Clear();
                 foreach (var user in Users)
                 {
-                    string status = user.IsSuspended ? "⛔ Avstängd" : "✅ Aktiv";
+                    string status = user.IsSuspended ? "⛔ Suspended" : "✅ Active";
                     Console.WriteLine($"User: {user.Username} ({status})");
                     Console.WriteLine($"- Email: {user.Email}");
                     Console.WriteLine($"- Role: {user.Role}");
@@ -376,8 +385,6 @@ namespace BankApp2.Models
         }
         public void ConvertCurrency(Account account)
         {
-
-
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Yellow;
             while (true)
@@ -392,6 +399,8 @@ namespace BankApp2.Models
                 string? newCurrency = Console.ReadLine()?.ToUpper();
                 if (string.IsNullOrWhiteSpace(newCurrency))
                 {
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                    Console.ForegroundColor = ConsoleColor.White;
                     break;
                 }
                 var currencyManager = CurrencyManager;
@@ -414,11 +423,7 @@ namespace BankApp2.Models
                 Console.WriteLine($"✅ Your balance is now {newBalance:F2} {newCurrency}");
                 Console.WriteLine("\nPress any key to continue...");
                 Console.ReadKey();
-
             }
-
-
-
         }
     }
 }

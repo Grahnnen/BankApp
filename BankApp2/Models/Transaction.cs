@@ -4,7 +4,6 @@ namespace BankApp2.Models
 {
     public class Transaction
     {
-        public string Id { get; }
         public string AccountNumber { get; }
         public decimal Amount { get; }
         public DateTime DateTime { get; }
@@ -15,7 +14,6 @@ namespace BankApp2.Models
 
 		public Transaction(string accountNumber, decimal amount, string type, string? targetAccount = null)
         {
-            Id = Guid.NewGuid().ToString();
             AccountNumber = accountNumber;
             Amount = amount;
             DateTime = DateTime.Now;

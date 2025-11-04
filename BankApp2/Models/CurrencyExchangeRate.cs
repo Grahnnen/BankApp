@@ -12,7 +12,6 @@ namespace BankApp2.Models
             ExchangeRate = exchangeRate;
             LastUpdated = DateTime.Now;
         }
-
         public override string ToString()
         {
             return $"{CurrencyCode}: {ExchangeRate:F4} (Updated: {LastUpdated:yyyy-MM-dd HH:mm})";
