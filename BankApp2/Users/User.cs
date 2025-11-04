@@ -197,19 +197,20 @@ namespace BankApp2
                 Console.WriteLine("1.💵 Deposit money  ");
                 Console.WriteLine("2.🏧 Withdraw money  ");
                 Console.WriteLine("3.🔄 Transfer money  ");
-                Console.WriteLine("4.💸 Check maximum loan amount");
-                Console.WriteLine("5.🏦 Take loan");
-                Console.WriteLine("6.📊 Calculate loan interest");
-                Console.WriteLine("7.⭐ Add favorite");
-                Console.WriteLine("8.📋 Show favorites and transfer");
-                Console.WriteLine("9.⚙️ Enable Autopay for bills");
-                Console.WriteLine("10.⏳ View Pending Recurring Payments");
-                Console.WriteLine("11.🌍 Convert Currency");
-                Console.WriteLine("12. Rename Account");
+                Console.WriteLine("4.❌ Cancel Transfer");
+                Console.WriteLine("5.💸 Check maximum loan amount");
+                Console.WriteLine("6.🏦 Take loan");
+                Console.WriteLine("7.📊 Calculate loan interest");
+                Console.WriteLine("8.⭐ Add favorite");
+                Console.WriteLine("9.📋 Show favorites and transfer");
+                Console.WriteLine("10.⚙️ Enable Autopay for bills");
+                Console.WriteLine("11.⏳ View Pending Recurring Payments");
+                Console.WriteLine("12.🌍 Convert Currency");
+                Console.WriteLine("13. Rename Account");
 
                 if (account is SavingsAccount)
                 {
-                    Console.WriteLine("13. Calculate Interest");
+                    Console.WriteLine("14. Calculate Interest");
                 }
 
                 string response = Console.ReadLine();
@@ -271,12 +272,18 @@ namespace BankApp2
                 }
                 else if (response == "4")
                 {
+
+                    bank.CancelTransaction(this);
+                    Console.ReadKey();
+                }
+                else if (response == "5")
+                {
                     decimal maxLoan = account.GetMaxLoanAmount();
                     Console.WriteLine($"Current amount available to take loan for: {maxLoan.ToString("C", new CultureInfo("sv-SE"))}");
                     Console.ReadKey();
                 }
                 // Added max loan limit and validation Jordan
-                else if (response == "5")
+                else if (response == "6")
                 {
                     Console.WriteLine($"Enter loan amount up to limit (max {account.GetMaxLoanAmount():C}):");
                     string input = Console.ReadLine();
@@ -317,7 +324,7 @@ namespace BankApp2
                 }
 
                 // Loan interest calculation Jordan
-                else if (response == "6")
+                else if (response == "7")
                 {
                     Console.WriteLine("Calculate compound interest for a loan: ");
 
@@ -345,7 +352,7 @@ namespace BankApp2
                     Console.ReadKey();
                 }
 
-                else if (response == "7")
+                else if (response == "8")
                 {
                     Console.WriteLine("Enter name for favorite: ");
                     var alias = Console.ReadLine();
@@ -354,7 +361,7 @@ namespace BankApp2
                     bank.AddFavorite(alias, favAccount);
                     Console.ReadKey();
                 }
-                else if (response == "8")
+                else if (response == "9")
                 {
                     if (bank.FavoriteRecipients.Count == 0)
                     {
@@ -382,7 +389,7 @@ namespace BankApp2
                     Console.ReadKey();
                 }
                 // Added recurring payments/autopay Jordan
-                else if (response == "9")
+                else if (response == "10")
                 {
                     Console.WriteLine("Set up a recurring payment: ");
 
@@ -420,17 +427,17 @@ namespace BankApp2
 
                 }
                 // Added show pending recurring payments Jordan
-                else if (response == "10")
+                else if (response == "11")
                 {
                     ShowPendingRecurringPayments();
                 }
               
-                else if (response == "11")
+                else if (response == "12")
                 {
 
                     bank.ConvertCurrency(account);
                 }
-                else if (response == "12")
+                else if (response == "13")
         
                 {
                     Console.Write("Choose new account name: ");
@@ -439,11 +446,12 @@ namespace BankApp2
                     Console.WriteLine("Press any key to continue..");
                     Console.ReadKey();
                 }
-                else if (response == "13" && account is SavingsAccount)
+                else if (response == "14" && account is SavingsAccount)
                 {
                     var savingsAccount = account as SavingsAccount;
                     savingsAccount.ShowInterest();
                 }
+                
             }
         }
         public void SetEmail()
