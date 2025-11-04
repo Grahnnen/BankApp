@@ -1,12 +1,10 @@
 ﻿using BankApp2.Models;
 using BankApp2.Users;
 
-
 namespace BankApp2.Menu
 {
     public class BankMenu
     {
-
         public void ShowMenu()
         {
             // 1. Create an instance of LoginManager
@@ -39,7 +37,7 @@ namespace BankApp2.Menu
                 {
                     Console.WriteLine("Please write your username and password.");
                 }
-
+                
                 Console.WriteLine("\nPress any key to continue");
                 Console.ReadKey();
                 Console.Clear();
@@ -47,6 +45,7 @@ namespace BankApp2.Menu
                 // 5. Optional: show role if login succeeded
                 if (loginResult.Success)
                 {
+                    
                     loginManager.TryChangePAssword(loginResult);
                    
                     // Add the logged-in user to the bank's Users list if not already present
@@ -66,6 +65,7 @@ namespace BankApp2.Menu
 |  `--'  | |  |  |  | |  |____ |  |_)  |  /  _____  \  |  |\   | |  .  \  
  \______/  |__|  |__| |_______||______/  /__/     \__\ |__| \__| |__|\__\ 
 ";
+
                         Console.WriteLine(title);
                         Console.WriteLine($"Logged in as: {loginResult.LoggedInUser?.Username}");
 
@@ -104,6 +104,7 @@ namespace BankApp2.Menu
                         }
                         else if (response == "1")
                         {
+                            //generate random account number
                             Random rng = new Random();
                             int random = rng.Next(999999, 9999999);
                             bank.OpenAccount(loginResult.LoggedInUser, random.ToString());
@@ -150,7 +151,6 @@ namespace BankApp2.Menu
                         }
                         else if (response == "11" && loginResult.LoggedInUser.Role == "Admin")
                         {
-
                             var newUser = loginManager.DeleteUser();
                             if (newUser != null)
                                 bank.Users.Remove(newUser);
@@ -173,8 +173,8 @@ namespace BankApp2.Menu
                         }
                         else
                         {
-                            Console.WriteLine("Ogiltig inmatning, Vänligen ange en giltig siffra");
-                            Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
+                            Console.WriteLine("Please enter a valid choice!");
+                            Console.WriteLine("Press anykey to continue...");
                             Console.ReadKey();
                         }
                     }
@@ -183,4 +183,3 @@ namespace BankApp2.Menu
         }
     }
 }
-

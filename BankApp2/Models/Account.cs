@@ -1,10 +1,7 @@
-﻿
-using BankApp2.Models;
+﻿using BankApp2.Models;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Linq;
-
-
 
 namespace BankApp2
 {
@@ -24,7 +21,6 @@ namespace BankApp2
             Owner = user;
             CurrencyCode = currency;
             AccountName = "Unnamed Account";
-
         }
 
         public void RenameAccount(string newName)
@@ -66,7 +62,7 @@ namespace BankApp2
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
+                Console.WriteLine($"An error has occured: {ex.Message}");
                 Console.ReadKey();
             }
         }
@@ -81,17 +77,12 @@ namespace BankApp2
 					return;
 				}
 				Balance += amount;
-				//Owner.transactions.Add(new Transaction(
-				//	accountNumber: AccountNumber,
-				//	amount: amount,
-				//	type: "Incoming transfer"
-				//)
-				//{ Status = "Completed" });
+
 				Console.WriteLine($"Deposit successful: new balance is {Balance}.");
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
+				Console.WriteLine($"An error has occured: {ex.Message}");
 				Console.ReadKey();
 			}
 		}
@@ -115,7 +106,6 @@ namespace BankApp2
                         Console.WriteLine("Withdrawal failed: insufficient funds.");
                         return;
                     }
-                   
 
                     Balance -= amount;
 					Owner.transactions.Add(new Transaction(
@@ -136,12 +126,12 @@ namespace BankApp2
             catch (Exception ex)
             {
 
-                Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
+                Console.WriteLine($"An error has occured: {ex.Message}");
                 Console.ReadKey();
             }
         }
 
-        // 2️⃣ Version som tar emot belopp direkt (för överföring)
+        // Second version of withdraw that takes in amount directly
         public virtual void Withdraw(decimal amount)
         {
             try
@@ -163,7 +153,7 @@ namespace BankApp2
             catch (Exception ex)
             {
 
-                Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
+                Console.WriteLine($"An error has occured: {ex.Message}");
                 Console.ReadKey();
             }
         }
@@ -181,5 +171,3 @@ namespace BankApp2
         }
 	}
 }
-
-

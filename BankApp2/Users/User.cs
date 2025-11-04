@@ -12,7 +12,6 @@ namespace BankApp2
 
         public string Username { get; set; }
         public string Password { get; set; }
-        public decimal Balance { get; set; }
         public string Role { get; set; }
         public string Email { get; set; }
         public int FailedAttempts { get; set; } = 0;
@@ -30,8 +29,8 @@ namespace BankApp2
                 IsSuspended = true;
             }
             
-            string status = IsSuspended ? "avstängt" : "aktiverat";
-            Console.WriteLine($"Kontot för {Username} har nu blivit {status}.");
+            string status = IsSuspended ? "Suspended" : "Activated";
+            Console.WriteLine($"The account {Username} has now been {status}.");
         }
 
 
@@ -40,11 +39,10 @@ namespace BankApp2
         public List<Transaction> PendingTransactions { get; set; } = new List<Transaction>();
 
 
-        public User(string username, string password, decimal balance, string role, string email = "")
+        public User(string username, string password, string role, string email = "")
         {
             Username = username;
             Password = password;
-            Balance = balance;
             Role = role;
             Email = email;
 
@@ -97,20 +95,20 @@ namespace BankApp2
                         }
                         else
                         {
-                            Console.WriteLine("Ogiltigt val. Försök igen.");
+                            Console.WriteLine("Please enter a valid account choice!");
                             Console.ReadKey();
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Du måste skriva ett nummer!");
+                        Console.WriteLine("Please enter a valid account choice!");
                         Console.ReadKey();
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ett fel uppstod: {ex.Message}");
+                Console.WriteLine($"An error has occured: {ex.Message}");
                 Console.ReadKey();
             }
         }
@@ -206,11 +204,11 @@ namespace BankApp2
                 Console.WriteLine("10.⚙️ Enable Autopay for bills");
                 Console.WriteLine("11.⏳ View Pending Recurring Payments");
                 Console.WriteLine("12.🌍 Convert Currency");
-                Console.WriteLine("13. Rename Account");
+                Console.WriteLine("13.🔃Rename Account");
 
                 if (account is SavingsAccount)
                 {
-                    Console.WriteLine("14. Calculate Interest");
+                    Console.WriteLine("14.🟰Calculate Interest");
                 }
 
                 string response = Console.ReadLine();
@@ -223,19 +221,18 @@ namespace BankApp2
                     try
                     {
                         account.Deposit();
-                        Console.WriteLine("Insättningen lyckades!");
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Fel format – skriv ett giltigt belopp.");
+                        Console.WriteLine("Wrong format!.");
                     }
                     catch (ArgumentException ex)
                     {
-                        Console.WriteLine($"Fel: {ex.Message}");
+                        Console.WriteLine($"Error: {ex.Message}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
+                        Console.WriteLine($"An error has occured: {ex.Message}");
                     }
                 }
                 else if (response == "2")
@@ -243,26 +240,27 @@ namespace BankApp2
                     try
                     {
                         account.Withdraw();
-                        Console.WriteLine("Uttag lyckades!");
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Fel format – skriv ett giltigt belopp.");
+                        Console.WriteLine("Wrong format!.");
                     }
                     catch (ArgumentException ex)
                     {
-                        Console.WriteLine($"Fel: {ex.Message}");
+                        Console.WriteLine($"An error has occured: {ex.Message}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
+                        Console.WriteLine($"An error has occured: {ex.Message}");
                     }
                 }
                 else if (response == "3")
                 {
-                    Console.WriteLine("Enter Account number: ");
+                    Console.Clear();
+                    Console.WriteLine("Transfering money.");
+                    Console.Write("Enter Account number: ");
                     var accountNumber = Console.ReadLine();
-                    Console.WriteLine("Enter amount for transfer: ");
+                    Console.Write("Enter amount for transfer: ");
                     var inputAmount = (Console.ReadLine());
 
                     if (decimal.TryParse(inputAmount, out decimal amount))
@@ -272,12 +270,13 @@ namespace BankApp2
                 }
                 else if (response == "4")
                 {
-
+                    Console.Clear();
                     bank.CancelTransaction(this);
                     Console.ReadKey();
                 }
                 else if (response == "5")
                 {
+                    Console.Clear();
                     decimal maxLoan = account.GetMaxLoanAmount();
                     Console.WriteLine($"Current amount available to take loan for: {maxLoan.ToString("C", new CultureInfo("sv-SE"))}");
                     Console.ReadKey();
@@ -285,6 +284,7 @@ namespace BankApp2
                 // Added max loan limit and validation Jordan
                 else if (response == "6")
                 {
+                    Console.Clear();
                     Console.WriteLine($"Enter loan amount up to limit (max {account.GetMaxLoanAmount():C}):");
                     string input = Console.ReadLine();
 
@@ -326,6 +326,7 @@ namespace BankApp2
                 // Loan interest calculation Jordan
                 else if (response == "7")
                 {
+                    Console.Clear();
                     Console.WriteLine("Calculate compound interest for a loan: ");
 
                     Console.Write("Enter loan amount: ");
@@ -354,6 +355,7 @@ namespace BankApp2
 
                 else if (response == "8")
                 {
+                    Console.Clear();
                     Console.WriteLine("Enter name for favorite: ");
                     var alias = Console.ReadLine();
                     Console.WriteLine("Enter account number to save: ");
@@ -363,6 +365,8 @@ namespace BankApp2
                 }
                 else if (response == "9")
                 {
+                    Console.Clear();
+
                     if (bank.FavoriteRecipients.Count == 0)
                     {
                         Console.WriteLine("No saved favorites.");
@@ -391,6 +395,8 @@ namespace BankApp2
                 // Added recurring payments/autopay Jordan
                 else if (response == "10")
                 {
+                    Console.Clear();
+
                     Console.WriteLine("Set up a recurring payment: ");
 
                     Console.Write("Enter recipient account number: ");
@@ -429,17 +435,20 @@ namespace BankApp2
                 // Added show pending recurring payments Jordan
                 else if (response == "11")
                 {
+                    Console.Clear();
+
                     ShowPendingRecurringPayments();
                 }
               
                 else if (response == "12")
                 {
+                    Console.Clear();
 
                     bank.ConvertCurrency(account);
                 }
                 else if (response == "13")
-        
                 {
+                    Console.Clear();
                     Console.Write("Choose new account name: ");
                     string newName = Console.ReadLine();
                     account.RenameAccount(newName);
@@ -448,6 +457,7 @@ namespace BankApp2
                 }
                 else if (response == "14" && account is SavingsAccount)
                 {
+                    Console.Clear();
                     var savingsAccount = account as SavingsAccount;
                     savingsAccount.ShowInterest();
                 }

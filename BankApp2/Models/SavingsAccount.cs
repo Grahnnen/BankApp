@@ -9,10 +9,7 @@ namespace BankApp2.Models
 {
     public class SavingsAccount : Account
     {
-
         public decimal InterestRate { get; set; }
-
-
         public int FreeWithdrawals { get; set; } = 3;
         public decimal WithdrawalFee { get; set; } = 10m;
         private int withdrawCount = 0;
@@ -26,7 +23,6 @@ namespace BankApp2.Models
         {
             Balance += Balance * InterestRate;
         }
-
         public override void Withdraw()
         {
             Console.Clear();
@@ -84,7 +80,7 @@ namespace BankApp2.Models
 
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Ett oväntat fel uppstod");
+                    Console.WriteLine($"An error has occured: {ex.Message}");
                     Console.ReadKey();
                 }
             }
@@ -115,7 +111,6 @@ namespace BankApp2.Models
 
             withdrawCount++;
             Balance -= totalAmount;
-            //Owner.transactions.Add(new Transaction(AccountNumber, amount, "Outgoing transfer"));
 
             if (withdrawCount > FreeWithdrawals)
             {
