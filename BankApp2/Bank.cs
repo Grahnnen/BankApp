@@ -119,7 +119,36 @@ namespace BankApp2.Models
             Console.ReadKey();
         }
 
+        public virtual void CancelTransaction(User user)
+        {
+            var pending = user.PendingTransactions.Where(t => t.Status == "Pending").ToList();
 
+            if (!pending.Any())
+            {
+                Console.WriteLine("No pending transactions.");
+                return;
+            }
+
+            Console.WriteLine("Choose transaction to cancel:");
+            for (int i = 0; i < pending.Count; i++)
+            {
+                var t = pending[i];
+                Console.WriteLine($"{i + 1}. {t.Amount} kr from {t.AccountNumber} to {t.TargetAccount} (Scheduled: {t.ScheduledCompletionTime})");
+            }
+
+            Console.Write("\nYour Choice: ");
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice > 0 && choice <= pending.Count)
+            {
+                var transaction = pending[choice - 1];
+                transaction.Status = "Cancelled";
+                user.PendingTransactions.Remove(transaction);
+                Console.WriteLine("✅ Transactionen canceled.");
+            }
+            else
+            {
+                Console.WriteLine("❌ Ogiltigt val.");
+            }
+        }
         public Dictionary<string, string> FavoriteRecipients { get; } = new Dictionary<string, string>();
 
         public void AddFavorite(string alias, string accountNumber)
