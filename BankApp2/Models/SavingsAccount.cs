@@ -7,6 +7,7 @@ using BankApp2.Users;
 
 namespace BankApp2.Models
 {
+    // Savings account with interest earning and limited free withdrawals
     public class SavingsAccount : Account
     {
         public decimal InterestRate { get; set; }
@@ -19,10 +20,14 @@ namespace BankApp2.Models
             InterestRate = interestRate;
         }
 
+        
+        // Add interest to the account balance
         public void ApplyInterest()
         {
             Balance += Balance * InterestRate;
         }
+        
+        // Interactive withdrawal method with console input
         public override void Withdraw()
         {
             Console.Clear();
@@ -86,6 +91,7 @@ namespace BankApp2.Models
             }
         }
 
+        // Programmatic withdrawal method (no console interaction)
         public override void Withdraw(decimal amount)
         {
             if (amount <= 0)
@@ -119,12 +125,13 @@ namespace BankApp2.Models
 
         }
 
+        // Calculate and display projected interest earnings
         public void ShowInterest()
         {
             Console.Clear();
             Console.WriteLine($"Account: {AccountNumber}");
             Console.WriteLine($"Current Balance: {Balance:F2} kr"); // F2 Gives us two decimals
-            Console.WriteLine($"Interest Rate: {InterestRate:P2} per month"); //P2 gives us percentage with two decimals
+            Console.WriteLine($"Interest Rate: {InterestRate:P2} per month"); //P2 gives us a percentage with two decimals
 
             Console.Write("\nEnter number of months to calculate interest: ");
             if (!int.TryParse(Console.ReadLine(), out int months) || months <= 0)
