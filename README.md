@@ -9,17 +9,17 @@ Robin Grahn
 Anton Smedman
 
 ## Arbetsprocess
-- Vi använder GitHub för versionshantering.
-- `main` = stabil kod (ingen jobbar direkt här).
-- `develop` = utvecklingsbranch, här mergar vi färdiga features.
-- Nya features görs i brancher som heter `feature/*`, t.ex. `feature/add-account`.
-- När en feature är klar görs en **Pull Request** till `develop`.
-- Minst en person ska granska (code review) innan vi mergar.
+- We use github for versionmanagement
+- `main` = stable code (noone works directly in here).
+- `develop` = developmentbranch, into here we merge completed features.
+- New features are created in feature branches `feature/*`, `feature/add-account`.
+- When a feature is done a **Pull Request** is made to `develop`.
+- Atleast 1 review is required for a pullrequest to merge 
 
 ## Usage
-Skapa ett konto genom att prata med en admin(logga in på nuvarande med 'emma' *12345*)
-Därefter kan du öppna nya bankkonton, sätta in pengar, ta ut pengar eller föra över pengar mellan konton och användare.
-Du kan visa alla konton med positivt saldo och visa alla dina högsta transaktioner
+Create an account by talking to an admin(log in to premade with 'emma' *12345*)
+When logged in you can create new accounts, deposit money, withdraw money or transfer money between accounts or users.
+You can show all accounts with positive balance and show your top 3 transactions
 
 ## Showcase
 <img width="1433" height="680" alt="umebank" src="https://github.com/user-attachments/assets/e6dae004-4815-4d56-915a-949a8e93c5d1" />
