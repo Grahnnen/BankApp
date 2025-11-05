@@ -6,18 +6,22 @@ namespace BankApp2
 {
     public class User
     {
+        // The date and time when the user account was created
         public DateTime CreatedDate { get; set; }
+        // The next scheduled date when the user must change their password
         public DateTime NextPasswordChangeDate { get; set; }
 
-
+        // Basic user credentials and information
         public string Username { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; }
+        public string Role { get; set; } // Defines user role, e.g., admin or customer
         public string Email { get; set; }
+        // Tracks failed login attempts and account status flags
         public int FailedAttempts { get; set; } = 0;
         public bool IsLocked { get; set; } = false;
         public bool IsSuspended { get; set; } = false;
 
+        // Toggles the user's suspension status (activated <-> suspended)
         public void ToggleSuspension()
         {
             if (IsSuspended)
@@ -33,12 +37,12 @@ namespace BankApp2
             Console.WriteLine($"The account {Username} has now been {status}.");
         }
 
-
+        // Stores all user accounts, transaction history, and pending transactions
         public List<Account> Accounts = new List<Account>();
         public List<Transaction> transactions = new List<Transaction>();
         public List<Transaction> PendingTransactions { get; set; } = new List<Transaction>();
 
-
+        // Constructor for creating a new user and automatically generating default accounts
         public User(string username, string password, string role, string email = "")
         {
             Username = username;
@@ -46,16 +50,19 @@ namespace BankApp2
             Role = role;
             Email = email;
 
-            CreatedDate = DateTime.Now; // date sets when user created
-            NextPasswordChangeDate = CreatedDate.AddMinutes(90); // when user need to change password
+            // Record creation time and set next password change
+            CreatedDate = DateTime.Now; 
+            NextPasswordChangeDate = CreatedDate.AddMinutes(90); 
 
-
+            // Create a checking and savings account with random account numbers
             Random rng = new Random();
             int random = rng.Next(999999, 9999999);
             Accounts.Add(new CheckingAccount(this, random.ToString(), 0));
             random = rng.Next(999999, 9999999);
             Accounts.Add(new SavingsAccount(this, random.ToString(), 0, 0.03m));
         }
+
+        // Displays all user accounts and allows account-specific management options
         public void PrintAccounts(Bank bank)
         {
             try
@@ -63,12 +70,14 @@ namespace BankApp2
                 while (true)
                 {
                     Console.Clear();
-
+                    // List all accounts with details
                     for (int i = 0; i < Accounts.Count; i++)
                     {
                         Console.WriteLine("-----------------------------");
                         Console.WriteLine($"{i + 1}. Account Name: {Accounts[i].AccountName}");
                         Console.WriteLine($"Account number: {Accounts[i].AccountNumber}");
+
+                        // Display account type (Savings or Checking)
                         if (Accounts[i] is SavingsAccount)
                         {
                             Console.WriteLine($"Account type: Savings account");
@@ -83,6 +92,7 @@ namespace BankApp2
 
                     Console.Write("Account to manage: (0 to exit)");
 
+                    // Handle account selection
                     if (int.TryParse(Console.ReadLine(), out int response))
                     {
                         if (response == 0)
@@ -113,11 +123,14 @@ namespace BankApp2
             }
         }
 
+        // Displays the top N largest transactions for the user
         public void PrintTopTransactions(int count = 3)
         {
             Console.Clear();
             var topTransactions = GetTopTransactions(count);
             Console.WriteLine($"Top {count} transactions:");
+
+            // Display transactions in color-coded status
             foreach (var t in topTransactions)
             {
                 if (t.Status == "Pending")
@@ -129,6 +142,8 @@ namespace BankApp2
             }
             Console.ReadKey();
         }
+
+        // Returns a list of the top N transactions ordered by amount
         public List<Transaction> GetTopTransactions(int topCount)
         {
             return transactions
@@ -136,6 +151,8 @@ namespace BankApp2
                 .Take(topCount)
                 .ToList();
         }
+
+        // Prints all accounts that currently have a positive balance
         public void PrintPositiveAccounts()
         {
             var positiveAccounts = Accounts.Where(a => a.Balance > 0);
@@ -160,6 +177,7 @@ namespace BankApp2
             Console.ReadKey();
         }
 
+        // Displays all recurring payments that are still pending
         public void ShowPendingRecurringPayments()
         {
             Console.WriteLine("Pending recurring payments:");
@@ -169,18 +187,22 @@ namespace BankApp2
             }
             Console.ReadKey();
         }
-        public bool IsPasswordChangeDue() // checking if the time is in scope for changing password
+
+        // Checks if the user is due for a password change based on schedule
+        public bool IsPasswordChangeDue() 
         {
             return DateTime.Now >= NextPasswordChangeDate;
         }
 
-
+        // Displays a detailed account management menu for deposits, withdrawals, transfers, etc.
         void AccountMenu(Account account, Bank bank)
         {
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine($"🏦 Account number: {account.AccountNumber}");
+
+                // Selects the proper currency symbol for display
                 string currencySymbol = account.CurrencyCode switch
                 {
                     "USD" => "$",
@@ -206,16 +228,21 @@ namespace BankApp2
                 Console.WriteLine("12.🌍 Convert Currency");
                 Console.WriteLine("13.🔃Rename Account");
 
+                // Option for savings accounts to calculate interest
                 if (account is SavingsAccount)
                 {
                     Console.WriteLine("14.🟰Calculate Interest");
                 }
 
                 string response = Console.ReadLine();
+
+                // Exit option
                 if (response == "0")
                 {
                     break;
                 }
+
+                // Deposit operation
                 else if (response == "1")
                 {
                     try
@@ -235,6 +262,8 @@ namespace BankApp2
                         Console.WriteLine($"An error has occured: {ex.Message}");
                     }
                 }
+
+                // Withdrawal operation
                 else if (response == "2")
                 {
                     try
@@ -254,6 +283,8 @@ namespace BankApp2
                         Console.WriteLine($"An error has occured: {ex.Message}");
                     }
                 }
+
+                // Handles money transfer between accounts
                 else if (response == "3")
                 {
                     Console.Clear();
@@ -268,12 +299,16 @@ namespace BankApp2
                         bank.TransferMoney(this, account.AccountNumber, accountNumber, amount);
                     }
                 }
+
+                // Cancels an existing pending transaction
                 else if (response == "4")
                 {
                     Console.Clear();
                     bank.CancelTransaction(this);
                     Console.ReadKey();
                 }
+
+                // Displays the user's maximum eligible loan amount
                 else if (response == "5")
                 {
                     Console.Clear();
@@ -281,7 +316,8 @@ namespace BankApp2
                     Console.WriteLine($"Current amount available to take loan for: {maxLoan.ToString("C", new CultureInfo("sv-SE"))}");
                     Console.ReadKey();
                 }
-                // Added max loan limit and validation Jordan
+
+                // Processes a loan request with validation and updates balance if approved
                 else if (response == "6")
                 {
                     Console.Clear();
@@ -323,7 +359,7 @@ namespace BankApp2
                     }
                 }
 
-                // Loan interest calculation Jordan
+                // Calculates compound interest for a loan
                 else if (response == "7")
                 {
                     Console.Clear();
@@ -353,6 +389,7 @@ namespace BankApp2
                     Console.ReadKey();
                 }
 
+                // Adds a recipient account to user's favorites
                 else if (response == "8")
                 {
                     Console.Clear();
@@ -363,6 +400,8 @@ namespace BankApp2
                     bank.AddFavorite(alias, favAccount);
                     Console.ReadKey();
                 }
+
+                // Displays saved favorite recipients and allows transfers to them
                 else if (response == "9")
                 {
                     Console.Clear();
@@ -392,7 +431,8 @@ namespace BankApp2
                     }
                     Console.ReadKey();
                 }
-                // Added recurring payments/autopay Jordan
+
+                // Sets up a recurring automatic payment
                 else if (response == "10")
                 {
                     Console.Clear();
@@ -432,20 +472,23 @@ namespace BankApp2
                     Console.ReadKey();
 
                 }
-                // Added show pending recurring payments Jordan
+                // Shows all pending recurring payments
                 else if (response == "11")
                 {
                     Console.Clear();
 
                     ShowPendingRecurringPayments();
                 }
-              
+                
+                // Converts account balance into a different currency
                 else if (response == "12")
                 {
                     Console.Clear();
 
                     bank.ConvertCurrency(account);
                 }
+
+                // Renames the selected account
                 else if (response == "13")
                 {
                     Console.Clear();
@@ -455,6 +498,8 @@ namespace BankApp2
                     Console.WriteLine("Press any key to continue..");
                     Console.ReadKey();
                 }
+
+                // Displays calculated interest for a savings account
                 else if (response == "14" && account is SavingsAccount)
                 {
                     Console.Clear();
@@ -464,6 +509,8 @@ namespace BankApp2
                 
             }
         }
+
+        // Allows user to set or update their email address
         public void SetEmail()
         {
             Console.Clear();
@@ -498,6 +545,7 @@ namespace BankApp2
             Console.ReadKey();
         }
 
+        // Validates email format using a regex
         private bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -513,6 +561,5 @@ namespace BankApp2
                 return false;
             }
         }
-        
     }
 }
