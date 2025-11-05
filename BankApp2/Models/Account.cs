@@ -66,7 +66,7 @@ namespace BankApp2
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
                 Console.ReadKey();
             }
         }
@@ -91,7 +91,7 @@ namespace BankApp2
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
+				Console.WriteLine($"An unexpected error occurred: {ex.Message}");
 				Console.ReadKey();
 			}
 		}
@@ -136,7 +136,7 @@ namespace BankApp2
             catch (Exception ex)
             {
 
-                Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
                 Console.ReadKey();
             }
         }
@@ -163,7 +163,7 @@ namespace BankApp2
             catch (Exception ex)
             {
 
-                Console.WriteLine($"Ett oväntat fel uppstod {ex.Message}");
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
                 Console.ReadKey();
             }
         }

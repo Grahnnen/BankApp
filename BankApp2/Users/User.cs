@@ -77,20 +77,20 @@ namespace BankApp2
                         }
                         else
                         {
-                            Console.WriteLine("Ogiltigt val. Försök igen.");
+                            Console.WriteLine("Invalid choice, please try again.");
                             Console.ReadKey();
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Du måste skriva ett nummer!");
+                        Console.WriteLine("You need to input a number!");
                         Console.ReadKey();
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ett fel uppstod: {ex.Message}");
+                Console.WriteLine($"An error occured: {ex.Message}");
                 Console.ReadKey();
             }
         }
@@ -202,19 +202,19 @@ namespace BankApp2
                     try
                     {
                         account.Deposit();
-                        Console.WriteLine("Insättningen lyckades!");
+                        Console.WriteLine("Deposit successful!");
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Fel format – skriv ett giltigt belopp.");
+                        Console.WriteLine("Invalid format - please enter a valid amount.");
                     }
                     catch (ArgumentException ex)
                     {
-                        Console.WriteLine($"Fel: {ex.Message}");
+                        Console.WriteLine($"Error: {ex.Message}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
+                        Console.WriteLine($"An unexpected error occurred: {ex.Message}");
                     }
                 }
                 else if (response == "2")
@@ -222,19 +222,19 @@ namespace BankApp2
                     try
                     {
                         account.Withdraw();
-                        Console.WriteLine("Uttag lyckades!");
+                        Console.WriteLine("Withdrawal successful!");
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Fel format – skriv ett giltigt belopp.");
+                        Console.WriteLine("Invalid format - please enter a valid amount.");
                     }
                     catch (ArgumentException ex)
                     {
-                        Console.WriteLine($"Fel: {ex.Message}");
+                        Console.WriteLine($"Error: {ex.Message}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Ett oväntat fel uppstod: {ex.Message}");
+                        Console.WriteLine($"An unexpected error occured: {ex.Message}");
                     }
                 }
                 else if (response == "3")

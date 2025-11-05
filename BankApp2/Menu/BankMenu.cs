@@ -163,8 +163,8 @@ namespace BankApp2.Menu
                         }
                         else
                         {
-                            Console.WriteLine("Ogiltig inmatning, Vänligen ange en giltig siffra");
-                            Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
+                            Console.WriteLine("Invalid input, please enter a valid number");
+                            Console.WriteLine("Press any key to continue...");
                             Console.ReadKey();
                         }
                     }

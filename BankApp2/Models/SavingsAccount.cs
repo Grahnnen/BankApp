@@ -84,7 +84,7 @@ namespace BankApp2.Models
 
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Ett oväntat fel uppstod");
+                    Console.WriteLine($"An unexpected error occurred.");
                     Console.ReadKey();
                 }
             }
