@@ -9,15 +9,22 @@ namespace BankApp2.Models
 {
     public class Bank
     {
+        // List of all registered users in the bank
         public List<User> Users { get; set; } = new List<User>();
+
+        // Handles currency-related operations and conversions
         public CurrencyManager CurrencyManager { get; set; } = new CurrencyManager();
 
+        // Property that collects all accounts from all users
         public IEnumerable<Account> Accounts => Users.SelectMany(u => u.Accounts);
-        
+
+        // Constructor: Starts the background task to process pending transactions
         public Bank()
 		{
 			Task.Run(ProcessPendingTransactions);
 		}
+
+        // Allows a user to open a new checking or savings account
 		public void OpenAccount(User user, string accountNumber)
         {
             while (true)
@@ -28,10 +35,14 @@ namespace BankApp2.Models
                 Console.WriteLine("1. Checking account");
                 Console.WriteLine("2. Saving account");
                 string response = Console.ReadLine();
+
+                // Cancel option
                 if (response == "0")
                 {
                     break;
                 }
+
+                // Option to open a checking account
                 else if (response == "1")
                 {
                     var account = new CheckingAccount(user, accountNumber, 0);
@@ -43,6 +54,8 @@ namespace BankApp2.Models
                     Console.ReadKey();
                     continue;
                 }
+
+                // Option to open a savings account
                 else if (response == "2")
                 {
                     var account = new SavingsAccount(user, accountNumber, 0, 0.03m);
@@ -56,6 +69,8 @@ namespace BankApp2.Models
                 }
             }
         }
+
+        // Displays a summary of all users, including number of accounts and total balance
         public void PrintUserAccountSummaries()
         {
             Console.Clear();
@@ -81,6 +96,8 @@ namespace BankApp2.Models
             Console.WriteLine("Press any key to go back");
             Console.ReadKey();
         }
+
+        // Transfers money between two accounts (creates pending transactions)
         public void TransferMoney(User sender, string fromAccountNumber, string toAccountNumber, decimal amount)
         {
             var fromAccount = sender.Accounts.FirstOrDefault(a => a.AccountNumber == fromAccountNumber);
@@ -101,6 +118,7 @@ namespace BankApp2.Models
                 return;
             }
 
+            // Prevent transfer if there's not enough balance
             if (fromAccount.Balance < amount)
             {
                 Console.WriteLine("Insufficient balance.");
@@ -108,6 +126,7 @@ namespace BankApp2.Models
                 return;
             }
 
+            // Create outgoing transaction for sender
             var transaction = new Transaction(fromAccountNumber, amount, "Outgoing Transfer", toAccountNumber)
             {
                 Status = "Pending",
@@ -117,6 +136,7 @@ namespace BankApp2.Models
             sender.PendingTransactions.Add(transaction);
             sender.transactions.Add(transaction);
 
+            // Create corresponding incoming transaction for receiver
             var incomingTransaction = new Transaction(fromAccountNumber, amount, "Incoming Transfer", toAccountNumber)
             {
                 Status = "Pending",
@@ -128,6 +148,7 @@ namespace BankApp2.Models
             Console.ReadKey();
         }
 
+        // Cancels a pending transaction before it is processed
         public virtual void CancelTransaction(User user)
         {
             var pending = user.PendingTransactions.Where(t => t.Status == "Pending").ToList();
@@ -158,8 +179,11 @@ namespace BankApp2.Models
                 Console.WriteLine("❌ Invalid choice.");
             }
         }
+
+        // Stores favorite recipient account numbers for quick transfers
         public Dictionary<string, string> FavoriteRecipients { get; } = new Dictionary<string, string>();
 
+        // Adds a new favorite recipient by alias and account number
         public void AddFavorite(string alias, string accountNumber)
         {
             if (string.IsNullOrWhiteSpace(alias) || string.IsNullOrWhiteSpace(accountNumber))
@@ -179,6 +203,7 @@ namespace BankApp2.Models
             }
         }
 
+        // Displays all saved favorite recipients
         public void ShowFavorites()
         {
             Console.WriteLine("Saved favorites:");
@@ -188,15 +213,17 @@ namespace BankApp2.Models
             }
         }
 
-
+        // Continuously checks and processes pending transactions when their scheduled time arrives
         private async Task ProcessPendingTransactions()
 		{
 			while (true)
 			{
 				var now = DateTime.Now;
+
 				foreach (var user in Users)
 				{
-					var toProcess = user.PendingTransactions
+                    // Get all pending transactions that are ready to be processed
+                    var toProcess = user.PendingTransactions
 						.Where(t => t.Status == "Pending" && t.ScheduledCompletionTime <= now)
 						.ToList();
 
@@ -206,11 +233,13 @@ namespace BankApp2.Models
                         var toAccount = Users.SelectMany(u => u.Accounts)
                                      .FirstOrDefault(a => a.AccountNumber == transaction.TargetAccount);
 
+                        // Execute transaction if both accounts exist
                         if (fromAccount != null && toAccount != null)
                         {
                             fromAccount.Withdraw(transaction.Amount);
                             toAccount.Deposit(transaction.Amount);
 
+                            // Log completed transaction for the receiver
                             var receiverUser = toAccount.Owner;
                             receiverUser.transactions.Add(new Transaction(
                                 toAccount.AccountNumber,
@@ -220,6 +249,7 @@ namespace BankApp2.Models
                             )
                             { Status = "Completed" });
 
+                            // Remove corresponding pending records from receiver
                             receiverUser.transactions.RemoveAll(t =>
                                 t.AccountNumber == transaction.AccountNumber &&
                                 t.TargetAccount == transaction.TargetAccount &&
@@ -235,8 +265,10 @@ namespace BankApp2.Models
                         }
                         transaction.Status = "Completed";
 					}
+                    // Clean up completed transactions
 					user.PendingTransactions.RemoveAll(t => t.Status == "Completed");
 				}
+                // Wait one second before next check
 				await Task.Delay(TimeSpan.FromSeconds(1));
 			}
 		}
