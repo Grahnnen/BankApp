@@ -35,6 +35,7 @@ namespace BankApp2
                 Console.WriteLine("Invalid name, try again.");
             }
         }
+        // Deposit money into the account user inputs amount in console
         public void Deposit()
         {
             Console.Clear();
@@ -66,8 +67,8 @@ namespace BankApp2
                 Console.ReadKey();
             }
         }
-
-		public void Deposit(decimal amount)
+        // Deposit money directly by passing amount as a parameter
+        public void Deposit(decimal amount)
 		{
 			try
 			{
@@ -87,8 +88,8 @@ namespace BankApp2
 			}
 		}
 
-        // Version where user writes sum in the console.
-		public virtual void Withdraw()
+        // Withdraw money user inputs amount in console
+        public virtual void Withdraw()
         {
             try
             {
@@ -108,7 +109,8 @@ namespace BankApp2
                     }
 
                     Balance -= amount;
-					Owner.transactions.Add(new Transaction(
+                    // Log the withdrawal as a transaction
+                    Owner.transactions.Add(new Transaction(
 					                AccountNumber, 
                                     amount, 
                                     "Withdraw"
@@ -131,7 +133,7 @@ namespace BankApp2
             }
         }
 
-        // Second version of withdraw that takes in amount directly
+        // Withdraw money directly by passing amount as a parameter
         public virtual void Withdraw(decimal amount)
         {
             try
@@ -157,7 +159,7 @@ namespace BankApp2
                 Console.ReadKey();
             }
         }
-        
+        // Calculate the maximum loan amount based on balance
         public virtual decimal GetMaxLoanAmount()
         {
 	        return Balance * 5;
