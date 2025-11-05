@@ -22,6 +22,7 @@ namespace BankApp2.Users
                 new User("robin", "12345", "Admin"),
             };
         }
+
         //Handles user login
         public LoginResult Login(string username, string password)
         {
