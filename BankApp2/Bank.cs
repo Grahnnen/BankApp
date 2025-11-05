@@ -273,8 +273,10 @@ namespace BankApp2.Models
 			}
 		}
 
+        // Searches for users by username (partial match)
 		public void FindUser(string username)
         {
+            // Find all users whose username contains the search term
             var foundUser = Users.Where(u => u.Username.Contains(username));
             if (foundUser.Count() <= 0)
             {
@@ -302,6 +304,7 @@ namespace BankApp2.Models
                 Console.ReadKey();
             }
         }
+        // Searches for accounts by account number (partial match)
         public void FindAccount(string accountNumber)
         {
             var foundAccounts = Accounts.Where(u => u.AccountNumber.Contains(accountNumber));
@@ -326,6 +329,7 @@ namespace BankApp2.Models
                 Console.ReadKey();
             }
         }
+        // Displays all users in the system
         public void ShowAllUsers()
         {
             if (Users.Count() <= 0)
@@ -353,6 +357,7 @@ namespace BankApp2.Models
                 Console.ReadKey();
             }
         }
+        // Finds and displays the user with the most transactions
         public void FindUserWithTopTransactions()
         {
             var foundUser = Users.OrderByDescending(u => u.transactions.Count).FirstOrDefault(); Console.Clear();
@@ -376,6 +381,7 @@ namespace BankApp2.Models
             Console.ReadKey();
         }
 
+        // Displays the top 3 largest transactions across all users in the bank
         public void ShowBanksBiggestTransactions()
         {
             Console.Clear();
@@ -415,6 +421,7 @@ namespace BankApp2.Models
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
+        // Converts an account's balance from one currency to another
         public void ConvertCurrency(Account account)
         {
             Console.BackgroundColor = ConsoleColor.Black;
@@ -439,6 +446,7 @@ namespace BankApp2.Models
                 var currentRate = currencyManager.GetExchangeRate(account.CurrencyCode);
                 var targetRate = currencyManager.GetExchangeRate(newCurrency);
 
+                // Validate that both currencies exist in the system
                 if (!currentRate.HasValue || !targetRate.HasValue)
                 {
                     Console.WriteLine("Currency not found, press enter to try again!");
@@ -446,6 +454,7 @@ namespace BankApp2.Models
                     continue;
                 }
 
+                // Perform the currency conversion
                 decimal newBalance = currencyManager.ConvertCurrency(account.Balance, account.CurrencyCode, newCurrency);
 
                 account.Balance = newBalance;
