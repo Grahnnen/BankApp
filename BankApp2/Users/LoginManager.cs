@@ -21,7 +21,7 @@ namespace BankApp2.Users
                 new User("robin", "12345", "Admin"),
             };
         }
-
+        //Handles user login
         public LoginResult Login(string username, string password)
         {
             var user = users.FirstOrDefault(u => u.Username == username);
@@ -54,7 +54,7 @@ namespace BankApp2.Users
                 };
             }
         }
-
+        //Adding a new user
         public User AddUser()
         {
             Console.Clear();
@@ -86,6 +86,7 @@ namespace BankApp2.Users
                 return null;
             }
         }
+        //Admin delete existing user
         public User DeleteUser()
         {
             Console.Clear();
@@ -113,6 +114,8 @@ namespace BankApp2.Users
             Console.ReadKey();
             return userToDelete;
         }
+
+        //Change password
         public void TryChangePAssword(LoginResult loginResult)
         {
             if (loginResult.LoggedInUser.IsPasswordChangeDue())
@@ -129,11 +132,13 @@ namespace BankApp2.Users
                     Console.Write("Enter new password: ");
                     string newPassword = Console.ReadLine();
                     loginResult.LoggedInUser.Password = newPassword;
-                    loginResult.LoggedInUser.NextPasswordChangeDate = DateTime.Now.AddDays(90); // we set the time for when the password need to be changed next time
+                    loginResult.LoggedInUser.NextPasswordChangeDate = DateTime.Now.AddDays(90); // password must be changed every 90 days
                     Console.WriteLine("✅ Password successfully changed!");
                 }
             }
         }
+
+        //Admin suspends user
         public void SuspendUserInteractive(User admin)
         {
             if(admin.Role != "Admin")
