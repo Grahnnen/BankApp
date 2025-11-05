@@ -6,7 +6,7 @@ namespace BankApp2.Models
         // This assumes that the base currency is SEK, could be made more clear
         // Uses the logic that 1 SEK = 0,1 USD for example
         public CurrencyManager()
-        {
+        {   // Store exchange rates for different currencies
             exchangeRates = new Dictionary<string, CurrencyExchangeRate>
             {
                 { "SEK", new CurrencyExchangeRate("SEK", 1.0m) },
@@ -16,6 +16,7 @@ namespace BankApp2.Models
             };
         }
 
+        // Update the exchange rate for a specific currency
         public void SetExchangeRate(string currencyCode, decimal rate)
         {
             if (rate <= 0)
@@ -36,6 +37,7 @@ namespace BankApp2.Models
             }
         }
 
+        // Interactive menu for setting exchange rates via console input
         public void SetExchangeRateInteractive()
         {
             Console.Clear();
@@ -65,6 +67,7 @@ namespace BankApp2.Models
             Console.ReadKey();
         }
 
+        // Display all current exchange rates to the console
         public void ViewAllExchangeRates()
         {
             Console.Clear();
@@ -87,6 +90,7 @@ namespace BankApp2.Models
             Console.ReadKey();
         }
 
+        // Get the exchange rate for a specific currency, or null if not found
         public decimal? GetExchangeRate(string currencyCode)
         {
             if (exchangeRates.TryGetValue(currencyCode.ToUpper(), out var rate))
@@ -96,6 +100,7 @@ namespace BankApp2.Models
             return null;
         }
 
+        // Convert an amount from one currency to another
         public decimal ConvertCurrency(decimal amount, string fromCurrency, string toCurrency)
         {
             var fromRate = GetExchangeRate(fromCurrency);
