@@ -11,6 +11,7 @@ namespace BankApp2.Users
         public List<User> Users => users;
         public LoginManager()
         {
+            //List of all users and password in the bank
             users = new List<User>
             {
                 new User("admin", "1234", "Admin"),
