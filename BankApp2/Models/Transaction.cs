@@ -23,6 +23,7 @@ namespace BankApp2.Models
 			ScheduledCompletionTime = DateTime.Now.AddSeconds(20);
 		}
 
+        // Returns a formatted string with transaction details
         public override string ToString()
         {
 			if (!string.IsNullOrEmpty(TargetAccount))
@@ -30,7 +31,7 @@ namespace BankApp2.Models
 			return $"{DateTime:G} | {Type} | {Amount:C}";
 		}
 
-        // Recurring transaction properties Jordan
+        // Properties for handling recurring transactions
         public bool IsRecurring { get; set; }
         public int IntervalDays { get; set; }
         public DateTime? NextExecutionDate { get; set; }
