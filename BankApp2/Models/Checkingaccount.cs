@@ -8,6 +8,8 @@ using BankApp2.Users;
 namespace BankApp2.Models
 {
     public class CheckingAccount : Account
+
+    // Withdraw method: validates input, checks overdraft limit, updates balance, and records transaction.
     {
         private const decimal OverdraftLimit = -5000m;
 
