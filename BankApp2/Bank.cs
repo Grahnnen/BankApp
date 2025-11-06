@@ -1,0 +1,470 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BankApp2.Models
+{
+    public class Bank
+    {
+        // List of all registered users in the bank
+        public List<User> Users { get; set; } = new List<User>();
+
+        // Handles currency-related operations and conversions
+        public CurrencyManager CurrencyManager { get; set; } = new CurrencyManager();
+
+        // Property that collects all accounts from all users
+        public IEnumerable<Account> Accounts => Users.SelectMany(u => u.Accounts);
+
+        // Constructor: Starts the background task to process pending transactions
+        public Bank()
+		{
+			Task.Run(ProcessPendingTransactions);
+		}
+
+        // Allows a user to open a new checking or savings account
+		public void OpenAccount(User user, string accountNumber)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Choose account type to open:");
+                Console.WriteLine("0. Cancel");
+                Console.WriteLine("1. Checking account");
+                Console.WriteLine("2. Saving account");
+                string response = Console.ReadLine();
+
+                // Cancel option
+                if (response == "0")
+                {
+                    break;
+                }
+
+                // Option to open a checking account
+                else if (response == "1")
+                {
+                    var account = new CheckingAccount(user, accountNumber, 0);
+                    user.Accounts.Add(account);
+                    Console.Write("Choose account name: ");
+                    string newName = Console.ReadLine();
+                    account.RenameAccount(newName);
+                    Console.WriteLine($"{user.Username} added checkingaccount.");
+                    Console.ReadKey();
+                    continue;
+                }
+
+                // Option to open a savings account
+                else if (response == "2")
+                {
+                    var account = new SavingsAccount(user, accountNumber, 0, 0.03m);
+                    user.Accounts.Add(account);
+                    Console.Write("Choose account name: ");
+                    string newName = Console.ReadLine();
+                    account.RenameAccount(newName);
+                    Console.WriteLine($"{user.Username} added savingsaccount.");
+                    Console.ReadKey();
+                    continue;
+                }
+            }
+        }
+
+        // Displays a summary of all users, including number of accounts and total balance
+        public void PrintUserAccountSummaries()
+        {
+            Console.Clear();
+
+            var summaries = Users
+ 
+                .Select(u => new
+                {
+                    UserName = u.Username,
+                    AccountCount = u.Accounts.Count,
+                    TotalBalance = u.Accounts.Sum(account => account.Balance)
+                });
+
+            foreach (var summary in summaries)
+            {
+                Console.WriteLine("-----------------------------");
+                Console.WriteLine($"Name: {summary.UserName}");
+                Console.WriteLine($"Account: {summary.AccountCount}");
+                Console.WriteLine($"Balance: {summary.TotalBalance:C}");
+            }
+
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine("Press any key to go back");
+            Console.ReadKey();
+        }
+
+        // Transfers money between two accounts (creates pending transactions)
+        public void TransferMoney(User sender, string fromAccountNumber, string toAccountNumber, decimal amount)
+        {
+            var fromAccount = sender.Accounts.FirstOrDefault(a => a.AccountNumber == fromAccountNumber);
+            if (fromAccount == null)
+            {
+                Console.WriteLine("Account to transfer from not found.");
+                Console.ReadKey();
+                return;
+            }
+            var receiverAccount = Users
+                .SelectMany(u => u.Accounts)
+                .FirstOrDefault(a => a.AccountNumber == toAccountNumber);
+
+            if (receiverAccount == null)
+            {
+                Console.WriteLine("Receiver account not found");
+                Console.ReadKey();
+                return;
+            }
+
+            // Prevent transfer if there's not enough balance
+            if (fromAccount.Balance < amount)
+            {
+                Console.WriteLine("Insufficient balance.");
+                Console.ReadKey();
+                return;
+            }
+
+            // Create outgoing transaction for sender
+            var transaction = new Transaction(fromAccountNumber, amount, "Outgoing Transfer", toAccountNumber)
+            {
+                Status = "Pending",
+                ScheduledCompletionTime = DateTime.Now.AddSeconds(20)
+            };
+
+            sender.PendingTransactions.Add(transaction);
+            sender.transactions.Add(transaction);
+
+            // Create corresponding incoming transaction for receiver
+            var incomingTransaction = new Transaction(fromAccountNumber, amount, "Incoming Transfer", toAccountNumber)
+            {
+                Status = "Pending",
+                ScheduledCompletionTime = DateTime.Now.AddSeconds(20)
+            };
+            receiverAccount.Owner.transactions.Add(incomingTransaction);
+
+            Console.WriteLine($"Transferred {amount} kr from {fromAccountNumber} to {toAccountNumber}.");
+            Console.ReadKey();
+        }
+
+        // Cancels a pending transaction before it is processed
+        public virtual void CancelTransaction(User user)
+        {
+            var pending = user.PendingTransactions.Where(t => t.Status == "Pending").ToList();
+
+            if (!pending.Any())
+            {
+                Console.WriteLine("No pending transactions.");
+                return;
+            }
+
+            Console.WriteLine("Choose transaction to cancel:");
+            for (int i = 0; i < pending.Count; i++)
+            {
+                var t = pending[i];
+                Console.WriteLine($"{i + 1}. {t.Amount} kr from {t.AccountNumber} to {t.TargetAccount} (Scheduled: {t.ScheduledCompletionTime})");
+            }
+
+            Console.Write("\nYour Choice: ");
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice > 0 && choice <= pending.Count)
+            {
+                var transaction = pending[choice - 1];
+                transaction.Status = "Cancelled";
+                user.PendingTransactions.Remove(transaction);
+                Console.WriteLine("✅ Transactionen canceled.");
+            }
+            else
+            {
+                Console.WriteLine("❌ Invalid choice.");
+            }
+        }
+
+        // Stores favorite recipient account numbers for quick transfers
+        public Dictionary<string, string> FavoriteRecipients { get; } = new Dictionary<string, string>();
+
+        // Adds a new favorite recipient by alias and account number
+        public void AddFavorite(string alias, string accountNumber)
+        {
+            if (string.IsNullOrWhiteSpace(alias) || string.IsNullOrWhiteSpace(accountNumber))
+            {
+                Console.WriteLine("Type name and account number to add favorite.");
+                return;
+            }
+
+            if (!FavoriteRecipients.ContainsKey(alias))
+            {
+                FavoriteRecipients[alias] = accountNumber;
+                Console.WriteLine($"Favorite '{alias}' saved for account {accountNumber}.");
+            }
+            else
+            {
+                Console.WriteLine("Favorite already exist");
+            }
+        }
+
+        // Displays all saved favorite recipients
+        public void ShowFavorites()
+        {
+            Console.WriteLine("Saved favorites:");
+            foreach (var fav in FavoriteRecipients)
+            {
+                Console.WriteLine($"{fav.Key}, {fav.Value}");
+            }
+        }
+
+        // Continuously checks and processes pending transactions when their scheduled time arrives
+        private async Task ProcessPendingTransactions()
+		{
+			while (true)
+			{
+				var now = DateTime.Now;
+
+				foreach (var user in Users)
+				{
+                    // Get all pending transactions that are ready to be processed
+                    var toProcess = user.PendingTransactions
+						.Where(t => t.Status == "Pending" && t.ScheduledCompletionTime <= now)
+						.ToList();
+
+					foreach (var transaction in toProcess)
+					{
+                        var fromAccount = user.Accounts.FirstOrDefault(a => a.AccountNumber == transaction.AccountNumber);
+                        var toAccount = Users.SelectMany(u => u.Accounts)
+                                     .FirstOrDefault(a => a.AccountNumber == transaction.TargetAccount);
+
+                        // Execute transaction if both accounts exist
+                        if (fromAccount != null && toAccount != null)
+                        {
+                            fromAccount.Withdraw(transaction.Amount);
+                            toAccount.Deposit(transaction.Amount);
+
+                            // Log completed transaction for the receiver
+                            var receiverUser = toAccount.Owner;
+                            receiverUser.transactions.Add(new Transaction(
+                                toAccount.AccountNumber,
+                                transaction.Amount,
+                                "Incoming transfer",
+                                fromAccount.AccountNumber
+                            )
+                            { Status = "Completed" });
+
+                            // Remove corresponding pending records from receiver
+                            receiverUser.transactions.RemoveAll(t =>
+                                t.AccountNumber == transaction.AccountNumber &&
+                                t.TargetAccount == transaction.TargetAccount &&
+                                t.Amount == transaction.Amount &&
+                                t.Status == "Pending"
+                            );
+                            receiverUser.PendingTransactions.RemoveAll(t =>
+                                t.AccountNumber == transaction.AccountNumber &&
+                                t.TargetAccount == transaction.TargetAccount &&
+                                t.Amount == transaction.Amount &&
+                                t.Status == "Pending"
+                            );
+                        }
+                        transaction.Status = "Completed";
+					}
+                    // Clean up completed transactions
+					user.PendingTransactions.RemoveAll(t => t.Status == "Completed");
+				}
+                // Wait one second before next check
+				await Task.Delay(TimeSpan.FromSeconds(1));
+			}
+		}
+
+        // Searches for users by username (partial match)
+		public void FindUser(string username)
+        {
+            // Find all users whose username contains the search term
+            var foundUser = Users.Where(u => u.Username.Contains(username));
+            if (foundUser.Count() <= 0)
+            {
+                Console.WriteLine("No user found!");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.Clear();
+                foreach (var user in foundUser)
+                {
+                    Console.WriteLine("----------------");
+                    string status = user.IsSuspended ? "⛔ Suspended" : "✅ Active";
+                    Console.WriteLine($"User: {user.Username} ({status})");
+                    Console.WriteLine($"- Email : {user.Email}");
+                    Console.WriteLine($"- Role: {user.Role}");
+                    Console.WriteLine($"- Transactions: {user.transactions.Count}");
+                    Console.WriteLine($"- Accounts: {user.Accounts.Count}");
+                    foreach (var account in user.Accounts)
+                    {
+                        Console.WriteLine($" -{account.AccountNumber} ({account.Balance}kr)");
+                    }
+                }
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+            }
+        }
+        // Searches for accounts by account number (partial match)
+        public void FindAccount(string accountNumber)
+        {
+            var foundAccounts = Accounts.Where(u => u.AccountNumber.Contains(accountNumber));
+            if (foundAccounts.Count() <= 0)
+            {
+                Console.WriteLine("No accounts found!");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.Clear();
+                foreach (var account in foundAccounts)
+                {
+                    Console.WriteLine("----------------");
+                    string status = account.Owner.IsSuspended ? "⛔ Suspended" : "✅ Active";
+                    Console.WriteLine($"Account number: {account.AccountNumber}");
+                    Console.WriteLine($"- Owner: {account.Owner.Username} ({status})");
+                    Console.WriteLine($"- Balance: {account.Balance}");
+                }
+                Console.WriteLine("----------------");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+            }
+        }
+        // Displays all users in the system
+        public void ShowAllUsers()
+        {
+            if (Users.Count() <= 0)
+            {
+                Console.WriteLine("No users found!");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.Clear();
+                foreach (var user in Users)
+                {
+                    string status = user.IsSuspended ? "⛔ Suspended" : "✅ Active";
+                    Console.WriteLine($"User: {user.Username} ({status})");
+                    Console.WriteLine($"- Email: {user.Email}");
+                    Console.WriteLine($"- Role: {user.Role}");
+                    Console.WriteLine($"- Transactions: {user.transactions.Count}");
+                    Console.WriteLine($"- Accounts: {user.Accounts.Count}");
+                    foreach (var account in user.Accounts)
+                    {
+                        Console.WriteLine($" -{account.AccountNumber} ({account.Balance}kr)");
+                    }
+                }
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+            }
+        }
+        // Finds and displays the user with the most transactions
+        public void FindUserWithTopTransactions()
+        {
+            var foundUser = Users.OrderByDescending(u => u.transactions.Count).FirstOrDefault(); Console.Clear();
+            Console.Clear();
+            if (foundUser != null)
+            {
+                Console.WriteLine("----------------");
+                Console.WriteLine($"User: {foundUser.Username}");
+                Console.WriteLine($"- Role: {foundUser.Role}");
+                Console.WriteLine($"- Accounts: {foundUser.Accounts.Count}");
+                Console.Write($"- Transactions: ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(foundUser.transactions.Count);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.WriteLine("No users found.");
+            }
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        // Displays the top 3 largest transactions across all users in the bank
+        public void ShowBanksBiggestTransactions()
+        {
+            Console.Clear();
+
+            var allTransactions = Users
+                .SelectMany(u => u.transactions)
+                .OrderByDescending(t => t.Amount)
+                .Take(3)
+                .ToList();
+
+            if (allTransactions.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("Top 3 transactions across the bank:");
+            int rank = 1;
+            foreach (var transactions in allTransactions)
+            {
+                var ownerName = Accounts.FirstOrDefault(a => a.AccountNumber == transactions.AccountNumber).Owner.Username;
+
+                Console.WriteLine("----------------");
+                Console.WriteLine($"#{rank} Amount: {transactions.Amount:C}");
+                Console.WriteLine($"Owner: {ownerName}");
+                Console.WriteLine($"Type: {transactions.Type}");
+                Console.WriteLine($"From: {transactions.AccountNumber}");
+                Console.WriteLine($"To: {transactions.TargetAccount}");
+                Console.WriteLine($"Status: {transactions.Status}");
+                Console.WriteLine($"Date: {transactions.DateTime}");
+                rank++;
+            }
+            Console.WriteLine("----------------");
+
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+        // Converts an account's balance from one currency to another
+        public void ConvertCurrency(Account account)
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            while (true)
+            {
+
+                Console.Clear();
+                Console.WriteLine("=== Convert Currency 🌍 ===");
+                Console.WriteLine($"Current balance: {account.Balance:F2} {account.CurrencyCode}");
+                Console.WriteLine();
+                Console.WriteLine("\n[Press enter to Exit]");
+                Console.Write("Enter target currency (SEK| USD| EUR| GBP): ");
+                string? newCurrency = Console.ReadLine()?.ToUpper();
+                if (string.IsNullOrWhiteSpace(newCurrency))
+                {
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                }
+                var currencyManager = CurrencyManager;
+                var currentRate = currencyManager.GetExchangeRate(account.CurrencyCode);
+                var targetRate = currencyManager.GetExchangeRate(newCurrency);
+
+                // Validate that both currencies exist in the system
+                if (!currentRate.HasValue || !targetRate.HasValue)
+                {
+                    Console.WriteLine("Currency not found, press enter to try again!");
+                    Console.ReadKey();
+                    continue;
+                }
+
+                // Perform the currency conversion
+                decimal newBalance = currencyManager.ConvertCurrency(account.Balance, account.CurrencyCode, newCurrency);
+
+                account.Balance = newBalance;
+                account.CurrencyCode = newCurrency;
+
+                Console.WriteLine();
+                Console.WriteLine($"✅ Your balance is now {newBalance:F2} {newCurrency}");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+            }
+        }
+    }
+}
